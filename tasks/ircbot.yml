@@ -1,0 +1,21 @@
+- name: "Install Python pip"
+  yum: name=python-pip update_cache={{ yum.update_cache }} state=installed
+
+- name: "Copy a script which is used to install IRC Library"
+  copy: src=files/install_irclib.sh dest=/root/ mode=0755
+
+- name: "Run the script to install IRC Library"
+  command: /root/install_irclib.sh
+
+- name: "Remove the script"
+  file: path=/root/install_irclib.sh state=absent
+
+- name: "Install Google Client API"
+  pip: name=google-api-python-client
+
+- name: "Install IRC Bot"
+  yum: name=jboss-set-ircbot update_cache={{ yum.update_cache }} state=installed
+
+- name: "Set up IRC Bot"
+  template: src=templates/ircbotconfig.j2 dest=/home/jboss/.setbotconfig
+
