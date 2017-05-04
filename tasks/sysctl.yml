@@ -1,3 +1,6 @@
 - name: Configure kernel to act as a router
   sysctl: name=net.ipv4.ip_forward value=1 state=present
 
+- name: Disable ipv6 to workaround https://bugs.eclipse.org/bugs/show_bug.cgi?id=495089
+  sysctl: name=net.ipv6.conf.all.disable_ipv6 value=1 state=present
+
