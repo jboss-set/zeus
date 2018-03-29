@@ -1,11 +1,11 @@
 {% if item.hostname is not defined %}
-{% set hostname = 'localhost' %}
+{% set hostname = ansible_nodename %}
 {% else %}
 {% set hostname = item.hostname %}
 {% endif %}
 
 {% if item.port is not defined %}
-{% set port = '80' %}
+{% set port = '443' %}
 {% else %}
 {% set port = item.port %}
 {% endif %}
