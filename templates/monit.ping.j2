@@ -1,2 +1,2 @@
 check host {{ item.name }} with address {{ item.name }}
-    if failed ping then alert
+    if failed ping with timeout 15 seconds then alert
