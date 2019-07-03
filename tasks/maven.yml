@@ -1,0 +1,10 @@
+- name: "Deploy a {{ ansible_nodename }} specific setings.xml to help jobs use the HTTP Maven Cache"
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: jboss
+    group: jboss
+    mode: 644
+  loop:
+    - { src: templates/settings.xml.j2, dest: /home/jboss/settings.xml }
+    - { src: templates/settings-64.xml.j2, dest: /home/jboss/settings-64.xml }
