@@ -5,9 +5,10 @@
 readonly HARMONIA_REPOSITORY=${HARMONIA_REPOSITORY:-'git@github.com:jboss-set/harmonia.git'}
 readonly HARMONIA_BRANCH=${HARMONIA_BRANCH:-'master'}
 readonly HARMONIA_FOLDER=${HARMONIA_FOLDER:-'harmonia'}
-readonly HARMONIA_BUILD_SCRIPT=${HARMONIA_BUILD_SCRIPT:-"${HARMONIA_FOLDER}/eap-job.sh"}
+readonly HARMONIA_BUILD_SCRIPT_NAME=${HARMONIA_BUILD_SCRIPT_NAME:-'eap-job.sh'}
+readonly HARMONIA_BUILD_SCRIPT=${HARMONIA_BUILD_SCRIPT:-"${HARMONIA_FOLDER}/${HARMONIA_BUILD_SCRIPT_NAME}"}
 
-readonly MAVEN_SETTINGS_XML=${MAVEN_SETTINGS_XML:-'/home/master/settings.xml'}
+readonly MAVEN_SETTINGS_XML=${MAVEN_SETTINGS_XML-'/home/master/settings.xml'}
 
 clean() {
   if [[ ! -z "${HARMONIA_FOLDER}" ]]; then
