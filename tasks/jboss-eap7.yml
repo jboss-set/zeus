@@ -57,3 +57,12 @@
           driver_name: "{{ mjolnir_ds.driver_name }}"
           user_name: "{{ mjolnir_ds.user_name }}"
           password: "{{ mjolnir_ds.password }}"
+        - name: "{{ mjolnir_dev_ds.name }}"
+          pool_name: "{{ mjolnir_dev_ds.pool_name }}"
+          enabled: true
+          use_java_context: "{{ mjolnir_dev_ds.use_java_context }}"
+          jndi_name: "{{ mjolnir_dev_ds.jndi_name }}"
+          connection_url: "{{ mjolnir_dev_ds.connection_url }}"
+          driver_name: "{{ mjolnir_dev_ds.driver_name }}"
+          user_name: "{{ mjolnir_dev_ds.user_name }}"
+          password: "{{ mjolnir_dev_ds.password }}"
