@@ -2,6 +2,13 @@
 - name: "Ensures jboss-eap7 RPM package is installed"
   import_tasks: tasks/rpminfo.yml
 
+- set_fact: package_name={{ jboss.saml_adapter_package_name }}
+- name: "Ensures Keycloak SAML adapter RPM package is installed"
+  import_tasks: tasks/rpminfo.yml
+
+- name: "Install Keycloak SAML adapter into EAP"
+  command: {{ jboss.home }}/bin/jboss-cli.sh --file=files/adapter-install-saml-offline.cli -Dserver.config={{ jboss.config }}
+
 - name: "Created config directory for jboss-eap7"
   file: path=/etc/jboss-eap7/ state=directory group=jboss owner=jboss
 
