@@ -74,8 +74,8 @@ server {
     }
 
     location /mjolnir-dev {
-      proxy_pass http://{{ ansible_nodename }}:8480 ;
-      proxy_redirect     http://{{ ansible_nodename }}:8480 https://{{ ansible_nodename }};
+      proxy_pass http://{{ ansible_nodename }}:8180 ;
+      proxy_redirect     http://{{ ansible_nodename }}:8180 https://{{ ansible_nodename }};
       include /etc/nginx/proxy.conf;
     }
 

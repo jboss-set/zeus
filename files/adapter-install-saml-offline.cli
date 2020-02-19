@@ -5,4 +5,4 @@ end-if
 if (outcome != success) of /subsystem=keycloak-saml:read-resource
     /subsystem=keycloak-saml:add
 end-if
-
+/subsystem=undertow/server=default-server/http-listener=default:write-attribute(name=proxy-address-forwarding,value=true)
