@@ -1,0 +1,6 @@
+- name: "Deploy init script for jboss-eap7 dev instance"
+  copy: src=files/jboss-eap-dev.sh dest=/etc/init.d/jboss-eap-dev.sh owner=root group=root mode=755
+
+- name: "Copy init script configuration file for jboss-eap7 dev instance"
+  copy: src=files/jboss-eap-dev.conf dest=/etc/default/jboss-eap-dev.conf owner=root group=root mode=755
+
