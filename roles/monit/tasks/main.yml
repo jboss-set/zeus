@@ -39,6 +39,9 @@
 - name: "Ensures custom script 'check-sudoers-list' is deployed"
   template: src=check-sudoers-list.j2 dest={{scripts_home.path}}/check-sudoers-list
 
+- name: "Ensures custom script 'check-pg-container' is deployed"
+  template: src=check-pg-container.j2 dest={{scripts_home.path}}/check-pg-container
+
 - name: "Set Monit checks based on custom scripts"
   template: src=templates/monit.script.j2 dest=/etc/monit.d/{{ item.check_name }} owner=root group=root
   with_items: "{{ custom_monitoring_scripts }}"

@@ -2,8 +2,8 @@
 
 container_name='{{postgres_db.name}}'
 
-if [ "$(docker inspect -f '{{.State.Running}}' ${container_name} 2>/dev/null)" = "true" ]; then
-  return 1;
+if [ "$(docker inspect -f '{%raw%}{{.State.Running}}{%endraw%}' ${container_name} 2>/dev/null)" = "true" ]; then
+  exit 0
 else
-  return 0;
+  exit 1
 fi
