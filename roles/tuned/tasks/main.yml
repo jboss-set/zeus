@@ -1,23 +1,29 @@
-- set_fact:
-    tuned_package_name: tuned
-- name: "Ensure {{ tuned_package_name }} is installed"
-  import_tasks: tasks/rpminfo.yml
+---
+- assert:
+    that:
+      - tuned_profile_target is defined
+      - tuned_profile_target != ""
+
+- include_role:
+    name: fast_yum_install
+  vars:
+    package_name: tuned
 
 - name: Started required service
   service:
-    name: "{{ item }}"
+    name: tuned
     state: started
     enabled: yes
-  with_items:
-    - tuned
-  #  - ktune
 
 - name: "Configure tuned profile"
-  command: /usr/sbin/tuned-adm profile {{ tuned_profile_target }} creates=/etc/ansible/facts.d/tuned-profile.fact
+  command: >
+    "{{ tuned.bin }}" profile "{{ tuned_profile_target }}" 
+  args:
+    creates: "{{ tuned.fact.file }}"
   when : tuned_profile_target is defined or (tuned_profile != tuned_profile_target)
 
 - name: Add tuned profile to facts.d
   template:
     src: tuned_profile.fact.j2
-    dest: /etc/ansible/facts.d/tuned-profile.fact
+    dest: "{{ tuned.fact.file }}"
   when: (tuned_profile is not defined and tuned_profile_target is defined) or (tuned_profile_target != tuned_profile)
