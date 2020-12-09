@@ -5,16 +5,16 @@
       - motd.font is defined
       - motd.font != ""
     quiet: true
-     
+
 - set_fact:
     motd_src_file: "files/motd.{{ motd.font }}"
 
 - name: Add a specific motd
-  copy: 
+  copy:
     src: "files/motd.{{ motd.font }}"
-    dest: /etc/motd 
-    owner: root 
-    group: root 
+    dest: /etc/motd
+    owner: root
+    group: root
     mode: 0644
 
 - include_tasks: tasks/remove_file.yml

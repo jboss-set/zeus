@@ -13,8 +13,8 @@
     changed_when: rpm_info.failed
   rescue:
   - name: "If package {{ package_name }} is missing, install package using yum.(cache update: {{ yum_cache_update }}"
-    yum: 
-      name: "{{ package_name }}" 
+    yum:
+      name: "{{ package_name }}"
       update_cache: "{{ yum_cache_update }}"
       state: installed
     when: rpm_info.failed
