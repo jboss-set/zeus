@@ -1,0 +1,3 @@
+---
+selinux:
+  state: "{{ override_selinux_state | default('enforcing') }}"

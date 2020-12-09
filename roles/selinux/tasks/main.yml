@@ -1,0 +1,11 @@
+---
+- assert:
+    that:
+      - selinux is defined
+      - selinux.state is defined
+      - selinux.state != ""
+    quiet: true
+
+- selinux:
+    policy: targeted
+    state: "{{ selinux.state }}"
