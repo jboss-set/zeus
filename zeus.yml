@@ -3,87 +3,40 @@
   gather_facts: no
   become: yes
   become_user: root
+  vars:
+    override_motd_font: bloody
+    override_kdump_level: 0
+    override_yum_cache_update: false
+    sysctl_entries:
+      - { name: net.ipv4.ip_forward, value: 1 }
+    tuned_profile_target : 'throughput-performance'   
   vars_files:
     - vars/thunder.yml
-  collections:
-    - wildfly.jcliff
   roles:
-    - jcliff
+    # stage 1 - OS settings and optimizations
+    - selinux
+    - motd
+    - bashrc
+    - kdump
+    - sysctl
+    - tuned
+    # stage 2 - auth and sudoers
+    # stage 3 - core services
+    - sshd
+    # podman, ssh, monit
+    - podman
   tasks:
-    - name: " ******* STAGE 0 *******"
-      debug: msg=" >>> Check Ansible Set Up <<<"
-
     - name: "Ensure ansible facts.d is created"
-      file: path=/etc/ansible/facts.d/ state=directory
+      file: 
+        path: /etc/ansible/facts.d/ 
+        state: directory
 
-    - name: "Load secrets"
-      include_vars: secrets.yml
-      when: ansible_hostname == "thunder"
+# to revisit for stage 1   
+#    - include: tasks/ntp.yml
 
-    - include_vars: dummy_secret.yml
-      when: ansible_hostname != "thunder"
+# to revisit for stage 2 (requires vpn)
+#    - include: tasks/authconfig.yml
 
-    - include: tasks/repos.yml
-
-    - name: " ******* STAGE 1 *******"
-      debug: msg=" >>> OS and Kernel Configuration and Optimization <<<"
-
-    - include: tasks/kdump.yml
-    - include: tasks/os-config.yml
-    - include: tasks/sysctl.yml
-    - include: tasks/ntp.yml
-    - include: tasks/tuned-adm.yml
-    - include: tasks/selinux.yml
-
-    - name: " ******* STAGE 2 *******"
-      debug: msg=" >>> Authentification and Sudoers <<<"
-
-    - include: tasks/authconfig.yml
-    - include: tasks/sshd.yml
-    - include: tasks/sudoers.yml
-
-    - name: " ******* STAGE 3 *******"
-      debug: msg=" >>> Set Up Required Infrastructure Services <<<"
-
-    - include: tasks/disabled.yml
-    - include: tasks/docker.yml
-    - include: tasks/nginx.yml
-
-    - name: " ******* STAGE 4 *******"
-      debug: msg=" >>> JBoss EAP and SET Webapps <<<"
-
-    - include: tasks/jboss-set-ci-scripts.yml
-    - include: tasks/pull-request-processor.yml
-    - include: tasks/jboss-eap7.yml
-    - include: tasks/prbz-overview.yml
-    - include: tasks/payload-status.yml
-    - include: tasks/old-releases.yml
-    - include: tasks/jenkins.yml
-    - name: "Provisioning self-signed certificate to JDKs"
-      include: tasks/java_certs.yml
-      loop: "{{ jdk_list }}"
-      loop_control:
-        loop_var: jdk
-
-    - include: tasks/maven.yml
-
-    - name: " ******* STAGE 5 *******"
-      debug: msg=" >>> Monitoring and Cronjobs <<<"
-
-    - include: tasks/logrotate.yml
-
-    - name: "******* STAGE 6 *******"
-      debug: msg=" >>> Tools and misc <<<"
-
-    - include: tasks/tools.yml
-
-- hosts: localhost
-  vars_files:
-    - vars/thunder.yml
-  roles:
-    - zeus_cronjobs
-    - monit
-  gather_facts: no
-  become: yes
-  become_user: root
-  tasks:
+#    - include: tasks/tools.yml
+#    - zeus_cronjobs
+#    - monit
