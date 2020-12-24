@@ -1,0 +1,47 @@
+---
+- name: "Install yum module for Podman"
+  command: >
+    yum module install -y container-tools
+  args:
+    creates: /usr/lib/python3.6/site-packages/podman/ 
+
+- include_role: 
+    name: fast_yum_install
+  vars:
+    package_name: "{{ item }}"
+  loop: "{{ podman.packages }}"
+
+- name: "Ensure user namespaces has been increased"
+  template:
+    src: templates/userns.conf.j2
+    dest: "{{ podman.kernel.user_namespaces_config_file }}"
+  notify:
+    - sysctl-userns
+
+- name: "Ensure podman service is running"
+  service:
+    name: "{{ item.name }}"
+    state: "{{ item.state }}"
+    enabled: "{{ item.enabled }}"
+  loop:
+    - { name: podman.socket, enabled: yes, state: started }
+    - { name: podman, enabled: yes, state: stopped }
+    - { name: podman.slice, enabled: yes, state: stopped }
+  register: podman_services
+
+#- debug:
+#    msg: "{{ podman_services.results[0].state }}"
+#
+#- set_fact:
+#    monit:
+#      podman:
+#        service: 
+#          name: "{{ item.name }}"
+#          state: "{{ item.state }}"
+#  loop: "{{ podman_services.results }}"
+#
+#  
+#- debug:
+#    msg: "{{ monit }}"
+#
+#

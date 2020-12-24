@@ -1,0 +1,9 @@
+---
+podman:
+  packages:
+    - slirp4netns 
+    - podman
+    - podman-docker
+  kernel:
+    max_user_namespaces: 28633
+    user_namespaces_config_file: /etc/sysctl.d/userns.conf

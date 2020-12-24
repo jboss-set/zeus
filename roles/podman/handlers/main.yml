@@ -1,0 +1,5 @@
+---
+- name: sysctl-userns
+  command: >
+    sysctl -p  "{{ podman.kernel.user_namespaces_config_file }}"
+  changed_when: False
