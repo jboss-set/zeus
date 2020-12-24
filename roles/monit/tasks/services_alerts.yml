@@ -1,0 +1,17 @@
+---
+- assert:
+    that:
+      - monit is defined
+      - monit.alerts is defined
+      - monit.alerts.services is defined
+      - (monit.alerts.services | length) > 0
+    quiet: true
+
+- name: "Ensure required services are running under Monit control"
+  template:
+    src: templates/monit.service.j2
+    dest: "/etc/monit.d/{{ item.name }}"
+    owner: root
+    group: root
+    mode: 0755
+  with_items: "{{ monit.alerts.services }}"

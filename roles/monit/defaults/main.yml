@@ -1,2 +1,21 @@
 ---
-# defaults file for monit
+monit:
+  daemon: 60
+  email:
+    server: server.mail
+    port: 399
+    from: belaran@gmail.com
+    to: belaran@gmail.com
+  alerts:
+    dnsnames:
+      - { name: 'raw.githubusercontent.com' }
+      - { name: 'repository.jboss.org' }
+      - { name: 'repo1.maven.org' }
+    disk_usage:
+      - { name: 'boot', path: '/boot', threshold: '90%' }
+      - { name: 'root', path: '/', threshold: '90%' }
+      - { name: 'var-crash', path: '/var/crash', threshold: '90%' }
+      - { name: 'home', path: '/home', threshold: '90%' }
+      - { name: 'docker-part', path: '/var/lib/docker', threshold: '85%' }
+    services:
+      - { name: 'sshd', pidfile: '/var/run/sshd.pid', start_program: '/usr/bin/systemctl start sshd', stop_program: '/usr/bin/systemctl stop sshd' }

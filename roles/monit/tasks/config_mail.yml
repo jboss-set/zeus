@@ -1,0 +1,22 @@
+---
+- assert:
+    that: 
+      - monit.email.server is defined
+      - monit.email.server != ""
+      - monit.email.port is defined
+      - monit.email.port != ""
+      - monit.email.from is defined
+      - monit.email.from != ""
+      - monit.email.to is defined
+      - monit.email.to != ""
+    quiet: true
+    fail_msg: "Invalid or missing informations"
+
+- name: "Monit Mail Settings"
+  template:
+    src: templates/monit.mail.j2
+    dest: /etc/monit.d/mail
+    owner: root
+    group: root
+
+

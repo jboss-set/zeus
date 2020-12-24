@@ -1,4 +1,5 @@
-check process {{ item.name }} with pidfile {{ item.pidfile }}
+check process {{ item.name }} {% if item.pidfile is defined %} with pidfile {{ item.pidfile }} {% else %} matchung {{ item.name }} {%endif %}
+
 {% if item.start_program is defined %}
     start program = "{{ item.start_program }} start"
 {% endif %}

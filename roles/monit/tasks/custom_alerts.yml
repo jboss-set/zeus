@@ -1,0 +1,26 @@
+--
+- assert:
+    that:
+      - monit is defined
+      - monit.alerts is defined
+      - monit.alerts.custom_scripts is defined
+      - (monit.alerts.custom_scripts | length) > 0
+    quiet: true
+
+- name: "Ensures custom scripts are deployed"
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: jboss
+    group: jboss
+    mode: 0755
+  with_items: "{{ monit.alerts.custom_scripts }}"
+
+- name: "Set Monit checks based on custom scripts"
+  template:
+    src: templates/monit.script.j2
+    dest: "/etc/monit.d/{{ item.check_name }}"
+    owner: root
+    group: root
+    mode: 0755
+  with_items: "{{ monit.alerts.custom_scripts }}":

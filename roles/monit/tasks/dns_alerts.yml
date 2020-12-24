@@ -1,0 +1,16 @@
+---
+- assert:
+    that:
+      - monit is defined
+      - monit.alerts is defined
+      - monit.alerts.dnsnames is defined
+      - (monit.alerts.dnsnames | length) > 0
+    quiet: true
+
+- name: "Set up Monit alert on commonly uses services"
+  template:
+    src: templates/monit.ping.j2
+    dest: "/etc/monit.d/{{ item.name }}"
+    owner: root
+    group: root
+  with_items: "{{ monit.alerts.dnsnames }}"

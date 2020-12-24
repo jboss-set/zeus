@@ -1,12 +1,12 @@
 # Set the mail server to us to send alerts
-set mailserver {{ email.server }} port {{ email.port }}
+set mailserver {{ monit.email.server }} port {{ monit.email.port }}
 
 # Define Monit's mail structure
 set mail-format {
-  from: {{ email.from }}
+  from: {{ monit.email.from }}
   subject: Monit - state of service $SERVICE on $HOST changed
   message:
   $DESCRIPTION
 }
 
-set alert {{ email.to }}
+set alert {{ monit.email.to }}

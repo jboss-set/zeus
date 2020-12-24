@@ -1,122 +1,17 @@
 ---
-# tasks file for monit
-- set_fact:
-    package_name: monit
-- import_tasks: tasks/rpminfo.yml
+- include_tasks: setup.yml
 
-- name: "Deploy Monit main config"
-  copy:
-    src: files/monit.conf
-    dest: /etc/monit.conf
-    owner: root
-    group: root
+- include_tasks: config_mail.yml
+  when: monit.email is defined
 
-- name: "Monit Mail Settings"
-  template:
-    src: templates/monit.mail.j2
-    dest: /etc/monit.d/mail
-    owner: root
-    group: root
+- include_tasks: dns_alerts.yml
+  when: monit.alerts.dnsnames is defined
 
-- name: "Ensures monit.conf.d is properly created and set"
-  file:
-    state: directory
-    path: /etc/monit.conf.d/
-    owner: root
-    group: root
+- include_tasks: disk_usage_alerts.yml
+  when: monit.alerts.disk_usage is defined
 
-- name: "Set up Monit alert on commonly uses services"
-  template:
-    src: templates/monit.ping.j2
-    dest: "/etc/monit.d/{{ item.name }}"
-    owner: root
-    group: root
-  with_items: "{{ dnsnames }}"
+- include_tasks: custom_alerts.yml
+  when: monit.alerts.custom_scripts is defined
 
-- name: "Set up Monit alert on disk usage"
-  template:
-    src: templates/monit.disk.j2
-    dest: "/etc/monit.d/{{ item.name }}"
-  with_items:
-    - { name: 'boot', path: '/boot', threshold: '90%' }
-    - { name: 'root', path: '/', threshold: '90%' }
-    - { name: 'var-crash', path: '/var/crash', threshold: '90%' }
-    - { name: 'home', path: '/home', threshold: '90%' }
-    - { name: 'docker-part', path: '/var/lib/docker', threshold: '85%' }
-
-- name: "Ensures custom scripts are deployed"
-  copy:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-    owner: jboss
-    group: jboss
-    mode: 0755
-  with_items:
-    - { src: files/sudo-group-check, dest: /opt/jboss-set-ci-scripts/ops/ }
-    - { src: files/dns-check, dest: /opt/jboss-set-ci-scripts/ops/ }
-    - { src: files/docker-space-monitoring, dest: /opt/jboss-set-ci-scripts/ops/ }
-    - { src: files/check-container.sh, dest: "{{scripts_home.path}}/check-container" }
-
-- name: "Ensures custom script 'check-sudoers-list' is deployed"
-  template:
-    src: check-sudoers-list.j2
-    dest: "{{scripts_home.path}}/check-sudoers-list"
-    owner: jboss
-    group: jboss
-    mode: 0755
-
-- name: "Set Monit checks based on custom scripts"
-  template:
-    src: templates/monit.script.j2
-    dest: "/etc/monit.d/{{ item.check_name }}"
-    owner: root
-    group: root
-    mode: 0755
-  with_items: "{{ custom_monitoring_scripts }}"
-
-- name: "Ensure required services are running under Monit control"
-  template:
-    src: templates/monit.service.j2
-    dest: "/etc/monit.d/{{ item.name }}"
-    owner: root
-    group: root
-    mode: 0755
-  with_items: "{{ services_list }}"
-
-- set_fact:
-    http_caches_config_folder: /etc/monit.d/http_caches/
-
-- name: "Ensure subfolder for http caches configuration exists"
-  file:
-    path: "{{ http_caches_config_folder }}"
-    state: directory
-    owner: root
-    group: root
-
-- name: "Ensure local HTTP Caches are monitored"
-  template:
-    src: monit.remote.http.service.j2
-    dest: "{{ http_caches_config_folder}}/{{ item.name }}"
-    owner: root
-    group: root
-  with_items: "{{ maven_http_caches }}"
-
-- name: "Monitor remote HTTP services"
-  template:
-    src: monit.remote.http.service.j2
-    dest: "/etc/monit.d/http-services-{{ item.name }}"
-    owner: root
-    group: root
-  with_items: "{{ remote_http_services }}"
-
-# this assume nginx is being used and installed, it would be cleaner to have a "if" here.
-- name: "Deploy credentials for monit app"
-  template:
-    src: templates/nginx.monit.passwd.j2
-    dest: /etc/nginx/monit.passwd
-
-- name: "Ensure Monit itself is running"
-  service:
-    name: monit
-    enabled: yes
-    state: started
+- include_tasks: services_alerts.yml
+  when: monit.alerts.services is defined
