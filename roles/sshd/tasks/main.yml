@@ -1,0 +1,20 @@
+---
+- include_role:
+    name: fast_yum_install
+  vars:
+    package_name: openssh-server
+
+- name: "Checks SSHd configuration"
+  template: 
+    src: templates/sshd_config.j2 
+    dest: /etc/ssh/sshd_config 
+    group: root 
+    owner: root
+  notify:
+    - restart sshd
+
+- name: "Ensure SSHd is running"
+  service:
+    name: sshd
+    state: started
+    enabled: yes

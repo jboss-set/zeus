@@ -1,0 +1,7 @@
+---
+sshd:
+  port: 22
+  bind_addr: 0.0.0.0
+  permit_root_login: "no"
+  password_auth: "yes"
+  x11_forwarding: "yes"
