@@ -1,0 +1,40 @@
+---
+- assert:
+    that:
+      - account is defined
+      - account.group is defined
+      - account.group != ""
+      - account.gid is defined
+      - account.gid | length > 0
+      - account.username is defined
+      - account.username != ""
+      - account.uid is defined
+      - account.uid | length > 0
+      - account.home is defined
+      - account.home != ""
+    quiet: true
+
+- name: "Ensure group {{ account.group }} exists."
+  group:
+    name: "{{ account.group }}"
+    gid: "{{ account.gid }}"
+    state: present
+
+- name: "Ensure user {{ account.username }} with UID {{ account.uid }} exists."
+  user:
+    name: "{{ account.username }}"
+    uid: "{{ account.uid }}"
+    group: "{{ account.group }}"
+
+- name: "Ensure path provided for home is valid: {{ account.home }}"
+  stat:
+    path: "{{ account.home }}"
+  register: account_home
+
+- name: "Ensure home directory {{ account.home }} exists."
+  file:
+    state: directory
+    path: "{{ account.home }}"
+    owner: "{{ account.username }}"
+    group: "{{ account.group }}"
+  when: account_home.stat is defined
