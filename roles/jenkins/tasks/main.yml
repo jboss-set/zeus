@@ -1,0 +1,43 @@
+---
+- assert:
+    that:
+      - jenkins is defined
+      - jenkins.groupname is defined
+      - jenkins.groupname != ""
+      - jenkins.gid is defined
+      - jenkins.gid | length > 0
+      - jenkins.username is defined
+      - jenkins.username != ""
+      - jenkins.uid is defined
+      - jenkins.uid | length > 0
+      - jenkins.home is defined
+      - jenkins.home != ""
+    quiet: true
+
+- include_role:
+    name: account
+  vars:
+    account: 
+      username: "{{ jenkins.username }}"
+      uid: "{{ jenkins.uid }}"
+      group: "{{ jenkins.groupname }}"
+      gid: "{{ jenkins.gid }}"
+      home: "{{ jenkins.home }}"
+
+#- name: "Ensures init script exists"
+#  template:
+#    src: templates/jenkins.sh.j2
+#    dest: /jenkins.sh
+#    owner: root
+#    group: root
+#    mode: 744
+
+- name: generate SSH key "{{ssh_key_filename}}"
+  openssh_keypair:
+    path: "{{ jenkins.home }}/.ssh/id_rsa"
+    type: rsa
+    size: 4096
+    state: present
+    force: no
+    owner: "{{ jenkins.username }}"
+    group: "{{ jenkins.groupname }}"
