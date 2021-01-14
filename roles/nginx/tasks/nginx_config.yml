@@ -1,7 +1,4 @@
-- set_fact: package_name=nginx
-- name: "Install nginx packages"
-  import_tasks: tasks/rpminfo.yml
-
+---
 - name: "Ensure folder for common configurations is created"
   file:
     path: /etc/nginx/commons.d

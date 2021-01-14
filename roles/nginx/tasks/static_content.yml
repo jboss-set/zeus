@@ -1,0 +1,61 @@
+---
+- assert:
+    that:
+      - nginx.docroot is defined
+      - nginx.docroot != ""
+      - nginx.username is defined
+      - nginx.username != ""
+      - nginx.groupname is defined
+      - nginx.groupname != ""
+    quiet: true
+    fail_msg: "Missing required parameter for nginx static content set up."
+
+- name: "Ensure that provided docroot is a valid path: {{ nginx.docroot }}"
+  stat:
+    path: "{{ nginx.docroot }}"
+  register: nginx_docroot_path
+
+- assert:
+    that:
+      - nginx_docroot_path is defined
+      - nginx_docroot_path.stat is defined
+    quiet: true
+
+- name: "Create {{ nginx.docroot }} folder"
+  file:
+    path: "{{ nginx.docroot }}"
+    state: directory
+    owner: "{{ nginx.username }}"
+    group: "{{ nginx.groupname }}"
+ 
+- name: "Create {{ nginx.docroot }}/img/ folder for landing page"
+  file:
+    path: "{{ nginx.docroot }}/img"
+    state: directory
+    owner: "{{ nginx.username }}"
+    group: "{{ nginx.groupname }}"
+
+- name: "Deploy tools logo for landing page"
+  copy:
+    src: "{{ item }}"
+    dest: "{{ nginx.docroot }}/img/"
+    owner: "{{ nginx.username }}"
+    group: "{{ nginx.groupname }}"
+  with_items:
+    - files/img/jenkins-logo.png
+    - files/img/monit-logo.png
+    - files/img/pr-bz-overview-logo.png
+    - files/img/payload-status-logo.png
+
+- name: "Deploy custom 404 page for Nginx"
+  template:
+    src: templates/jboss-set-404.html.j2
+    dest: "{{ nginx.docroot }}/jboss-set-404.html"
+    owner: "{{ nginx.username }}"
+    group: "{{ nginx.groupname }}"
+
+- name: "Link {{ nginx.docroot }}/index.html to jboss-set-404.html."
+  file:
+    state: hard
+    src: "{{ nginx.docroot }}/jboss-set-404.html"
+    dest: "{{ nginx.docroot }}/index.html"

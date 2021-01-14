@@ -106,10 +106,6 @@
 		      <img alt="monit" src="./img/monit-logo.png"/>
  		    </a>
 		  </td>
-		  <td>
-		    <a href="{{ mjolnir.url }}">
-		     <img alt="mjolnir" src="./img/mjolnir-logo.png"/>
-                   </a>
 		  </td>
 		  <td>
 		    <a href="https://{{ ansible_nodename }}/prbz-overview/">
@@ -126,6 +122,7 @@
 	    </table>
                 </center>
             </div>
+	    {% if nginx.caches is defined %}
             <h3>Maven HTTP Caches (EAP 7)</h3>
             <center>
             <table style="list-style-type: none;" align: "center">
@@ -164,6 +161,7 @@
                     alt="[ Powered by Fedora EPEL ]"
                     width="88" height="31" /></a>
             </div>
-            </div>
+	    {% endif %}
+	</div>
     </body>
 </html>

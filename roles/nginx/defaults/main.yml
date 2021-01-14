@@ -1,0 +1,9 @@
+---
+nginx: 
+  username: "{{ nginx_username_override | default('nginx') }}"
+  uid: "{{ nginx_uid_override | default('101') }}"
+  groupname: "{{ nginx_groupname_override | default('nginx') }}"
+  gid: "{{ nginx_gid_override | default('101') }}"
+  home: "{{ nginx_home_override | default('/home/nginx') }}" 
+  docroot: "{{ nginx_http_docroot_override | default('/home/nginx/static/') }}"
+

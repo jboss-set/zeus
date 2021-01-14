@@ -1,0 +1,24 @@
+---
+- assert:
+    that:
+      - nginx is defined
+      - nginx.groupname is defined
+      - nginx.groupname != ""
+      - nginx.gid is defined
+      - nginx.gid | length > 0
+      - nginx.username is defined
+      - nginx.username != ""
+      - nginx.uid is defined
+      - nginx.uid | length > 0
+    quiet: true
+    fail_msg: "Missing or invalid information in {{ nginx }}"
+
+- include_role:
+    name: account
+  vars:
+    account: 
+      username: "{{ nginx.username }}"
+      uid: "{{ nginx.uid }}"
+      group: "{{ nginx.groupname }}"
+      gid: "{{ nginx.gid }}"
+      home: "{{ nginx.home }}"
