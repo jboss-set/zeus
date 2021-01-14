@@ -1,0 +1,6 @@
+- name: "Ensure {{ tools.package_name }} is installed"
+  include_role: 
+    name: fast_yum_install
+  vars:
+    package_name: "{{ item }}"
+  loop: "{{ tools.package_names }}"

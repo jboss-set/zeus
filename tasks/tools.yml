@@ -1,6 +1,0 @@
-- name: "Ensure {{ tool_package_name }} is installed"
-  include_tasks: tasks/rpminfo.yml
-  loop:
-    - "{{ tools_package_names }}"
-  loop_control:
-    loop_var: tool_package_name
