@@ -1,5 +1,5 @@
 ---
-pr_processor_version: "{{ override_pr_processor_version | default('0.8.8.Final') }}"
+pr_processor_version: "{{ override_pr_processor_version | default('0.8.9.Final') }}"
 pr_processor:
   home: "{{ override_pr_processor_home | default('/opt/tools/pr-processor/') }}"
   url: "https://repository.jboss.org/org/jboss/set/pull-processor/{{ pr_processor_version }}/pull-processor-{{ pr_processor_version }}.jar"
