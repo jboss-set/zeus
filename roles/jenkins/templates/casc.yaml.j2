@@ -31,9 +31,7 @@ jenkins:
         - "{{ col }}"
 {% endfor %}
       includeStdJobList: true
-      jobNames:
-        - "{{ stream }}-build"
-        - "{{ stream }}-testsuite"
+      includeRegex: "{{ stream }}.*"
       name: "{{ stream }}"
       leftPortlets:
       - testStatisticsChart:
