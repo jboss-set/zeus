@@ -1,3 +1,16 @@
+{% if jenkins.credentials is defined %}
+credentials:
+  system:
+    domainCredentials:
+    - credentials:
+{% for cred in jenkins.credentials %}
+      - usernamePassword:
+          id: "{{ cred.id }}"
+          password: "{{ cred.password }}"
+          scope: GLOBAL
+          username: "{{ cred.username }}"
+{% endfor %}
+{% endif %}
 jenkins:
 {% if jenkins_token is defined %}
   authorizationStrategy:
