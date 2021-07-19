@@ -1,5 +1,11 @@
 ---
 - block:
+    - debug:
+        msg: "The PGSQL role does not support dry-run, be aware its content will be skipped."
+  when:
+    - ansible_check_mode
+
+- block:
   - assert:
       that:
         - pgsql is defined
@@ -30,4 +36,4 @@
   - set_fact:
       podman_services: "{{ podman_services }} + {{ postgres_instances.services }}"
   when:
-    - pgsql_skip is not defined
+    - pgsql_skip is not defined or ansible_check_mode
