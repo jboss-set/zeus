@@ -2,7 +2,7 @@
 - debug:
     msg: "{{ jenkins_jobs_to_update_list }}"
 
-- command: "runuser -l jenkins -c '{{ jobs.synchronizer.home }}/{{ jobs.synchronizer.container.name }} {{ item }}'"
+- command: "/usr/sbin/runuser -l jenkins -c '{{ jobs.synchronizer.home }}/{{ jobs.synchronizer.container.name }} {{ item }}'"
   register: jobs_sync_results
   changed_when: False
 

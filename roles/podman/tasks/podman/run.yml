@@ -14,7 +14,7 @@
     volume: "{{ item.volume.src }}:{{ item.volume.dest }}:rw"
 
 - name: "Retrieve image id for tag {{ item.tag }} if exists."
-  command: "runuser -l {{ item.owner }} -c 'podman run -v {{ volume }} -ti {{ item.image_name }} {{ item.script }}'"
+  command: "/usr/sbin/runuser -l {{ item.owner }} -c 'podman run -v {{ volume }} -ti {{ item.image_name }} {{ item.script }}'"
   register: run_results 
   changed_when: false
 

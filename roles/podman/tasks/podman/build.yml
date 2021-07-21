@@ -11,7 +11,7 @@
 - include_tasks: "podman/inspect.yml"
 
 - name: "Building image for {{ item.name }} [tag: {{ item.tag }}]."
-  command: "runuser -l {{ item.owner }} {{ podman_build }} {{ item.name }} {{ item.tag }}"
+  command: "/usr/sbin/runuser -l {{ item.owner }} {{ podman_build }} {{ item.name }} {{ item.tag }}"
   register: res
   changed_when:
     - res is defined

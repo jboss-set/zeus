@@ -9,7 +9,7 @@
     podman_find_image_by_tag: "/usr/bin/podman images -q -n {{ item.tag }}"
 
 - name: "Retrieve image id for tag {{ item.tag }} if exists."
-  command: "runuser -l {{ item.owner }} -c 'podman images -q -n {{ item.tag }}'"
+  command: "/usr/sbin/runuser -l {{ item.owner }} -c 'podman images -q -n {{ item.tag }}'"
   register: inspect_results 
   changed_when: false
 
