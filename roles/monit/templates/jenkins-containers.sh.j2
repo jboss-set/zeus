@@ -6,8 +6,9 @@ readonly LOGFILE=$(/usr/sbin/runuser  -l "${CONTAINER_USER}" -c mktemp)
 trap "rm -f ${LOGFILE}" EXIT
 
 set -u
-/usr/sbin/runuser -l "${CONTAINER_USER}" -c "podman ps -a --filter status=exited --filter status=created | tee ${LOGFILE}"
+/usr/sbin/runuser -l "${CONTAINER_USER}" -c "podman ps -a --filter status=exited --filter status=created > ${LOGFILE}"
 if [ $(cat "${LOGFILE}" | wc -l) -gt 1 ]; then
   echo "Dead containers (exited or created) owns by ${CONTAINER_USER}."
+  cat "${LOGFILE}"
   exit 1
 fi

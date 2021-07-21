@@ -1,4 +1,4 @@
---
+---
 - assert:
     that:
       - item is defined
@@ -18,7 +18,7 @@
 - name: "Ensures associate Monit check is enabled ({{ item.name }})"
   template:
     src: templates/monit.script.j2
-    dest: "/etc/monit.d/{{ item.check_name }}"
+    dest: "/etc/monit.d/{{ item.name }}"
     owner: root
     group: root
     mode: 0755
