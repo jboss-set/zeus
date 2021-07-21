@@ -1,4 +1,5 @@
 ---
+monit_custom_scripts_directory: "{{ override_monit_custom_scripts_directory | default('/opt/monit') }}"
 monit:
   daemon: "{{ monit_daemon_override | default(60) }}"
   email:
@@ -30,5 +31,7 @@ monit:
       - { name: 'pgsql-mjolnir-predprod', pidfile: '/var/run/pgsql-mjolnir-predprod/pgsql-mjolnir-predprod.pid', start_program: '/usr/bin/systemctl start pgsql-mjolnir-predprod', stop_program: '/usr/bin/systemctl stop pgsql-mjolnir-predprod
         ' }
       - { name: 'pgsql-component-upgrade-dev', pidfile: '/var/run/pgsql-component-upgrade-dev/pgsql-component-upgrade-dev.pid', start_program: '/usr/bin/systemctl start pgsql-component-upgrade-dev', stop_program: '/usr/bin/systemctl stop pgsql-component-upgrade-dev' }
+    custom_scripts:
+      - { name: "jenkins-containers", src: 'jenkins-containers.j2', dest: "{{ monit_custom_scripts_directory }}/jenkins-containers" }
 epel:
   url: 'https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm'

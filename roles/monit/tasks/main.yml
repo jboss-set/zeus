@@ -10,8 +10,23 @@
 - include_tasks: disk_usage_alerts.yml
   when: monit.alerts.disk_usage is defined
 
+- name: "Ensures custom scripts folder exists"
+  file:
+    path: "{{ monit_custom_scripts_directory }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0655
+  when:
+    - monit_custom_scripts_directory is defined
+    - monit.alerts.custom_scripts is defined
+
 - include_tasks: custom_alerts.yml
-  when: monit.alerts.custom_scripts is defined
+  when:
+    - monit is defined and monit.alerts is defined
+    - monit.alerts.custom_scripts is defined
+    - monit.alerts.custom_scripts | length > 0
+  loop: "monit.alerts.custom_scripts"
 
 - include_tasks: services_alerts.yml
   when: monit.alerts.services is defined
