@@ -1,4 +1,8 @@
 #!/bin/bash
 
-ansible-playbook -D /etc/ansible/zeus.yml 2>&1 | \
+readonly LOGFILE=$(mktemp)
+trap "rm -f ${LOGFILE}" EXIT
+
+ansible-playbook -D /etc/ansible/zeus.yml 2>&1 > "${LOGFILE}"
+cat "${LOGFILE}" | \
   mailx -r "{{ mailer.to }}" -s '{{ item.name }}' -S smtp="{{ mailer.smtp.host }}:{{mailer.smtp.port }}" "{{ mailer.replyTo }}"
