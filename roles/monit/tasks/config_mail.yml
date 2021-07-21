@@ -1,6 +1,6 @@
 ---
 - assert:
-    that: 
+    that:
       - monit.email.server is defined
       - monit.email.server != ""
       - monit.email.port is defined
@@ -18,5 +18,5 @@
     dest: /etc/monit.d/mail
     owner: root
     group: root
-
-
+  notify:
+    - restart monit

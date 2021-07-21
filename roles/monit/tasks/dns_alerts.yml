@@ -13,4 +13,6 @@
     dest: "/etc/monit.d/{{ item.name }}"
     owner: root
     group: root
+  notify:
+    - restart monit
   with_items: "{{ monit.alerts.dnsnames }}"

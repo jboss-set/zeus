@@ -11,4 +11,6 @@
   template:
     src: templates/monit.disk.j2
     dest: "/etc/monit.d/{{ item.name }}"
+  notify:
+    - restart monit
   with_items: "{{ monit.alerts.disk_usage }}"

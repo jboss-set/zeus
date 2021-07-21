@@ -44,7 +44,8 @@
     mode: 0700
     owner: root
     group: root
-
+  notify:
+    - restart monit
 - name: "Ensures monit.conf.d is properly created and set"
   file:
     state: directory
