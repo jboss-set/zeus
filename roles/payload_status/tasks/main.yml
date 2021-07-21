@@ -50,7 +50,9 @@
 
 - name: "Ensure {{ payload_status.home }} belongs to {{ payload_status.owner }}"
   command:
+    # just to be faster, file: takes ages...
     cmd: "chown -R {{ payload_status.owner }}:{{ payload_status.group }} {{ payload_status.home }}"
+    warn: false
 #
 #  file:
 #   path: "{{ payload_status.home }}"
