@@ -1,5 +1,7 @@
 #!/bin/bash
-podman run --add-host=localhost:{{ override_jenkins_bind_addr }} \
+podman run \
+       --rm \
+       --add-host=localhost:{{ override_jenkins_bind_addr }} \
 	   --workdir={{ jobs.descriptors.home }} \
 	   -v {{ jobs.descriptors.home }}:{{ jobs.descriptors.home }}:rw \
  	   -v {{ jobs.synchronizer.home }}:{{ jobs.synchronizer.home }}:ro \
