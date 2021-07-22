@@ -1,5 +1,5 @@
 # Set the mail server to us to send alerts
-set mailserver {{ monit.email.server }} port {{ monit.email.port }}
+set mailserver {{ mailer.smtp.host }} port {{ mailer.smtp.port }}
 
 # Define Monit's mail structure
 set mail-format {

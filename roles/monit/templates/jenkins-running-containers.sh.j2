@@ -1,0 +1,16 @@
+#!/bin/bash
+set -eo pipefail
+
+readonly JENKINS_CONFIG_FILE=${JENKINS_CONFIG_FILE:-'{{ ares.home }}/hephaestus/casc.yaml'}
+readonly JENKINS_NUM_EXECUTORS_FIELD=${JENKINS_NUM_EXECUTORS:-'numExecutors'}
+readonly CONTAINER_USER=${CONTAINER_USER:-'jenkins'}
+
+set -u
+NB_MAX_EXECUTORS=$(grep -e "${JENKINS_NUM_EXECUTORS_FIELD}" "${JENKINS_CONFIG_FILE}" | cut -f2 -d: | sed -e 's; ;;g')
+NB_CONTAINERS_RUNNING=$(/usr/sbin/runuser -l "${CONTAINER_USER}" -c "podman ps -q | wc -l")
+if [ "${NB_CONTAINERS_RUNNING}" -gt "${NB_MAX_EXECUTORS}" ]; then
+	echo "${CONTAINER_USER} is running more containers (${NB_CONTAINERS_RUNNING}) than expected (${NB_MAX_EXECUTORS})."
+  exit 1
+else
+  echo "${CONTAINER_USER} runs ${NB_CONTAINERS_RUNNING}/${NB_MAX_EXECUTORS} containers."
+fi

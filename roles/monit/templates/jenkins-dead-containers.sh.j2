@@ -11,4 +11,6 @@ if [ $(cat "${LOGFILE}" | wc -l) -gt 1 ]; then
   echo "Dead containers (exited or created) owns by ${CONTAINER_USER}."
   cat "${LOGFILE}"
   exit 1
+else
+  echo "No suspicious containers detected."
 fi
