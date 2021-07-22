@@ -1,0 +1,13 @@
+---
+- assert:
+    that:
+      - monit is defined
+      - monit.alerts is defined
+      - monit.alerts.system is defined
+    quiet: true
+
+- name: "Ensures system check for {{ ansible_hostname }} are deployed."
+  template:
+    src: "{{ item.src }}"
+    dest: "/etc/monit.d/{{ item.name }}"
+  loop: "{{ monit.alerts.system }}"

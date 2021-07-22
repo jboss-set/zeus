@@ -14,6 +14,8 @@ monit:
     username: "{{ monit_webapp_username | default('jboss') }}"
     password: "{{ monit_webapp_password | default('jboss') }}"
   alerts:
+    system:
+      - { name: "{{ ansible_hostname }}", src: 'monit.average_load.j2' }
     dnsnames:
       - { name: 'raw.githubusercontent.com' }
       - { name: 'repository.jboss.org' }

@@ -4,6 +4,9 @@
 - include_tasks: config_mail.yml
   when: monit.email is defined
 
+- include_tasks: system_alerts.yml
+  when: monit.alerts.system is defined
+
 - include_tasks: dns_alerts.yml
   when: monit.alerts.dnsnames is defined
 
