@@ -68,7 +68,11 @@
           name: COMPONENT_UPGRADE_LOGGER
           default: "{{ component_alignment.config.loggerurl }}"
 {% endif %}
-
+{% if item.pr_processor_home is defined %}
+      - string:
+          name: PULL_REQUEST_PROCESSOR_HOME
+          default: "{{ item.pr_processor_home }}"
+{% endif %}
     pipeline-scm:
       scm:
         - git:
