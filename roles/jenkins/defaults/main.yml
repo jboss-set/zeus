@@ -10,7 +10,7 @@ jenkins:
   tools:
     home: "{{ override_jenkins_tools_home | default('/opt/tools') }}"
   executors:
-    num: "{{ override_jenkins_num_executors | default(8) }}"
+    num: "{{ override_jenkins_num_executors | default(12) }}"
   default_jdk_home: '/opt/oracle/java'
   default_mvn_home: '/opt/apache/maven'
   default_mvn_settings: '/opt/tools/settings.xml'
