@@ -14,8 +14,56 @@ credentials:
 jenkins:
 {% if jenkins_token is defined %}
   authorizationStrategy:
-    loggedInUsersCanDoAnything:
-      allowAnonymousRead: false
+    roleBased:
+      roles:
+        global:
+          - name: "{{ jenkins.role.admin.name }}"
+            description: "{{ jenkins.role.admin.desc }}"
+            permissions:
+              - "Overall/Administer"
+            assignments:
+              - "{{ jenkins.role.admin.group }}"
+          - name: "anonymous"
+            description: "Anonymous users"
+            permissions:
+              - "Overall/Read"
+              - "Job/Read"
+            assignments:
+              - "anonymous"
+          - name: "readonly"
+            description: "Read-only users"
+            permissions:
+              - "Overall/Read"
+              - "Job/Read"
+              - "Job/ExtendedRead"
+              - "View/Read"
+            assignments:
+              - "authenticated"
+          - name: "{{ jenkins.role.user.name }}"
+            description: "{{ jenkins.role.user.desc }}"
+            permissions:
+              - "Job/Move"
+              - "Job/Build"
+              - "Job/Create"
+              - "Job/Read"
+              - "Run/Replay"
+              - "Job/Cancel"
+              - "Run/Delete"
+              - "Job/ExtendedRead"
+              - "Run/Update"
+              - "Job/Delete"
+              - "Job/Configure"
+              - "Job/Workspace"
+              - "Agent/Provision"
+              - "Agent/Configure"
+              - "Agent/ExtendedRead"
+              - "Agent/Connect"
+              - "Agent/Delete"
+              - "Agent/Disconnect"
+              - "Agent/Create"
+              - "Agent/Build"
+            assignments:
+              - "{{ jenkins.role.user.group }}"
 {% endif %}
   numExecutors: {{ jenkins.executors.num }}
   securityRealm:
