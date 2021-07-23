@@ -84,12 +84,14 @@
       artifact-num-to-keep: 5
 {% if item.triggers is defined %}
     triggers:
-  {% if item.triggers.poll_pattern is defined %}
+{% if item.triggers.poll_pattern is defined %}
       - pollscm:
-          cron: "{{ item.poll_pattern }}"
-      - timed: "{{ item.cron }}"
-  {% endif %}
-  {% if item.triggers.github  is defined %}
-      - github
-  {% endif %}
+          cron: "{{ item.triggers.poll_pattern }}"
+{% endif %}
+{% if item.triggers.cron is defined %}
+      - timed: "{{ item.triggers.cron }}"
+{% endif %}
+{% if item.triggers.github is defined %}
+      - github:
+{% endif %}
 {% endif %}
