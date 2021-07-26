@@ -45,6 +45,7 @@ jenkins:
       - eap-7.4.x
       - wildfly
       - xp-2.0.x
+      - xp-3.0.x
     tabs:
       columns:
         - "status"
