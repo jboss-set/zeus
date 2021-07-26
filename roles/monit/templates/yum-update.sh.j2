@@ -1,0 +1,23 @@
+#!/bin/bash
+
+formatOutput() {
+  local logfile=${1}
+
+  grep -e '^Install ' -e '^Remove ' -e '^Upgrade ' "${logfile}" |\
+    sed -e 's;$;,;' -e 's;  *; ;g' | tr -d '\n' |\
+    sed -e 's;,$;.;'
+  echo ''
+}
+
+readonly LOGFILE=$(mktemp)
+trap "rm -f ${LOGFILE}" EXIT
+
+yum update --assumeno 2> /dev/null > "${LOGFILE}"
+readonly UPDATE_STATUS=${?}
+
+if [ "${UPDATE_STATUS}" -ne 0 ]; then
+  formatOutput "${LOGFILE}"
+  exit 0 # switch to 1 when update have been performed
+else
+  echo "No update to perform."
+fi
