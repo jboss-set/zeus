@@ -39,6 +39,7 @@ jenkins:
       desc: "{{ override_jenkins_role_user_desc }}"
   view:
     streams:
+      - eap-6.4.x
       - eap-7.1.x
       - eap-7.2.x
       - eap-7.3.x
