@@ -33,3 +33,12 @@
     group: jenkins
     mode: 0644
 
+- name: "Deploy settings-64.xml"
+  template:
+    src: templates/settings-64.xml.j2
+    dest: /opt/tools/settings-64.xml
+    owner: jenkins
+    group: jenkins
+    mode: 0644
+  when:
+    - eap64_caches is defined

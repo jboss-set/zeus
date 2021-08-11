@@ -26,7 +26,17 @@ location {{ payload_status.context }} {
   proxy_pass {{ cache.url }};
 }
 
-{% endfor %}{% endif %}
+{% endfor %}
+{% if eap64_caches is defined %}{% for cache in eap64_caches %}location {{ cache.path }} {
+  access_log /var/log/nginx/cache-{{cache.name }}-access.log ;
+  error_log /var/log/nginx/cache-{{cache.name}}-error.log ;
+
+  include /etc/nginx/commons.d/maven.cache.conf;
+  proxy_pass {{ cache.url }};
+}
+
+{% endfor %}
+{% endif %}{% endif %}
 
 {% if monit_nginx_proxy_enable is defined %}
 location /monit/ {
