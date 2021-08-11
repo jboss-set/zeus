@@ -28,8 +28,8 @@ location {{ payload_status.context }} {
 
 {% endfor %}
 {% if eap64_caches is defined %}{% for cache in eap64_caches %}location {{ cache.path }} {
-  access_log /var/log/nginx/cache-{{cache.name }}-access.log ;
-  error_log /var/log/nginx/cache-{{cache.name}}-error.log ;
+  access_log /var/log/nginx/cache-{{cache.id}}-access.log ;
+  error_log /var/log/nginx/cache-{{cache.id}}-error.log ;
 
   include /etc/nginx/commons.d/maven.cache.conf;
   proxy_pass {{ cache.url }};
