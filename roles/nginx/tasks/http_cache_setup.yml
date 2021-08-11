@@ -33,3 +33,11 @@
     group: jenkins
     mode: 0644
 
+- name: "Deploy settings-eap64.xml"
+  template:
+    src: templates/settings-eap64.xml.j2
+    dest: /opt/tools/settings-eap64.xml
+    owner: jenkins
+    group: jenkins
+    mode: 0644
+
