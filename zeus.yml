@@ -4,8 +4,9 @@
   become: yes
   become_user: root
   vars_files:
-      - vars/aphrodite.yml
       - vars/olympus.yml
+      - vars/aphrodite.yml
+      - vars/netrc.yml
       - vars/monit.yml
       - vars/caches.yml
       - vars/java.yml
@@ -44,6 +45,7 @@
     - component_alignment
     - pr_processor
     - aphrodite
+    - netrc
     - jobs
     # monitoring
     - monit

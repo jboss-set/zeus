@@ -1,0 +1,18 @@
+---
+- assert:
+    that:
+      - netrc is defined
+      - netrc.users is defined
+      - netrc.users | length > 0
+    quiet: true
+
+- name: "Ensures that netrc config is deployed."
+  template:
+    src: templates/netrc.j2
+    dest: "{{ user.home | default('/home/' + user.name) }}/.netrc"
+    owner: "{{ user.name }}"
+    group: "{{ user.group | default(user.name) }}"
+    mode: 0600
+  loop: "{{ netrc.users }}"
+  loop_control:
+    loop_var: user
