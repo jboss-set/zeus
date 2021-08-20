@@ -5,6 +5,7 @@
   become_user: root
   vars_files:
       - vars/olympus.yml
+      - vars/ssh.yml
       - vars/aphrodite.yml
       - vars/netrc.yml
       - vars/monit.yml
