@@ -2,14 +2,9 @@
 - assert:
     that:
       - ssh is defined
-      - ssh.hosts is defined
+      - ssh.users is defined
+      - ssh.users | length > 0
     quiet: true
 
-- set_fact:
-    ssh_user: jenkins
-    ssh_home: /home/jenkins
-
 - include_tasks: tasks/deploy.yml
-  loop:
-    - { ssh_home: "{{ ssh_home }}", ssh_user: "{{ ssh_user }}" }
-    - { ssh_home: "/root/", ssh_user: 'root' }
+  loop: "{{ ssh.users }}"
