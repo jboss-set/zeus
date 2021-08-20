@@ -19,11 +19,17 @@
 
 - name: "Deploy identity file into {{ ssh_home }}"
   copy:
-    src: vars/files/jboss_set_github_rsa
+    src: "{{ key.path }}"
     dest: "{{ ssh_home }}/.ssh/jboss_set_github_rsa"
     owner: "{{ item.username }}"
     group: "{{ group }}"
     mode: 0400
+  loop: "{{ item.ssh_keys }}"
+  loop_control:
+    loop_var: key
+  when:
+    - item.ssh_keys is defined
+    - item.ssh_keys | length > 0
 
 - block:
   - assert:
