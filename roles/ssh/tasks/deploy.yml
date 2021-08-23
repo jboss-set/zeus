@@ -20,7 +20,7 @@
 - name: "Deploy identity file into {{ ssh_home }}"
   copy:
     src: "{{ key.path }}"
-    dest: "{{ ssh_home }}/.ssh/jboss_set_github_rsa"
+    dest: "{{ ssh_home }}/.ssh/"
     owner: "{{ item.username }}"
     group: "{{ group }}"
     mode: 0400
