@@ -73,6 +73,18 @@
           name: PULL_REQUEST_PROCESSOR_HOME
           default: "{{ item.pr_processor_home }}"
 {% endif %}
+{% if item.params is defined %}
+{% for p in item.params %}
+      - {{ p.type }}:
+          name: {{ p.name }}
+          {% if p.default is defined %}
+          default: "{{ p.default | default('') }}"
+          {% endif %}
+          {% if p.description is defined %}
+          description: "{{ p.description | default('') }}"
+          {% endif %}
+{% endfor %}
+{% endif %}
     pipeline-scm:
       scm:
         - git:
