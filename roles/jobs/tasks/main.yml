@@ -51,4 +51,6 @@
     include_tasks: sync_jobs.yml
     vars:
       item: ""
+    when:
+     - not jobs_sync_check_skip is defined
   when: override_no_jobs_tasks is not defined 
