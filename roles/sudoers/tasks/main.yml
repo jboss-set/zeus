@@ -1,0 +1,33 @@
+---
+- assert:
+    that:
+      - user is defined
+      - user.name is defined
+    quiet: true
+    fail_msg: "Please provide the necessary user informations"
+
+- set_fact:
+    user_home: "/home/{{ username }}"
+
+- name: Make sure sudoers.d dir is available
+  file:
+    path: "{{ sudo.sudoersd_dir }}"
+    state: directory
+
+- name: add user to sudoers
+  become: yes
+  template:
+    src: sudo.conf.j2
+    dest: /etc/sudoers.d/{{ username }}
+
+- name: check authorized_keys exists
+  stat:
+    path: " {{ user_home }}/.ssh/authorized_keys"
+  register: stat_result
+
+- name: setup the authorized key
+  authorized_key:
+    user: "{{ username }}"
+    state: present
+    key: "{{ override_path_to_ssh_key | default('~/.ssh/id_rsa.pub') }}"
+  when: not stat_result.stat.exists

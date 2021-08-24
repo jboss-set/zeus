@@ -1,0 +1,8 @@
+---
+user:
+  sudoer: yes
+  name: "{{ username }}"
+  gid: "{{ user_gid }}"
+  uid: "{{ user_uid }}"
+sudo:
+  sudoersd_dir: /etc/sudoers.d

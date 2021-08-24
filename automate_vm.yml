@@ -1,0 +1,45 @@
+---
+- name: Automate VM with Ansible
+  hosts: all
+  gather_facts: true
+  become: yes
+
+  vars_files:
+    - vars/account.yml
+    - vars/java.yml
+    - vars/java_certs.yml
+
+  roles:
+    - sudoers
+    - git
+    - java
+    - java_certs
+    - old_releases
+
+  pre_tasks:
+
+    - set_fact:
+        user_home: "/home/{{ username }}"
+
+    - name: Register the system
+      redhat_subscription:
+        state: present
+        username: "{{ credential_username }}"
+        password: "{{ credential_password }}"
+        autosubscribe: yes
+
+    - name: Update yum
+      yum:
+        name: "*"
+        state: latest
+
+    - include_role:
+        name: account
+      vars:
+        account:
+          username: "{{ username }}"
+          uid: "{{ user_uid }}"
+          group: "{{ group }}"
+          gid: "{{ user_gid }}"
+          password: "{{ password }}"
+          home: "{{ user_home }}"
