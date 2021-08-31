@@ -1,0 +1,17 @@
+#!/bin/bash
+set -eo pipefail
+
+readonly MAIL_FILE=$(mktemp)
+trap "rm -f ${MAIL_FILE}" EXIT
+
+readonly PATH_TO_REMINDER_APP=${PATH_TO_REMINDER_APP:-'/usr/share/jboss-editorial-app/jboss-editorial-app'}
+
+"${PATH_TO_REMINDER_APP}" | grep -e 'MAIL> ' | sed -e 's/MAIL> //' >> "${MAIL_FILE}"
+if [ "${PIPESTATUS[0]}" -eq 0 ]; then
+  to=$(head -1 ${MAIL_FILE})
+  title=$(head -2 "${MAIL_FILE}" | tail -1)
+  msg=$(tail -f "${MAIL_FILE}")
+  cat "${msg}" | \
+    mailx -s "${title}" -S smtp="{{ mailer.smtp.host }}:{{mailer.smtp.port }}" \
+          -b "{{ mailer.replyTo }}" "${to}"
+fi

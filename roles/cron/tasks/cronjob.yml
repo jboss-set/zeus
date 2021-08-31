@@ -8,8 +8,6 @@
       - item.src != ""
       - item.dest is defined
       - item.dest != ""
-      - item.special_time is defined
-      - item.special_time != ""
     quiet: true
 
 - name: "Ensures script job for {{ item.name }} is deployed"
@@ -27,3 +25,14 @@
     special_time: "{{ item.special_time }}"
   when:
     - item.special_time is defined
+
+- name: "Ensures cron task for {{ item.name }} is defined."
+  cron:
+    name: "{{ item.name }}"
+    job: "{{ item.dest }}"
+    weekday: "{{ item.weekday | default(omit) }}"
+    minute: "{{ item.minute | default(omit) }}"
+    hour: "{{ item.hour | default(omit) }}"
+    day: "{{ item.day | default(omit) }}"
+  when:
+    - not item.special_time is defined
