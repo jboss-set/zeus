@@ -8,9 +8,9 @@
   when: rebuild_keystore|default(false)
   java_cert:
     cert_url: "{{ item.cert_url }}"
-    keystore_path: "{{ jdk.home }}/{{ jdk.name }}/jre/lib/security/cacerts"
+    keystore_path: "{{ jvm_root_folder }}/{{ jdk.name }}/jre/lib/security/cacerts"
     cert_alias: "{{ item.alias }}"
-    executable: "{{ jdk.home }}/{{ jdk.name }}/bin/keytool"
+    executable: "{{ jvm_root_folder }}/{{ jdk.name }}/bin/keytool"
     keystore_pass: changeit
     keystore_create: no
     state: absent
@@ -19,9 +19,9 @@
 - name: Import SSL certificates in {{ jdk.name }}
   java_cert:
     cert_url: "{{ item.cert_url }}"
-    keystore_path: "{{ jdk.home }}/{{ jdk.name }}/jre/lib/security/cacerts"
+    keystore_path: "{{ jvm_root_folder }}/{{ jdk.name }}/jre/lib/security/cacerts"
     cert_alias: "{{ item.alias }}"
-    executable: "{{ jdk.home }}/{{ jdk.name }}/bin/keytool"
+    executable: "{{ jvm_root_folder }}/{{ jdk.name }}/bin/keytool"
     keystore_pass: changeit
     keystore_create: no
     state: present
