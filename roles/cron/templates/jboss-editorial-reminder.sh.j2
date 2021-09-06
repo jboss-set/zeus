@@ -13,5 +13,5 @@ if [ "${PIPESTATUS[0]}" -eq 0 ]; then
   msg=$(tail -1 "${MAIL_FILE}" )
   echo "${msg}" | \
     mailx -s "${title}" -S smtp="{{ mailer.smtp.host }}:{{mailer.smtp.port }}" \
-          -b "{{ mailer.replyTo }}" "${to}"
+          -r "{{ mailer.replyTo }}" -b "{{ mailer.replyTo }}" "${to}"
 fi
