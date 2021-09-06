@@ -8,10 +8,10 @@ readonly PATH_TO_REMINDER_APP=${PATH_TO_REMINDER_APP:-'/usr/share/jboss-editoria
 
 "${PATH_TO_REMINDER_APP}" | grep -e 'MAIL> ' | sed -e 's/MAIL> //' >> "${MAIL_FILE}"
 if [ "${PIPESTATUS[0]}" -eq 0 ]; then
-  to=$(head -1 ${MAIL_FILE})
+  to=$(head -1 ${MAIL_FILE} | sed -e 's/^.*<//' -e 's/>.*$//')
   title=$(head -2 "${MAIL_FILE}" | tail -1)
-  msg=$(tail -f "${MAIL_FILE}")
-  cat "${msg}" | \
+  msg=$(tail -1 "${MAIL_FILE}" )
+  echo "${msg}" | \
     mailx -s "${title}" -S smtp="{{ mailer.smtp.host }}:{{mailer.smtp.port }}" \
           -b "{{ mailer.replyTo }}" "${to}"
 fi
