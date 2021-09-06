@@ -126,6 +126,16 @@ jenkins:
 {% endif %}{% endfor %}
 
   - dashboard:
+      name: "cryo"
+      columns:
+{% for col in jenkins.view.tabs.columns  %}
+        - "{{ col }}"
+{% endfor %}
+      includeStdJobList: true
+      jobNames:
+      includeRegex: "cryo-*"
+
+  - dashboard:
       name: "Failing Jobs"
       columns:
 {% for col in jenkins.view.tabs.columns  %}
