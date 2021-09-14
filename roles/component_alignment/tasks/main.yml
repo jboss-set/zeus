@@ -13,6 +13,10 @@
       - component_alignment.path is defined
       - component_alignment.config is defined
       - component_alignment.config.dir is defined
+      - mailer is defined
+      - mailer.smtp is defined
+      - mailer.smtp.host is defined
+      - mailer.smtp.port is defined
     quiet: true
 
 - name: "Ensures component alignment home exists: {{ component_alignment.home }}"
@@ -49,3 +53,11 @@
 
 - include_tasks: tasks/deploy_config.yml
   loop: "{{ component_alignment.config.files }}"
+
+- name: "Create component alignment config file"
+  template:
+    src: templates/smtp-settings.sh.j2
+    dest: /opt/tools/smtp-settings.sh
+    owner: jenkins
+    group: jenkins
+    mode: 0644
