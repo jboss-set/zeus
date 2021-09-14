@@ -73,3 +73,5 @@
     dest: "{{ nginx.home }}/config/commons.d/ssl.conf"
     owner: nginx
     group: nginx
+  notify:
+    - restart nginx
