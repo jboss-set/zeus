@@ -23,6 +23,7 @@
   register: script_geturl_execution
   when: 
     - script.url is defined
+    - not ansible_check_mode
   notify: run sql init scripts
 
 - block:
