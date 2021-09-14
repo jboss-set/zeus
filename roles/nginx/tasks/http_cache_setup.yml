@@ -15,6 +15,8 @@
   loop:
     - { src: templates/commons.d/maven.cache.conf.j2, dest: "{{ nginx_config_dir }}/commons.d/maven.cache.conf" }
     - { src: templates/commons.d/caches.conf.j2, dest: "{{ nginx_config_dir }}/commons.d/caches.conf" }
+  notify:
+    - restart nginx
 
 - name: "Ensure Maven Central cache directory is created"
   file:

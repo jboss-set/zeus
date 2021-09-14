@@ -57,7 +57,9 @@
         - { src: templates/nginx.conf.j2, dest: "{{ nginx_config_dir }}/nginx.conf" }
         - { src: templates/commons.d/sites.conf.j2, dest: "{{ nginx_config_dir }}/commons.d/sites.conf" }
         - { src: templates/commons.d/proxy.conf.j2, dest: "{{ nginx_config_dir }}/commons.d/proxy.conf" }
-  when: nginx_config_dir_path is defined 
+      notify:
+        - restart nginx
+  when: nginx_config_dir_path is defined
 
 #- name: "Ensures that resulting configuration is valid."
 #  include_role:
