@@ -91,7 +91,7 @@
     that:
       - path_to_build_dir is defined
       - path_to_build_dir.stat is defined
-      - path_to_build_dir.stat.exists
+        #   - path_to_build_dir.stat.exists
     quiet: true
 
 - set_fact:
