@@ -67,6 +67,7 @@
     dest: "{{ payload_status.home }}/.env"
     owner: "{{ payload_status.owner }}"
     group: "{{ payload_status.group }}"
+  register: payload_env
 
 - name: "Build payload_status within podman"
   include_role:
@@ -81,7 +82,7 @@
       script: '/build.sh'
       owner: "{{ payload_status.owner }}"
   when:
-    - git_results.changed
+    - git_results.changed or payload_env.changed
 
 - set_fact:
     build_dir: "{{ payload_status.home }}/build"
