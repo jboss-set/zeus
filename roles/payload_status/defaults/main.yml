@@ -12,6 +12,6 @@ payload_status:
   react:
     vars:
       - name: 'REACT_APP_PRBZ_URL'
-        value: "{{ override_prbz_overview_url }}"
+        value: "{{ override_prbz_overview_url }}/rest/api/"
       - name: 'REACT_APP_VERSION'
         value: '$npm_package_version'
