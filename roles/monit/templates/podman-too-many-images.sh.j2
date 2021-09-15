@@ -1,0 +1,20 @@
+#!/bin/bash
+set -eo pipefail
+
+readonly SCRIPT_NAME=$(basename "${0}")
+
+readonly CONTAINER_USER=$(echo "${SCRIPT_NAME}" | cut -d- -f1)
+readonly EXPECTED_NB_IMAGES=$(echo "${SCRIPT_NAME}" | cut -d- -f2)
+
+readonly LOGFILE=$(/usr/sbin/runuser  -l "${CONTAINER_USER}" -c mktemp)
+trap "rm -f ${LOGFILE}" EXIT
+
+set -u
+/usr/sbin/runuser -l "${CONTAINER_USER}" -c "podman images > ${LOGFILE}"
+if [ $(cat "${LOGFILE}" | wc -l) -gt "$(expr "${EXPECTED_NB_IMAGES}" + 1)" ]; then
+  echo "There is too many images owned by ${CONTAINER_USER}."
+  cat "${LOGFILE}"
+  exit 1
+else
+  echo "${CONTAINER_USER} owns ${EXPECTED_NB_IMAGES} as expected."
+fi
