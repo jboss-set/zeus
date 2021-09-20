@@ -78,3 +78,8 @@
           group: "{{ override_jenkins_group }}"
           gid: "{{ override_jenkins_gid }}"
           home: /home/jenkins
+
+    - include_role:
+        name: fast_yum_install
+      vars:
+        package_name: firewalld
