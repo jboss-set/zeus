@@ -19,6 +19,14 @@
     that:
       - nginx_config_dir_path is defined
 
+- file:
+    state: directory
+    path: "{{ nginx_config_dir }}"
+    owner: "{{ nginx.username }}"
+    group: "{{ nginx.groupname }}"
+  when:
+    - not nginx_config_dir_path.stat.exists
+
 - include_tasks: nginx_config.yml
 
 - include_tasks: static_content.yml
