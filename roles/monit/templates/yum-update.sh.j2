@@ -17,7 +17,7 @@ readonly UPDATE_STATUS=${?}
 
 if [ "${UPDATE_STATUS}" -ne 0 ]; then
   formatOutput "${LOGFILE}"
-  exit 0 # switch to 1 when update have been performed
+  exit 1
 else
   echo "No update to perform."
 fi
