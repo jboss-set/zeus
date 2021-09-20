@@ -32,12 +32,12 @@
     - sshd
     - ssh
     - ares
+    - java
+    - java_certs
     - jenkins
     - jenkins_job_builder
     - pgsql
     - nginx
-    - java
-    - java_certs
     - old_releases
     - podman
     - systemd
