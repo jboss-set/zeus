@@ -7,7 +7,10 @@
 - include_role:
     name: fast_yum_install
   vars:
-    package_name: mailx
+    package_name: "{{ item }}"
+  loop:
+    - mailx
+    - cronie
 
 - include_tasks: cronjob.yml
   loop: "{{ cronjobs }}"
