@@ -3,15 +3,14 @@
     podman_images: []
 
 - name: "Ensure remote images are downloaded"
-  include_tasks: tasks/podman/pull.yml
+  containers.podman.podman_image:
+    name: "{{ item.name }}"
   loop: "{{ podman.images.remotes }}"
 
-- set_fact:
-    podman_build: "{{ ares.home }}/podman-build.sh"
-
-- include_tasks: tasks/podman/build.yml
+- name: "Ensure local images are successfully build"
+  containers.podman.podman_image:
+    name: "{{ item.tag }}"
+    path: "{{ ares.home }}/{{ item.name }}"
+    state: build
+  become_user: "{{ item.owner }}"
   loop: "{{ podman.images.locals }}"
-
-- debug:
-    msg: "{{ item }}"
-  loop: "{{ podman_images }}"

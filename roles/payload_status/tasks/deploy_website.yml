@@ -1,14 +1,13 @@
 ---
-- name: "Build payload_status within podman"
-  include_role:
+- include_role:
     name: podman
-    tasks_from: podman/run.yml
-  vars:
-    item:
-      name: 'yarn-buider'
-      src: "{{ payload_status.home }}"
-      dest: /workspace
-      script: '/build.sh'
+
+- name: "Running the payload_status container"
+  containers.podman.podman_container:
+    name: yarn-builder-container
+    image: localhost/yarn-builder:yarn-builder
+    volume: "{{ payload_status.home }}:/workspace:rw"
+    state: started
 
 - set_fact:
     build_dir: "{{ payload_status.home }}/build"

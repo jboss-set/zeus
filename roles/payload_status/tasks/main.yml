@@ -65,18 +65,16 @@
     group: "{{ payload_status.group }}"
   register: payload_env
 
-- name: "Build payload_status within podman"
-  include_role:
+- include_role:
     name: podman
-    tasks_from: podman/run.yml
-  vars:
-    item:
-      image_name: localhost/yarn-builder
-      volume:
-        src: "{{ payload_status.home }}"
-        dest: /workspace
-      script: '/build.sh'
-      owner: "{{ payload_status.owner }}"
+
+- name: "Running the payload_status container"
+  containers.podman.podman_container:
+    name: yarn-builder-container
+    image: localhost/yarn-builder:yarn-builder
+    volume: "{{ payload_status.home }}:/workspace:rw"
+    state: started
+  become_user: "{{ payload_status.owner }}"
   when:
     - git_results.changed or payload_env.changed
 
