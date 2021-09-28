@@ -3,7 +3,7 @@
   include_tasks: tasks/deploy_website.yml
   vars:
     item:
-      name: 'yarn-buider'
+      name: 'yarn-builder'
       src: "{{ payload_status.home }}"
       dest: /workspace
       script: '/build.sh'
