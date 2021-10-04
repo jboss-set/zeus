@@ -3,29 +3,48 @@
     that:
       - home_folder is defined
 
+- name: "Ensures the home dir exits: {{ home_folder }}"
+  file:
+    state: directory
+    path: "{{ home_folder }}"
+
 - include_role:
     name: fast_yum_install
   vars:
     package_name: tar
 
-- include_tasks: tasks/tool_install.yml
+- name: "Install libnsl (required by JDK6 keytool)"
+  include_role:
+    name: fast_yum_install
   vars:
-    home_folder: "{{ jdk_home_folder }}"
-    default_version: "{{ jdk_default }}"
-    default_link: "{{ jdk_default_link }}"
-    list: "{{ jdk_list }}"
+    package_name: libnsl
+
+- include_tasks: tasks/java_tools_setup.yml
+  loop: "{{ jdk_list }}"
   when:
     - jdk_list is defined
     - jdk_list is iterable
-    - jdk_home_folder is defined
 
-- include_tasks: tasks/tool_install.yml
-  vars:
-    home_folder: "{{ mvn_home_folder }}"
-    default_version: "{{ mvn_default }}"
-    default_link: "{{ mvn_default_link }}"
-    list: "{{ mvn_list }}"
+- include_tasks: tasks/java_tools_setup.yml
+  loop: "{{ mvn_list }}"
   when:
     - mvn_list is defined
     - mvn_list is iterable
-    - mvn_home_folder is defined
+
+- name: "Symlink {{ jdk_default_link }} to default version {{ jdk_default }}"
+  file:
+    src: "{{ jdk_default }}"
+    dest: "{{ jdk_default_link }}"
+    state: link
+  when:
+    - jdk_default_link is defined
+    - jdk_default is defined
+
+- name: "Symlink {{ mvn_default_link }} to default version {{ mvn_default }}"
+  file:
+    src: "{{ mvn_default }}"
+    dest: "{{ mvn_default_link }}"
+    state: link
+  when:
+    - mvn_default_link is defined
+    - mvn_default is defined

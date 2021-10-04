@@ -30,9 +30,10 @@
     - archive.stat is defined
     - not archive.stat.exists
 
-- stat:
+- name: "Ensures the home dir exits: {{ item.home }}"
+  file:
+    state: directory
     path: "{{ item.home }}"
-  register: path_to_home
 
 - name: "Unpack archive {{ path_to_archive }}"
   block:
@@ -60,10 +61,21 @@
       unarchive:
         src: "{{ path_to_archive }}"
         dest: "{{ item.home }}"
+        remote_src: yes
       when:
         - path_to_home is defined
         - path_to_home.stat is defined
         - not path_to_home.stat.exists
+
+    - name: "Symlink {{ item.link }} to tool home {{ item.home }}/{{ item.name }}"
+      file:
+        src: "{{ item.home }}/{{ item.name }}"
+        dest: "{{ item.link }}"
+        state: link
+      when:
+        - item.link is defined
+        - path_to_home is defined
+
   when:
     - archive_download is defined
       #    - path_to_home.stat is defined

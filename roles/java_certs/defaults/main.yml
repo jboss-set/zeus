@@ -1,0 +1,2 @@
+---
+olympus_cert_location: "{{ nginx_https_ssl_home_override | default('/home/nginx/ssl') }}/{{ nginx_https_ssl_cert_override | default('nginx.crt') }}"

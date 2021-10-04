@@ -4,8 +4,48 @@
       - jdk_list is defined 
       - jdk_list is iterable
 
-- name: "Provisioning self-signed certificate to JDKs"
-  include: tasks/java_certs.yml
+- name: "Check existence of RH root cert file"
+  stat:
+    path: "{{ rh_root_cert.path }}"
+  register: rh_root_cert_file
+
+- name: "Download RH root cert"
+  get_url:
+    url: "{{ rh_root_cert.url }}"
+    dest: "{{ rh_root_cert.path }}"
+  when:
+    - not rh_root_cert_file.stat.exists
+
+- name: "Add RH root cert to JDK keystore: {{ item.name }}"
+  shell: |
+    KEYSTORE={{ item.home }}/{{ item.name }}/jre/lib/security/cacerts
+    PASSWORD=changeit
+    ALIAS=rh-it
+    CERT_PATH={{ rh_root_cert.path }}
+    JDK_HOME={{ item.home }}/{{ item.name }}
+
+    $JDK_HOME/bin/keytool -list -noprompt -keystore $KEYSTORE -storepass $PASSWORD -alias $ALIAS \
+    || $JDK_HOME/bin/keytool -importcert -noprompt -alias $ALIAS -file $CERT_PATH -keystore $KEYSTORE -storepass $PASSWORD
+  when:
+    - rh_root_cert is defined
   loop: "{{ jdk_list }}"
-  loop_control:
-    loop_var: jdk
+
+- name: "Add Olympus cert to JDK keystore: {{ item.name }}"
+  shell: |
+    KEYSTORE={{ item.home }}/{{ item.name }}/jre/lib/security/cacerts
+    PASSWORD=changeit
+    ALIAS=olympus
+    CERT_PATH={{ olympus_cert_location }}
+    JDK_HOME={{ item.home }}/{{ item.name }}
+
+    $JDK_HOME/bin/keytool -list -noprompt -keystore $KEYSTORE -storepass $PASSWORD -alias $ALIAS \
+    || $JDK_HOME/bin/keytool -importcert -noprompt -alias $ALIAS -file $CERT_PATH -keystore $KEYSTORE -storepass $PASSWORD
+  when:
+    - rh_root_cert is defined
+  loop: "{{ jdk_list }}"
+
+- name: "Provisioning self-signed certificate to JDKs"
+  include_tasks: tasks/java_certs.yml
+  vars:
+    # only provision to the default JDK
+    jdk: "{{ jdk_default_item }}"
