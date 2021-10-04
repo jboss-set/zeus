@@ -28,19 +28,3 @@
 - name: "Install python docker packages"
   pip:
     name: docker
-
-- name: "Create postgresql volume"
-  docker_volume:
-    volume_name: pgdata
-
-- name: "Create and start postgreql"
-  docker_container:
-    name: "{{ postgres_db.name }}"
-    image: postgres
-    ports:
-      - "{{ postgres_db.port }}:5432"
-    state: started
-    volumes:
-      - "pgdata:/var/lib/postgresql/data"
-    env:
-      POSTGRES_PASSWORD: "{{ postgres_db.password }}"
