@@ -6,7 +6,7 @@ monit:
     server: "{{ monit_mail_server_hostname | default('localhost') }}"
     port: "{{ (monit_mail_server_port | default(399)) | int }}"
     from: "{{ monit_mail_from | default('monit@example.com') }}"
-    to: "{{ monit_mail_from | default('monit@example.com') }}"
+    to: "{{ monit_mail_to | default('monit@example.com') }}"
   webapp:
     port: "{{ monit_webapp_port | default('2812') }}"
     bind_address: "{{ monit_webapp_bind_address | default('localhost') }}"
