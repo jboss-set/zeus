@@ -1,0 +1,14 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+
+  tasks:
+  - name: checking if motd file exists
+    stat:
+      path: "/etc/motd"
+    register: file_details
+
+  - debug:
+      msg: "motd exists"
+    when: file_details.stat.exists
