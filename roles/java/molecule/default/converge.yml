@@ -1,0 +1,34 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include default role variables"
+      include_vars: "../../defaults/main.yml"
+    - name: "Include test variables"
+      include_vars: "main.yml"
+
+    # Preparation tasks for testing scenario:
+
+    # These are to avoid large downloads during CI
+    - name: "Create {{ jdk_home_folder }}"
+      file:
+        state: directory
+        path: "{{ jdk_home_folder }}"
+    - name: "Create {{ mvn_home_folder }}"
+      file:
+        state: directory
+        path: "{{ mvn_home_folder }}"
+    - name: "Include dummy JDK tar"
+      copy:
+        src: "dummy-jdk1.8.0_181.tgz"
+        dest: "{{ jdk_home_folder }}/jdk1.8.0_181.tgz"
+    - name: "Include dummy Maven tar"
+      copy:
+        src: "dummy-apache-maven-3.6.3.tgz"
+        dest: "{{ mvn_home_folder }}/apache-maven-3.6.3.tgz"
+
+    # Include roles for testing:
+
+    - name: "Include java"
+      include_role:
+        name: "java"

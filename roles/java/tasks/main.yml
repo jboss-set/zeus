@@ -3,12 +3,14 @@
     that:
       - home_folder is defined
 
-- include_role:
+- name: "Install tar"
+  include_role:
     name: fast_yum_install
   vars:
     package_name: tar
 
-- include_tasks: tasks/tool_install.yml
+- name: "Install JDK versions"
+  include_tasks: tasks/tool_install.yml
   vars:
     home_folder: "{{ jdk_home_folder }}"
     default_version: "{{ jdk_default }}"
@@ -19,7 +21,8 @@
     - jdk_list is iterable
     - jdk_home_folder is defined
 
-- include_tasks: tasks/tool_install.yml
+- name: "Install maven versions"
+  include_tasks: tasks/tool_install.yml
   vars:
     home_folder: "{{ mvn_home_folder }}"
     default_version: "{{ mvn_default }}"

@@ -1,0 +1,17 @@
+---
+# java.yml
+jdk_list:
+  - name: jdk1.8.0_181
+    home: /opt/oracle/
+    source: 'http://people.redhat.com/~rpelisse/jdk1.8.0_181.tgz'
+    owner: "{{ override_java_owner | default('root') }}"
+    link: /opt/oracle/jdk1.8
+jdk_default: /opt/oracle/jdk1.8.0_181
+jdk_default_link: /opt/oracle/java
+mvn_list:
+  - name: apache-maven-3.6.3
+    home: /opt/apache/
+    source: https://downloads.apache.org/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz
+    owner: "{{ override_java_owner | default('root') }}"
+mvn_default: /opt/apache/apache-maven-3.6.3/
+mvn_default_link: /opt/apache/maven
