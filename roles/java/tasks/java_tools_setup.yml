@@ -60,6 +60,7 @@
       unarchive:
         src: "{{ path_to_archive }}"
         dest: "{{ item.home }}"
+        remote_src: yes
       when:
         - path_to_home is defined
         - path_to_home.stat is defined

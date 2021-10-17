@@ -1,0 +1,6 @@
+---
+# java_certs.yml
+certificate_list:
+  - name: 'repository.jboss.org'
+    cert_url: repository.jboss.org
+    alias: repository.jboss.org

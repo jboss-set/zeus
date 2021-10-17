@@ -1,0 +1,29 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include test variables"
+      include_vars: "main.yml"
+    - name: "Include test variables from java role"
+      include_vars: "../../../../java/molecule/default/vars/main.yml"
+
+    # Preparation tasks for testing scenario:
+
+    - name: "Ensure group jenkins exists."
+      group:
+        name: "jenkins"
+        state: present
+    - name: "Ensure user jenkins exists."
+      user:
+        name: "jenkins"
+        group: "jenkins"
+        state: present
+
+    # Include roles for testing:
+
+    - name: "Include role java"
+      include_role:
+        name: "java"
+    - name: "Include role java_certs"
+      include_role:
+        name: "java_certs"
