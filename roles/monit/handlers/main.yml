@@ -3,3 +3,5 @@
   service:
     name: monit
     state: restarted 
+  when:
+    - local_dev_env is not defined

@@ -66,3 +66,5 @@
     name: monit
     state: started
     enabled: yes
+  when:
+    - local_dev_env is not defined
