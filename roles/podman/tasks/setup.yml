@@ -8,6 +8,7 @@
   args:
     warn: false
   register: is_yum_module_installed
+  ignore_errors: yes
   changed_when: false
 
 - name: "Install yum module for Podman"

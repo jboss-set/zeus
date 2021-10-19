@@ -2,6 +2,7 @@
 - job:
     name: {{ item.id }}
     project-type: pipeline
+    disabled: {{ jobs.disabled }}
     parameters:
 {% if item.git_repo is defined %}
       - string:
@@ -77,9 +78,11 @@
 {% for p in item.params %}
       - {{ p.type }}:
           name: {{ p.name }}
-          {% if p.default is defined %}default: "{{ p.default | default('') }}"
+{% if p.default is defined %}
+          default: "{{ p.default | default('') }}"
 {% endif %}
-          {% if p.description is defined %}description: "{{ p.description | default('') }}"
+{% if p.description is defined %}
+          description: "{{ p.description | default('') }}"
 {% endif %}
 {% endfor %}
 {% endif %}
