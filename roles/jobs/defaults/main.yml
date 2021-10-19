@@ -1,7 +1,7 @@
 ---
 jenkins_jobs_to_update_list: []
 jobs:
-  disabled: "{{ override_jobs_disabled | default('false') }}"
+  disabled: "{{ local_dev_env | default('false') }}"
   descriptors:
     home: "{{ override_jobs_home | default('/home/jenkins/jobs_definition') }}"
   synchronizer:
