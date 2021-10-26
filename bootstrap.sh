@@ -60,6 +60,8 @@ setupAnsible() {
   git clone "${ANSIBLE_GIT_URL}" /etc/ansible/
   cd /etc/ansible/
   git checkout "origin/${ANSIBLE_GIT_BRANCH}" -b "${ANSIBLE_GIT_BRANCH}"
+
+  ansible-galaxy collection install -r requirements.yml
 }
 
 setupAnsibleVars() {
