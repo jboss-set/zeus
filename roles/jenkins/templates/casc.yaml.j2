@@ -178,6 +178,11 @@ jenkins:
       - statBuilds:
           name: "Build statistics"
   viewsTabBar: "standard"
+
+security:
+  globalJobDslSecurityConfiguration:
+    useScriptSecurity: false
+
 tool:
 
 unclassified:
@@ -187,3 +192,8 @@ unclassified:
     replyToAddress: {{ mailer.replyTo }}
     smtpHost: {{ mailer.smtp.host }}
     smtpPort: {{ mailer.smtp.port }}
+
+jobs:
+  - url: "https://gitlab.cee.redhat.com/jboss-set/csb-jenkins-definition/-/raw/olympus/job-configurator.groovy"
+  - script: "queue('job-configurator')"
+
