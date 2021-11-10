@@ -49,18 +49,24 @@
     owner: "{{ jenkins.username }}"
     group: "{{ jenkins.groupname }}"
 
-- name: "Import SSL certificates from {{ jenkins.ldap.url }}"
+- name: "Download root CA"
+  get_url:
+    url: "{{ jenkins.root_ca.url }}"
+    dest: "{{ ares.home }}/hephaestus/Root-CA.crt"
+  when:
+    - jenkins.root_ca.url is defined
+
+- name: "Import Root CA"
   java_cert:
-    cert_url: "{{ jenkins.ldap.host }}"
-    cert_port: "{{ jenkins.ldap.port }}"
-    keystore_path: "{{ jenkins.ldap.keystore }}"
-    cert_alias: "{{ jenkins.ldap.host }}"
+    cert_path: "{{ ares.home }}/hephaestus/Root-CA.crt"
+    keystore_path: "{{ ares.home }}/hephaestus/cacerts"
+    cert_alias: "root-ca"
     executable: "{{ jenkins.default_jdk_home }}/bin/keytool"
     keystore_pass: changeit
     keystore_create: yes
     state: present
   when:
-    - jenkins.ldap is defined
+    - jenkins.root_ca.url is defined
 
 - set_fact:
      podman_services: "{{ podman_services }} + {{ jenkins.service }}"
