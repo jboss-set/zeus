@@ -29,6 +29,11 @@
           name: JAVA_HOME
           default: {{ item.java_home }}
 {% endif %}
+{% if item.parent_job is defined %}
+      - string:
+          name: PARENT_JOBNAME
+          default: {{ item.parent_job }}
+{% endif %}
 {% if item.maven_home is defined %}
       - string:
           name: MAVEN_HOME

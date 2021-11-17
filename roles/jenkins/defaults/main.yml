@@ -14,6 +14,9 @@ jenkins:
   default_jdk_home: '/opt/oracle/java'
   default_mvn_home: '/opt/apache/maven'
   default_mvn_settings: '/opt/tools/settings.xml'
+  jdk_list:
+    jdk8: '/opt/oracle/jdk1.8.0_181'
+    jdk17: '/opt/oracle/jdk-17.0.1'
   admin:
     id: 'admin'
     password: "{{ override_jenkins_password }}"

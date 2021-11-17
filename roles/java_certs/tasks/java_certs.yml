@@ -4,11 +4,33 @@
       - certificate_list is defined
       - certificate_list is iterable
 
+# determine the location of cacerts file
+- stat:
+    path: "{{ jdk.home }}/{{ jdk.name }}/jre/lib/security/cacerts"
+  register: cacerts_file_stat
+
+- set_fact:
+    cacerts_file: "{{ jdk.home }}/{{ jdk.name }}/jre/lib/security/cacerts"
+  when: cacerts_file_stat.stat.exists
+
+- stat:
+    path: "{{ jdk.home }}/{{ jdk.name }}/lib/security/cacerts"
+  register: cacerts_file_stat_alt
+  when: not cacerts_file is defined
+
+- set_fact:
+    cacerts_file: "{{ jdk.home }}/{{ jdk.name }}/lib/security/cacerts"
+  when: not cacerts_file_stat.stat.exists and cacerts_file_stat_alt.stat.exists
+
+- assert:
+    that:
+      cacerts_file is defined
+
 - name: Remove SSL certificates in {{ jdk.name }}
   when: rebuild_keystore|default(false)
   java_cert:
     cert_url: "{{ item.cert_url }}"
-    keystore_path: "{{ jdk.home }}/{{ jdk.name }}/jre/lib/security/cacerts"
+    keystore_path: "{{ cacerts_file }}"
     cert_alias: "{{ item.alias }}"
     executable: "{{ jdk.home }}/{{ jdk.name }}/bin/keytool"
     keystore_pass: changeit
@@ -19,7 +41,7 @@
 - name: Import SSL certificates in {{ jdk.name }}
   java_cert:
     cert_url: "{{ item.cert_url }}"
-    keystore_path: "{{ jdk.home }}/{{ jdk.name }}/jre/lib/security/cacerts"
+    keystore_path: "{{ cacerts_file }}"
     cert_alias: "{{ item.alias }}"
     executable: "{{ jdk.home }}/{{ jdk.name }}/bin/keytool"
     keystore_pass: changeit
