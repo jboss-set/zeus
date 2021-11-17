@@ -95,7 +95,7 @@
               - origin/master
             poll: {{ jenkinsfile.polling }}
             changelog: {{ jenkinsfile.polling }}
-      script-path: {{ item.jenkinsfile }}
+      script-path: "pipelines/{{ item.jenkinsfile }}"
       lightweight-checkout: true
     build-discarder:
       days-to-keep: 30
