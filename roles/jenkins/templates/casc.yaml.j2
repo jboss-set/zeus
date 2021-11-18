@@ -194,6 +194,6 @@ unclassified:
     smtpPort: {{ mailer.smtp.port }}
 
 jobs:
-  - url: "https://gitlab.cee.redhat.com/jboss-set/csb-jenkins-definition/-/raw/olympus/job-configurator.groovy"
+  - url: "https://raw.githubusercontent.com/jboss-set/cedalion/master/job-configurator.groovy"
   - script: "queue('job-configurator')"
 
