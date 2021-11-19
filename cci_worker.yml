@@ -1,0 +1,37 @@
+---
+- name: Automate VM with Ansible
+  hosts: all
+  gather_facts: true
+  become: yes
+
+  vars_files:
+    - vars/cci.yml
+    - vars/java.yml
+
+  roles:
+    - cci_account
+    - sudoers
+    - ssh
+    - git
+    - java
+    - java_certs
+    - old_releases
+
+  pre_tasks:
+
+    - name: Register
+      redhat_subscription:
+        state: present
+        username: "{{ cci_worker_rhel_subscription_username }}"
+        password: "{{ cci_worker_rhel_subscription_password }}"
+        autosubscribe: yes
+
+    - name: Update yum
+      yum:
+        name: "*"
+        state: latest
+
+    - name: Check zip package
+      yum:
+        name: zip
+        state: present

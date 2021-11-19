@@ -1,0 +1,20 @@
+---
+- assert:
+    that:
+      - user is defined
+      - user.username is defined
+      - user.username != ""
+      - sudo.sudoersd_dir is defined
+    quiet: true
+    fail_msg: "Please provide the necessary user informations"
+
+- name: Make sure sudoers.d dir is available
+  file:
+    path: "{{ sudo.sudoersd_dir }}"
+    state: directory
+
+- name: add user to sudoers
+  become: yes
+  template:
+    src: sudo.conf.j2
+    dest: /etc/sudoers.d/{{ user.username }}
