@@ -1,0 +1,5 @@
+---
+account:
+  username: "{{ cci_worker_username }}"
+  password: "{{ cci_worker_password }}"
+  home: "/home/{{ cci_worker_username }}"

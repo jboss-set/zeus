@@ -1,0 +1,6 @@
+---
+user:
+  sudoer: yes
+  username: "{{ cci_worker_username }}"
+sudo:
+  sudoersd_dir: /etc/sudoers.d
