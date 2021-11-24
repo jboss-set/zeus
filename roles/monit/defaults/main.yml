@@ -36,7 +36,7 @@ monit:
     custom_scripts:
       - { name: "jenkins-dead-containers", src: 'jenkins-dead-containers.sh.j2', dest: "{{ monit_custom_scripts_directory }}/jenkins-containers" }
       - { name: "jenkins-running-containers", src: 'jenkins-running-containers.sh.j2', dest: "{{ monit_custom_scripts_directory }}/jenkins-dead-containers" }
-      - { name: "jenkins-podman-too-many-images", src: 'podman-too-many-images.sh.j2', dest: "{{ monit_custom_scripts_directory }}/jenkins-7-podman-too-many-images.sh" }
+      - { name: "jenkins-podman-too-many-images", src: 'podman-too-many-images.sh.j2', dest: "{{ monit_custom_scripts_directory }}/jenkins-8-podman-too-many-images.sh" }
       - { name: "root-podman-too-many-images", src: 'podman-too-many-images.sh.j2', dest: "{{ monit_custom_scripts_directory }}/root-7-podman-too-many-images.sh" }
       - { name: "yum-update", src: 'yum-update.sh.j2', dest: "{{ monit_custom_scripts_directory }}/yum-update" }
 epel:
