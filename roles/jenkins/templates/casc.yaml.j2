@@ -70,8 +70,8 @@ jenkins:
     - envVars:
         env:
 {% for item in jenkins_secrets_as_env_vars %}
-          - key: "{% item.name %}"
-            value: "{% item.value %}"
+          - key: "{{ item.name }}"
+            value: "{{ item.value }}"
 {% endfor %}
 {% endif %}
   numExecutors: {{ jenkins.executors.num }}
