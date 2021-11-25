@@ -20,7 +20,10 @@
 
 - set_fact:
     cacerts_file: "{{ jdk.home }}/{{ jdk.name }}/lib/security/cacerts"
-  when: not cacerts_file_stat.stat.exists and cacerts_file_stat_alt.stat.exists
+  when:
+    - not cacerts_file_stat is defined
+    - not cacerts_file_stat.stat.exists
+    - cacerts_file_stat_alt.stat.exists
 
 - assert:
     that:
