@@ -1,9 +1,9 @@
-{% if jenkins.credentials is defined %}
+{% if jenkins_credentials is defined %}
 credentials:
   system:
     domainCredentials:
     - credentials:
-{% for cred in jenkins.credentials %}
+{% for cred in jenkins_credentials %}
       - usernamePassword:
           id: "{{ cred.id }}"
           password: "{{ cred.password }}"
