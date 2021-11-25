@@ -65,6 +65,15 @@ jenkins:
             assignments:
               - "{{ jenkins.role.user.group }}"
 {% endif %}
+{% if jenkins_secrets_as_env_vars is defined %}
+  globalNodeProperties:
+    - envVars:
+        env:
+{% for item in jenkins_secrets_as_env_vars %}
+          - key: "{% item.name %}"
+            value: "{% item.value %}"
+{% endfor %}
+{% endif %}
   numExecutors: {{ jenkins.executors.num }}
   securityRealm:
 {% if jenkins.ldap.url is defined and jenkins.ldap.url != ""  %}
