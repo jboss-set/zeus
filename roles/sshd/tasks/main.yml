@@ -2,7 +2,10 @@
 - include_role:
     name: fast_yum_install
   vars:
-    package_name: openssh-server
+    package_name: "{{ item }}"
+  with_items:
+  - openssh-server
+  - firewalld
 
 - name: "Checks SSHd configuration"
   template: 
@@ -35,6 +38,10 @@
 - set_fact:
     path_to_key: "{{ root_ssh_folder }}/{{ ansible_nodename }}_rsa"
 
+- name: "Check for the user {{ cci_worker_username }}"
+  command: getent passwd "{{ cci_worker_username }}"
+  register: contents
+
 - name: "Generate SSH key for server {{ path_to_key }}"
   openssh_keypair:
     path: "{{ path_to_key }}"
@@ -44,6 +51,7 @@
     force: no
     owner: "root"
     group: "root"
+  when: contents.stdout == ""
 
 - name: "Hard link generated key to /root/.ssh/authorized_keys"
   file:
@@ -52,3 +60,4 @@
     dest: "/root/.ssh/authorized_keys"
     owner: "root"
     group: "root"
+  when: contents.stdout == ""
