@@ -32,7 +32,10 @@
         name: "*"
         state: latest
 
-    - name: Check zip package
-      yum:
-        name: zip
-        state: present
+    - include_role:
+        name: fast_yum_install
+      vars:
+        package_name: "{{ item }}"
+      with_items:
+        - firewalld
+        - zip
