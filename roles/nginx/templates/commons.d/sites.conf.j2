@@ -52,7 +52,7 @@ location /monit/ {
 
 {% if jenkins is defined %}
 {% for jenkins_server in jenkins.service %}
-/etc/nginx/commons.d/{{ jenkins_server.name }}.conf
+include /etc/nginx/commons.d/{{ jenkins_server.name }}.conf;
 {% endfor %}
 {% endif %}
 
