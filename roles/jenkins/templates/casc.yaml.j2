@@ -94,23 +94,6 @@ jenkins:
   views:
   - all:
       name: "all"
-{% for stream in jenkins.view.streams  %}
-  - dashboard:
-      columns:
-{% for col in jenkins.view.tabs.columns  %}
-        - "{{ col }}"
-{% endfor %}
-      includeStdJobList: true
-      includeRegex: "{{ stream }}.*"
-      name: "{{ stream }}"
-      leftPortlets:
-      - testStatisticsChart:
-          name: "Test Statistics Chart"
-      rightPortlets:
-      - latestBuilds:
-          name: "Latest builds"
-          numBuilds: 10
-{% endfor %}
   - dashboard:
       name: "Component Alignment"
       columns:
@@ -122,17 +105,6 @@ jenkins:
 {% for ca_job in component_alignment.jobs %}
         - "{{ ca_job.id }}"
 {% endfor %}
-  - dashboard:
-      name: "SET CI"
-      columns:
-{% for col in jenkins.view.tabs.columns  %}
-        - "{{ col }}"
-{% endfor %}
-      includeStdJobList: true
-      jobNames:
-{% for ci_job in ci_server.jobs  %}{% if ci_job.id.startswith("ci-") %}
-        - "{{ ci_job.id }}"
-{% endif %}{% endfor %}
 
   - dashboard:
       name: "cryo"
@@ -166,26 +138,6 @@ jenkins:
           includeExcludeTypeString: "excludeMatched"
           stable: false
           unstable: false
-  - dashboard:
-      name: "Bugclerk"
-      columns:
-{% for col in jenkins.view.tabs.columns  %}
-        - "{{ col }}"
-{% endfor %}
-      includeStdJobList: true
-      jobNames:
-{% for ci_job in ci_server.jobs %}{% if ci_job.id.startswith("bugclerk-reports-") %}
-        - "{{ ci_job.id }}"
-{% endif %}{% endfor %}
-      leftPortlets:
-      - unstableJobsPortlet:
-          name: "Unstable Jobs"
-          recurse: false
-          showOnlyFailedJobs: false
-      name: "Bugclerk"
-      rightPortlets:
-      - statBuilds:
-          name: "Build statistics"
   viewsTabBar: "standard"
 
 security:

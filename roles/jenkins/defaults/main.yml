@@ -43,23 +43,6 @@ jenkins:
       group: "{{ override_jenkins_role_user_group }}"
       desc: "{{ override_jenkins_role_user_desc }}"
   view:
-    streams:
-      - eap-6.4.x
-      - eap-7.1.x
-      - eap-7.2.x
-      - eap-7.3.x
-      - wildfly
-      - xp-2.0.x
-      - xp-3.0.x
-    tabs:
-      columns:
-        - "status"
-        - "weather"
-        - "jobName"
-        - "lastSuccess"
-        - "lastFailure"
-        - "lastDuration"
-        - "buildButton"
   service:
     - name: hephaestus
       ip: "{{ known_hosts.jenkins.ip | default('10.88.0.3') }}"
