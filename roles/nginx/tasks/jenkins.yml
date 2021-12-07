@@ -1,0 +1,11 @@
+---
+- assert:
+    that:
+      - jenkins is defined
+      - jenkins.service is defined
+
+- name: "Deploy nginx config for jenkins servers"
+  template:
+    src: templates/commons.d/jenkins.conf.j2
+    dest: "{{ nginx_config_dir }}/commons.d/{{ item.name }}.conf"
+  loop: "{{ jenkins.service }}"

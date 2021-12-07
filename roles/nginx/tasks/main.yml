@@ -37,6 +37,11 @@
 - include_tasks: ssl.yml
   when: nginx.https is defined
 
+- include_tasks: jenkins.yml
+  when:
+    - jenkins is defined
+    - jenkins.service is defined
+
 - name: permit traffic in default zone for https service
   firewalld:
     service: "{{ item }}"
