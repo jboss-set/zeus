@@ -46,6 +46,7 @@ jenkins:
   service:
     - name: hephaestus
       ip: "{{ known_hosts.jenkins.ip | default('10.88.0.3') }}"
+      location: '/jenkins'
       readwrite_volumes:
         - { src: '/home/jenkins', dest: '/var/jenkins_home' }
       add_hosts:
@@ -55,6 +56,7 @@ jenkins:
        - { src: "{{ override_jenkins_port | default('8080') }}", dest: "{{ override_jenkins_port | default('8080') }}" }
     - name: hephaestus.next
       ip: "{{ known_hosts.jenkins.ip | default('10.88.1.0') }}"
+      location: '/jenkins.next'
       readwrite_volumes:
         - { src: '/tmp/jenkins', dest: '/var/jenkins_home' }
       add_hosts:

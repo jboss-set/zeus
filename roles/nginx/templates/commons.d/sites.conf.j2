@@ -1,10 +1,10 @@
-server_name {{ ansible_nodename }}; 
+server_name {{ ansible_nodename }};
 root /usr/share/nginx/html;
 
 location / {
   error_page 404 /index.html;
   index /index.html;
-} 
+}
 
 location /publish {
     autoindex on;
@@ -51,16 +51,9 @@ location /monit/ {
 {% endif %}
 
 {% if jenkins is defined %}
-location /jenkins/ {
-  add_header X-Cache-Status $upstream_cache_status;
-
-  access_log /var/log/nginx/jenkins-access.log ;
-  error_log /var/log/nginx/jenkins-error.log ;
-
-  proxy_pass http://{{ jenkins.bind_addr }}:{{ jenkins.port }}/jenkins/ ;
-  proxy_redirect     http://{{ jenkins.bind_addr }}:{{ jenkins.port }}/ https://{{ jenkins.bind_addr }};
-  include /etc/nginx/commons.d/proxy.conf;
-}
+{% for jenkins_server in jenkins.service %}
+/etc/nginx/commons.d/{{ jenkins_server.name }}.conf
+{% endfor %}
 {% endif %}
 
 # redirect server error pages to the static page /50x.html
