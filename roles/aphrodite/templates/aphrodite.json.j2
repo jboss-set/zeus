@@ -2,15 +2,15 @@
     "issueTrackerConfigs": [
         {
             "url": "{{ aphrodite.trackers.jira.url }}",
-            "username": "{{ aphrodite.trackers.jira.username }}",
-            "password": "{{ aphrodite.trackers.jira.password }}",
+            "username": "{{ aphrodite.trackers.jira.username | default('') }}",
+            "password": "{{ aphrodite.trackers.jira.password | default('') }}",
             "tracker": "{{ aphrodite.trackers.jira.type }}",
             "defaultIssueLimit": {{ aphrodite.trackers.jira.limit }}
         },
         {
             "url": "{{ aphrodite.trackers.bugzilla.url }}",
-            "username": "{{ aphrodite.trackers.bugzilla.username }}",
-            "password": "{{ aphrodite.trackers.bugzilla.password }}",
+            "username": "{{ aphrodite.trackers.bugzilla.username | default('') }}",
+            "password": "{{ aphrodite.trackers.bugzilla.password | default('') }}",
             "tracker": "{{ aphrodite.trackers.bugzilla.type }}",
             "defaultIssueLimit": {{ aphrodite.trackers.bugzilla.limit }}
         }
