@@ -57,6 +57,7 @@ jenkins:
     - name: hephaestus.next
       ip: "{{ known_hosts.jenkins_next.ip | default('10.88.1.0') }}"
       location: '/jenkins.next'
+      redirect_path: '/jenkins'
       readwrite_volumes:
         - { src: '/tmp/jenkins', dest: '/var/jenkins_home' }
       add_hosts:
