@@ -4,7 +4,7 @@ location {{ item.location }}/ {
   access_log /var/log/nginx/{{ item.name }}-access.log ;
   error_log /var/log/nginx/{{ item.name }}-error.log ;
 
-  proxy_pass http://{{ item.ip }}:{{ item.ports_mapping[0].src }}{{ item.location }}/ ;
+  proxy_pass http://{{ item.ip }}:{{ item.ports_mapping[0].src }}{{ item.redirect_path | default(item.location) }}/ ;
   proxy_redirect     http://{{ item.ip }}:{{ item.ports_mapping[0].src }}/ https://{{ item.ip }};
   include /etc/nginx/commons.d/proxy.conf;
 }
