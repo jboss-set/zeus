@@ -68,5 +68,12 @@
   when:
     - jenkins.root_ca.url is defined
 
+- name: "Ensures data folder for Jenkins.next exists."
+  file:
+    state: directory
+    path: /tmp/jenkins
+    owner: "{{ jenkins.username }}"
+    group: "{{ jenkins.username }}"
+
 - set_fact:
      podman_services: "{{ podman_services }} + {{ jenkins.service }}"
