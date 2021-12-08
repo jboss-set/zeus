@@ -77,3 +77,5 @@
     owner: "{{ item.owner }}"
     group: "{{ item.owner }}"
     recurse: yes
+  when: 
+    - not ansible_check_mode is defined
