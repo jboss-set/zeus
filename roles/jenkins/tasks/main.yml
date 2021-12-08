@@ -31,23 +31,12 @@
     owner: "{{ ares.owner }}"
     group: "{{ ares.owner }}"
 
-- name: "Generate SSH key {{ jenkins.home }}/.ssh/id_rsa"
-  openssh_keypair:
-    path: "{{ jenkins.home }}/.ssh/id_rsa"
-    type: rsa
-    size: 4096
-    state: present
-    force: no
-    owner: "{{ jenkins.username }}"
-    group: "{{ jenkins.groupname }}"
-
-- name: "Hard link generated key to {{ jenkins.home }}/.ssh/authorized_keys"
-  file:
-    state: hard
-    src: "{{ jenkins.home }}/.ssh/id_rsa.pub"
-    dest: "{{ jenkins.home }}/.ssh/authorized_keys"
-    owner: "{{ jenkins.username }}"
-    group: "{{ jenkins.groupname }}"
+- include_tasks:
+  loop:
+    - "{{ jenkins.home }}"
+    - "{{ jenkins.home_next }}"
+  loop_control:
+    loop_var: homedir
 
 - name: "Download root CA"
   get_url:
@@ -71,9 +60,12 @@
 - name: "Ensures data folder for Jenkins.next exists."
   file:
     state: directory
-    path: /tmp/jenkins
+    path: "{{ jenkins.home_next }}"
     owner: "{{ jenkins.username }}"
     group: "{{ jenkins.username }}"
+  loop:
+    - "{{ jenkins.home_next }}"
+    - "{{ jenkins.home }}"
 
 - set_fact:
      podman_services: "{{ podman_services }} + {{ jenkins.service }}"

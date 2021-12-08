@@ -1,0 +1,28 @@
+---
+- assert:
+    that:
+      - homedir is defined
+      - jenkins is defined
+      - jenkins.groupname is defined
+      - jenkins.groupname != ""
+      - jenkins.username is defined
+      - jenkins.username != ""
+    quiet: true
+
+- name: "Generate SSH key {{ homedir }}/.ssh/id_rsa"
+  openssh_keypair:
+    path: "{{ homedir }}/.ssh/id_rsa"
+    type: rsa
+    size: 4096
+    state: present
+    force: no
+    owner: "{{ jenkins.username }}"
+    group: "{{ jenkins.groupname }}"
+
+- name: "Hard link generated key to {{ homedir }}/.ssh/authorized_keys"
+  file:
+    state: hard
+    src: "{{ homedir }}/.ssh/id_rsa.pub"
+    dest: "{{ homedir }}/.ssh/authorized_keys"
+    owner: "{{ jenkins.username }}"
+    group: "{{ jenkins.groupname }}"

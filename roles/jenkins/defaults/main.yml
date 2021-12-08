@@ -7,6 +7,7 @@ jenkins:
   uid: "{{ override_jenkins_uid | default(1000)  }}"
   gid: "{{ override_jenkins_gid | default(1000)  }}"
   home: "{{ override_jenkins_home | default('/home/jenkins') }}"
+  home_next: "{{ override_jenkins_home | default('/tmp/jenkins') }}"
   tools:
     home: "{{ override_jenkins_tools_home | default('/opt/tools') }}"
   executors:
