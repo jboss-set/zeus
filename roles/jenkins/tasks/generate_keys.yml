@@ -9,6 +9,13 @@
       - jenkins.username != ""
     quiet: true
 
+- name: "Ensures SSH folder exists"
+  file:
+    state: directory
+    path: "{{ homedir }}/.ssh/"
+    owner: "{{ jenkins.username }}"
+    group: "{{ jenkins.groupname }}"
+
 - name: "Generate SSH key {{ homedir }}/.ssh/id_rsa"
   openssh_keypair:
     path: "{{ homedir }}/.ssh/id_rsa"
@@ -26,3 +33,6 @@
     dest: "{{ homedir }}/.ssh/authorized_keys"
     owner: "{{ jenkins.username }}"
     group: "{{ jenkins.groupname }}"
+  when:
+    - not ansible_check_mode is defined
+
