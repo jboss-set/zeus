@@ -1,0 +1,37 @@
+---
+- assert:
+    that:
+      - jenkins is defined
+      - jenkins.username is defined
+      - jenkins.username != ""
+      - jenkins.home_next is defined
+      - jenkins.home_next != ""
+      - jenkins.home is defined
+      - jenkins.home != ""
+    quiet: true
+
+- set_fact:
+   jenkins_next_ssh_dir: "{{ jenkins.home_next }}/.ssh"
+
+- name: "Ensures Jenkins.next {{ jenkins_next_ssh_dir }} exists."
+  file:
+    state: directory
+    path: "{{ jenkins_next_ssh_dir }}"
+    owner: "{{ jenkins.username }}"
+    group: "{{ jenkins.groupname | default(jenkins.username) }}"
+
+- name: "Copy Jenkins SSH files to Jenkins.next"
+  copy:
+    src: "{{ jenkins.home }}/.ssh/"
+    dest: "{{ jenkins_next_ssh_dir }}"
+    remote_src: yes
+
+- name: "Ensures data folder for Jenkins.next exists."
+  file:
+    state: directory
+    path: "{{ jenkins.home_next }}"
+    owner: "{{ jenkins.username }}"
+    group: "{{ jenkins.groupname | default(jenkins.username) }}"
+  loop:
+    - "{{ jenkins.home_next }}"
+    - "{{ jenkins.home }}"

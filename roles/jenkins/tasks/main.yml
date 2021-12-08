@@ -31,10 +31,9 @@
     owner: "{{ ares.owner }}"
     group: "{{ ares.owner }}"
 
-- include_tasks:
+- include_tasks: generate_keys.yml
   loop:
     - "{{ jenkins.home }}"
-    - "{{ jenkins.home_next }}"
   loop_control:
     loop_var: homedir
 
@@ -66,6 +65,8 @@
   loop:
     - "{{ jenkins.home_next }}"
     - "{{ jenkins.home }}"
+
+- include_tasks: jenkins_next.yml
 
 - set_fact:
      podman_services: "{{ podman_services }} + {{ jenkins.service }}"
