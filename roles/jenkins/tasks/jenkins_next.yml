@@ -10,6 +10,17 @@
       - jenkins.home != ""
     quiet: true
 
+- name: "Copy gitconfig from jenkins to jenkins.next"
+  copy:
+    src: "{{ jenkins.home }}/{{ item }}"
+    dest: "{{ jenkins.home_next }}/{{ item }}"
+    remote_src: yes
+    owner: "{{ jenkins.username }}"
+    group: "{{ jenkins.groupname | default(jenkins.username) }}"
+  loop:
+    - '.gitconfig'
+    - '.netrc'
+
 - set_fact:
    jenkins_next_ssh_dir: "{{ jenkins.home_next }}/.ssh"
 
