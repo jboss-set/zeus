@@ -7,7 +7,7 @@ jobs:
   synchronizer:
     home: "{{ override_jobs_synchronizer | default('/opt/tools/jobs-synchronizer/') }}"
     script:
-      src: 'templates/synchronizer/jobs-sync.sh.j2' 
+      src: 'templates/synchronizer/jobs-sync.sh.j2'
       name: 'jobs-sync.sh'
     container:
       src: 'templates/synchronizer/podman-jobs-sync.sh.j2'
