@@ -33,7 +33,7 @@
 
 - include_tasks: generate_keys.yml
   loop:
-    - "{{ jenkins.home }}"
+    - "/home/jenkins"
   loop_control:
     loop_var: homedir
 
