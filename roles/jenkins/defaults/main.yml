@@ -1,4 +1,6 @@
 ---
+value_of_jenkins_home: "{{ override_jenkins_home | default('/home/jenkins/current') }}"
+value_of_jenkins_home_next: "{{ override_jenkins_next_home | default('/home/jenkins/next') }}"
 jenkins:
   groupname: "{{ override_jenkins_group | default('jenkins') }}"
   bind_addr: "{{ override_jenkins_bind_addr | default('localhost') }}"
@@ -6,8 +8,8 @@ jenkins:
   username: "{{ override_jenkins_name | default('jenkins') }}"
   uid: "{{ override_jenkins_uid | default(1000)  }}"
   gid: "{{ override_jenkins_gid | default(1000)  }}"
-  home: "{{ override_jenkins_home | default('/home/jenkins') }}"
-  home_next: "{{ override_jenkins_home | default('/tmp/jenkins') }}"
+  home: "{{ value_of_jenkins_home }}"
+  home_next: "{{ value_of_jenkins_home_next }}"
   tools:
     home: "{{ override_jenkins_tools_home | default('/opt/tools') }}"
   executors:
@@ -49,7 +51,7 @@ jenkins:
       ip: "{{ known_hosts.jenkins.ip | default('10.88.0.3') }}"
       location: '/jenkins'
       readwrite_volumes:
-        - { src: '/home/jenkins', dest: '/var/jenkins_home' }
+        - { src: "{{ value_of_jenkins_home }}", dest: '/var/jenkins_home' }
       add_hosts:
         - { src: "{{ known_hosts.podman.name }}", ip: "{{ known_hosts.podman.ip }}" }
         - { src: "{{ known_hosts.server.name }}", ip: "{{ known_hosts.server.ip }}" }
@@ -59,7 +61,7 @@ jenkins:
       ip: "{{ known_hosts.jenkins_next.ip | default('10.88.1.0') }}"
       location: '/jenkins.next'
       readwrite_volumes:
-        - { src: '/tmp/jenkins', dest: '/var/jenkins_home' }
+        - { src: "{{ value_of_jenkins_home_next }}", dest: '/var/jenkins_home' }
       add_hosts:
         - { src: "{{ known_hosts.podman.name }}", ip: "{{ known_hosts.podman.ip }}" }
         - { src: "{{ known_hosts.server.name }}", ip: "{{ known_hosts.server.ip }}" }

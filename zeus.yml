@@ -77,7 +77,7 @@
           uid: "{{ override_jenkins_uid }}"
           group: "{{ override_jenkins_group }}"
           gid: "{{ override_jenkins_gid }}"
-          home: /home/jenkins
+          home: "{{ override_jenkins_home | default('/home/jenkins') }}"
 
     - include_role:
         name: fast_yum_install

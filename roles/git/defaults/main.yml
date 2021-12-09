@@ -7,7 +7,7 @@ git:
       email: rpelisse@redhat.com
       name: 'Romain Pelisse'
       home: /root
-    - user: jenkins    
+    - user: jenkins
       email: jboss-set@redhat.com
       name: "JBoss SET"
-      home: /home/jenkins
+      home: "{{ override_jenkins_home | default('/home/jenkins/') }}"
