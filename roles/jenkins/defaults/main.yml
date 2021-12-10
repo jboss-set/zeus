@@ -33,7 +33,6 @@ jenkins:
     host: "{{ override_ldap_host | default('') }}"
     port: "{{ override_ldap_port | default('636') }}"
     url: "{{ override_ldap_url | default('') }}"
-    keystore: "{{ override_ldap_keystore }}"
   root_ca:
     url: "{{ override_root_ca_url | default('') }}"
   role:
