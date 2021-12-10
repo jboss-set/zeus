@@ -17,27 +17,16 @@
       - ci_server.jobs is defined
       - ci_server.jobs | length > 1
   
-  - block:
-    - include_tasks: jobs_config.yml
-      loop: "{{ component_alignment.jobs }}"
-      when:
-        - ci_server is defined
-        - component_alignment.jobs is defined
-        - component_alignment.jobs | length > 1
-  
-      vars:
-        jobs_list: "{{ component_alignment.jobs }}"
-  
-    - name: "Generate configfile for jobs"
-      template:
-        src: templates/component-alignment-config-template.csv.j2
-        dest: "/opt/tools/component-alignment-config-template.csv"
-        owner: jenkins
-        group: jenkins
-        mode: 0644
+  - name: "Generate configfile for jobs"
+    template:
+      src: templates/component-alignment-config-template.csv.j2
+      dest: "/opt/tools/component-alignment-config-template.csv"
+      owner: jenkins
+      group: jenkins
+      mode: 0644
     when:
-     - component_alignment is defined
-     - component_alignment.jobs is defined
+      - component_alignment is defined
+      - component_alignment.jobs is defined
   
   - name: "Ensure that all jobs with a descriptor exists on server"
     include_tasks: sync_jobs.yml
