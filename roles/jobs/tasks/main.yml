@@ -11,11 +11,14 @@
   - name: "Deploy fetchLastSuccessfulBuildId.sh"
     template:
       src: templates/fetchLastSuccessfulBuildId.sh.j2
-      dest: /home/jenkins/fetchLastSuccessfulBuildId.sh
+      dest: "/home/jenkins/{{ item }}fetchLastSuccessfulBuildId.sh"
       owner: jenkins
       group: jenkins
       mode: 0755
-  
+    loop:
+      - next
+      - current
+
   - include_tasks: job-sync-deploy.yml
   
   - include_tasks: jobs_config.yml
