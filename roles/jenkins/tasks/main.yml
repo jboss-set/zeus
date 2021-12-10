@@ -70,7 +70,7 @@
 - name: "Ensures data folder for Jenkins.next exists."
   file:
     state: directory
-    path: "{{ jenkins.home_next }}"
+    path: "{{ item }}"
     owner: "{{ jenkins.username }}"
     group: "{{ jenkins.username }}"
   loop:
