@@ -17,6 +17,16 @@
       - jenkins.tools.home != ""
     quiet: true
 
+- name: "Ensures data folder for Jenkins and Jenkins.next exists."
+  file:
+    state: directory
+    path: "{{ item }}"
+    owner: "{{ jenkins.username }}"
+    group: "{{ jenkins.groupname | default(jenkins.username) }}"
+  loop:
+    - "{{ jenkins.home_next }}"
+    - "{{ jenkins.home }}"
+
 - name: "Ensures tools home directory ({{ jenkins.tools.home }} exists."
   file:
     state: directory
@@ -76,8 +86,6 @@
   loop:
     - "{{ jenkins.home_next }}"
     - "{{ jenkins.home }}"
-
-- include_tasks: jenkins_next.yml
 
 - set_fact:
      podman_services: "{{ podman_services }} + {{ jenkins.service }}"

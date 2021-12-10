@@ -51,6 +51,10 @@ jenkins:
       location: '/jenkins'
       readwrite_volumes:
         - { src: "{{ value_of_jenkins_home }}", dest: '/var/jenkins_home' }
+      readonly_volumes:
+        - { src: "/home/jenkins/.ssh", dest: '/var/jenkins_home/.ssh' }
+        - { src: "/home/jenkins/.netrc", dest: '/var/jenkins_home/.netrc' }
+        - { src: '/home/jenkins/.gitconfig', dest: '/var/jenkins_home/.gitconfig' }
       add_hosts:
         - { src: "{{ known_hosts.podman.name }}", ip: "{{ known_hosts.podman.ip }}" }
         - { src: "{{ known_hosts.server.name }}", ip: "{{ known_hosts.server.ip }}" }
@@ -61,6 +65,10 @@ jenkins:
       location: '/jenkins.next'
       readwrite_volumes:
         - { src: "{{ value_of_jenkins_home_next }}", dest: '/var/jenkins_home' }
+      readonly_volumes:
+        - { src: "/home/jenkins/.ssh", dest: '/var/jenkins_home/.ssh' }
+        - { src: "/home/jenkins/.netrc", dest: '/var/jenkins_home/.netrc' }
+        - { src: '/home/jenkins/.gitconfig', dest: '/var/jenkins_home/.gitconfig' }
       add_hosts:
         - { src: "{{ known_hosts.podman.name }}", ip: "{{ known_hosts.podman.ip }}" }
         - { src: "{{ known_hosts.server.name }}", ip: "{{ known_hosts.server.ip }}" }
