@@ -8,14 +8,6 @@
       group: jenkins
       mode: 0755
   
-  - name: "Deploy fetchLastSuccessfulBuildId.sh"
-    template:
-      src: templates/fetchLastSuccessfulBuildId.sh.j2
-      dest: /home/jenkins/fetchLastSuccessfulBuildId.sh
-      owner: jenkins
-      group: jenkins
-      mode: 0755
-  
   - include_tasks: job-sync-deploy.yml
   
   - include_tasks: jobs_config.yml
