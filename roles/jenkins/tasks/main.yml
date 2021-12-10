@@ -56,6 +56,17 @@
   when:
     - jenkins.root_ca.url is defined
 
+- name: "Deploy fetchLastSuccessfulBuildId.sh"
+    template:
+      src: templates/fetchLastSuccessfulBuildId.sh.j2
+      dest: "{{item}}"/fetchLastSuccessfulBuildId.sh
+      owner: jenkins
+      group: jenkins
+      mode: 0755
+    loop:
+      - "{{ jenkins.home }}"
+      - "{{ jenkins.home_next }}"
+
 - name: "Ensures data folder for Jenkins.next exists."
   file:
     state: directory
