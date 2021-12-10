@@ -3,7 +3,7 @@ set -eo pipefail
 
 readonly PARENT_JOB_NAME=${1}
 readonly JENKINS_HOME=${JENKINS_HOME:-'/var/jenkins_home'}
-readonly PARENT_JOB_DIR="${JENKINS_HOME_DIR}/jobs/${PARENT_JOB_NAME}"
+readonly PARENT_JOB_DIR="${JENKINS_HOME}/jobs/${PARENT_JOB_NAME}"
 readonly PARENT_JOB_BUILDS_DIR="${PARENT_JOB_DIR}/builds"
 readonly PARENT_JOB_PERMALINK="${PARENT_JOB_BUILDS_DIR}/permalinks"
 
