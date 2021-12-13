@@ -27,3 +27,17 @@
     path: "{{ account.home }}"
     owner: "{{ account.username }}"
   when: account_home.stat is defined
+
+- name: "Ensure ssh directory for {{ account.username }} exists"
+  file:
+    state: directory
+    path: "{{ account.home }}/.ssh"
+    owner: "{{ account.username }}"
+
+- name: "Deploy authorized key"
+  authorized_key:
+    user: "{{ account.username }}"
+    state: present
+    key: "{{ item }}"
+  with_file:
+    - "vars/files/openstack_rsa.pub"
