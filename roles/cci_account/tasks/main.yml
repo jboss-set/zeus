@@ -40,4 +40,26 @@
     state: present
     key: "{{ item }}"
   with_file:
-    - "vars/files/openstack_rsa.pub"
+    - "{{ account.pubkey_file }}"
+
+- name: "Deploy fix_multicast script"
+  copy:
+    src: "files/setup_multicast.sh"
+    dest: "/usr/local/sbin/setup_multicast.sh"
+    owner: "root"
+    group: "root"
+    mode: "0755"
+
+- name: "Create boot-time service to fix multicast"
+  copy:
+    src: "files/setup_multicast.service"
+    dest: "/etc/systemd/system/setup_multicast.service"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+
+- name: "Ensures setup_multicast service is running"
+  service:
+    name: "setup_multicast.service"
+    state: started
+    enabled: yes

@@ -1,0 +1,11 @@
+[Unit]
+Description=Setups multicast ability for ipv6 tests
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/sbin/setup_multicast.sh
+TimeoutStartSec=0
+
+[Install]
+WantedBy=default.target
