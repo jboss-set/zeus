@@ -18,6 +18,16 @@
     vars:
       package_name: python3-psycopg2
 
+  - name: "Creates data volume dirs for postgres containers"
+    file:
+      path: "{{ item }}"
+      state: directory
+      owner: jenkins
+      group: jenkins
+    loop:
+      - "{{ pgsql.instances.mjolnir_preprod.data_volume }}"
+      - "{{ pgsql.instances.component_upgrade.data_volume }}"
+
   - name: "Ensures {{ pgsql.scripts.home }} exists."
     file:
       path: "{{ pgsql.scripts.home }}"

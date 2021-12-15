@@ -14,6 +14,7 @@ pgsql:
         url: 'https://raw.githubusercontent.com/jboss-set/mjolnir-archive-service/master/dbscripts/create.sql'
       load_data: 
         name: 'mjolnir-preprod_data.sql'
+      data_volume: /var/lib/pgsql-mjolnir-predprod
     component_upgrade:
       db_name: component-upgrade
       username: component-upgrade
@@ -22,6 +23,7 @@ pgsql:
       create_db: 
         name: 'component-upgrade-init.sql'
         url: 'https://raw.githubusercontent.com/TomasHofman/component-upgrade-logger/main/src/main/resources/init.sql'
+      data_volume: /var/lib/pgsql-component-upgrade-dev
 postgres_instances:
   services:
     - name: pgsql-mjolnir-predprod
@@ -33,6 +35,8 @@ postgres_instances:
       vars:
        - { name: 'POSTGRES_PASSWORD', value: "{{ pgsql.instances.mjolnir_preprod.password }}" }
        - { name: 'POSTGRES_USER', value: "{{ pgsql.instances.mjolnir_preprod.username }}" }
+      readwrite_volumes:
+       - { src: "{{ pgsql.instances.mjolnir_preprod.data_volume }}", dest: '/var/lib/postgresql/data' }
 
     - name: pgsql-component-upgrade-dev
       image: 'docker.io/library/postgres'
@@ -43,3 +47,5 @@ postgres_instances:
       vars:
        - { name: 'POSTGRES_PASSWORD', value: "{{ pgsql.instances.component_upgrade.password }}" }
        - { name: 'POSTGRES_USER', value: "{{ pgsql.instances.component_upgrade.username }}" }
+      readwrite_volumes:
+        - { src: "{{ pgsql.instances.component_upgrade.data_volume }}", dest: '/var/lib/postgresql/data' }
