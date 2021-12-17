@@ -26,7 +26,7 @@
     enabled: yes
 
 - set_fact:
-    root_ssh_folder: '/root/.ssh/'
+    root_ssh_folder: '/root/.ssh'
 
 - file:
     path: "{{ root_ssh_folder }}"
