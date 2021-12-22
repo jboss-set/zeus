@@ -63,6 +63,7 @@ jenkins:
     - name: hephaestus.next
       ip: "{{ known_hosts.jenkins_next.ip | default('10.88.1.0') }}"
       location: '/jenkins.next'
+      state: stopped
       readwrite_volumes:
         - { src: "{{ value_of_jenkins_home_next }}", dest: '/var/jenkins_home' }
       readonly_volumes:

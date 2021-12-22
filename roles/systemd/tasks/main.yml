@@ -22,6 +22,6 @@
 - name: "Ensures podman_services are running"
   service:
     name: "{{ item.name }}"
-    state: started
+    state: "{{ item.state | default('started') }}"
     enabled: yes
   loop: "{{ podman_services }}"
