@@ -1,6 +1,6 @@
 ---
 - hosts: "{{ hosts_group_name | default('localhost') }}"
-  gather_facts: no
+  gather_facts: yes
   become: yes
   become_user: root
   vars_files:
@@ -18,6 +18,8 @@
       - vars/mailer.yml
       - vars/ldap.yml
       - vars/pgsql.yml
+      - vars/hosts.yml
+      - vars/qualys.yml
   roles:
     # stage 1 - OS settings and optimizations
     - selinux
@@ -51,6 +53,7 @@
     # monitoring
     - monit
     - cron
+    - infosec.qualys-cloud-agent
   pre_tasks:
 
     - set_fact:
