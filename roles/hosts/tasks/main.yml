@@ -3,13 +3,12 @@
   - name: Add Ansible inventory mappings to /etc/hosts
     become: true
     blockinfile:
-      path: /etc/hosts
+      path: "{{ hosts_path_to_file }}"
       block: |
-        {% for host in hosts.list %}
+        {% for host in hosts %}
         {{ host.ip }} {{ host.names }}
         {% endfor %}
   when:
     - hosts is defined
-    - hosts.list is defined
-    - hosts.list is iterable
-    - hosts.list | length > 0
+    - hosts is iterable
+    - hosts | length > 0
