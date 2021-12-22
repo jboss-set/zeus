@@ -1,3 +1,9 @@
 ---
+roles:
+  - name: infosec.qualys-cloud-agent
+    src: git+https://qualys_repo/infosec-public/qualys-cloud-agent.git
+    version: 'main'
+    ignore-certs: True
+
 collections:
   - name: containers.podman
