@@ -1,2 +1,2 @@
 ---
-hosts_path_to_file: /root/hosts
+hosts_path_to_file: /etc/hosts
