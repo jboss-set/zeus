@@ -71,9 +71,12 @@
 - name: "Running the payload_status container"
   containers.podman.podman_container:
     name: yarn-builder-container
-    image: localhost/yarn-builder:yarn-builder
+    image: localhost/yarn-builder:latest
     volume: "{{ payload_status.home }}:/workspace:rw"
     state: started
+    # the next steps depend on outcome of this run - keep container attached until build is done
+    detach: no
+    command: "./build.sh"
   become_user: "{{ payload_status.owner }}"
   when:
     - git_results.changed or payload_env.changed
