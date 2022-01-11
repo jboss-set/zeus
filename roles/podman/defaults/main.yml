@@ -11,7 +11,7 @@ podman:
   images:
     remotes:
       - { name: 'docker.io/library/nginx' }
-      - { name: 'quay.io/ansible/toolset' }
+      - { name: 'quay.io/ansible/toolset', owner: 'jenkins' }
     locals:
       - { name: 'automatons', owner: 'jenkins', tag: 'automatons' }
       - { name: 'bashomatons', owner: 'jenkins', tag: 'bashomatons' }
