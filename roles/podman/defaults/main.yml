@@ -11,7 +11,6 @@ podman:
   images:
     remotes:
       - { name: 'docker.io/library/nginx' }
-      - { name: 'quay.io/ansible/toolset', owner: 'jenkins' }
     locals:
       - { name: 'automatons', owner: 'jenkins', tag: 'automatons' }
       - { name: 'bashomatons', owner: 'jenkins', tag: 'bashomatons' }
@@ -20,3 +19,4 @@ podman:
       - { name: 'hephaestus.next', owner: 'root', tag: 'hephaestus.next' }
       - { name: 'jenkins-job-builder', owner: 'jenkins', tag: 'jbb' }
       - { name: 'ansible', owner: 'jenkins', tag: 'ansible' }
+      - { name: 'molecule-runner', owner: 'jenkins', tag: 'molecule-runner' }
