@@ -20,3 +20,4 @@ podman:
       - { name: 'jenkins-job-builder', owner: 'jenkins', tag: 'jbb' }
       - { name: 'ansible', owner: 'jenkins', tag: 'ansible' }
       - { name: 'molecule-runner', owner: 'jenkins', tag: 'molecule-runner' }
+      - { name: 'molecule-slave', owner: 'jenkins', tag: 'molecule-slave' }
