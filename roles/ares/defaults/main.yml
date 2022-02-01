@@ -9,3 +9,5 @@ ares:
     branch: "{{ podman_images_git_branch_override | default('olympus') }}"
     keyfile: "{{ github_keyfile }}"
   folder_name: "{{ podman_images_git_folder_name_override | default('ares.git') }}"
+  images_with_subs:
+    - molecule-slave

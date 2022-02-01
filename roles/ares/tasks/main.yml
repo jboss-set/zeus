@@ -35,3 +35,16 @@
     owner: "{{ ares.owner }}"
     group: "{{ ares.group }}"
   changed_when: false # weirdly this task always ends up in changed=true
+
+- name: "Add redhat.repo to images that needs to use host's subs"
+  copy:
+    src: /etc/yum.repos.d/redhat.repo
+    remote_src: yes
+    dest: "{{ ares.home }}/{{ item }}"
+    owner: "{{ ares.owner }}"
+    group: "{{ ares.group }}"
+  loop: "{{ ares.images_with_subs }}"
+  when:
+    - ares.images_with_subs is defined
+    - ares.images_with_subs | length > 0
+
