@@ -11,3 +11,5 @@ ares:
   folder_name: "{{ podman_images_git_folder_name_override | default('ares.git') }}"
   images_with_subs:
     - molecule-slave
+  images_with_sshkey:
+    - molecule-slave
