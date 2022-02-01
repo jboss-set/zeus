@@ -51,6 +51,7 @@
   get_url:
     url: "{{ jenkins.root_ca.url }}"
     dest: "{{ ares.home }}/hephaestus/Root-CA.crt"
+  check_mode: no
   when:
     - jenkins.root_ca.url is defined
 
