@@ -23,6 +23,12 @@ jenkins:
               - "Overall/Administer"
             assignments:
               - "{{ jenkins.role.admin.group }}"
+          - name: "{{ jenkins.role.ansibleCI.name }}"
+            description: "{{ jenkins.role.ansibleCI.desc }}"
+            permissions:
+              - "Overall/Administer"
+            assignments:
+              - "{{ jenkins.role.admin.group }}"
           - name: "anonymous"
             description: "Anonymous users"
             permissions:
