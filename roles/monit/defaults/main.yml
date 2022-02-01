@@ -1,6 +1,6 @@
 ---
 max_nb_images_for_root: 10
-max_nb_images_for_jenkins: 9
+max_nb_images_for_jenkins: 15
 
 monit_custom_scripts_directory: "{{ override_monit_custom_scripts_directory | default('/opt/monit') }}"
 monit:
