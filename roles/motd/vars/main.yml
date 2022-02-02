@@ -1,0 +1,6 @@
+---                                                              
+motd:
+  font: "{{ motd_font }}"
+  files:
+    to_remove: "{{ motd_files_to_remove }}"
+  home: /etc/motd.d/

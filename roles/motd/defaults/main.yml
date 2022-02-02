@@ -1,8 +1,5 @@
 ---
-motd:
-  font: "{{ override_motd_font | default('standard') }}"
-  files:
-    to_remove:
-      - cockpit
-      - insights-client
-  home: /etc/motd.d/
+motd_font: "standard"
+motd_files_to_remove:
+  - cockpit
+  - insights-client
