@@ -1,0 +1,6 @@
+---                                                                                      
+tuned:
+  fact:
+    home: "{{ tuned_fact_home }}"
+    file: "{{ tuned_fact_file }}"
+  bin: "{{ tuned_bin }}"
