@@ -1,6 +1,4 @@
 ---
-tuned:
-  fact:
-    home: "{{ override_fact_home | default('/etc/ansible/facts.d/') }}"
-    file: "{{ override_fact_file | default('/etc/ansible/facts.d/tuned-profile.fact') }}"
-  bin: "{{ override_tuned_bin | default('/usr/sbin/tuned-adm') }}"
+tuned_fact_home: "/etc/ansible/facts.d/"
+tuned_fact_file: "/etc/ansible/facts.d/tuned-profile.fact"
+tuned_bin: "/usr/sbin/tuned-adm"
