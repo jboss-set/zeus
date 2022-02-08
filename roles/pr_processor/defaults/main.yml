@@ -1,8 +1,5 @@
 ---
-pr_processor_version: "{{ override_pr_processor_version }}"
-pr_processor:
-  home: "{{ override_pr_processor_home | default('/opt/tools/pr-processor/') }}"
-  url: "https://repository.jboss.org/org/jboss/set/pull-processor/{{ pr_processor_version }}/pull-processor-{{ pr_processor_version }}.jar"
-  owner: "{{ override_pr_processor_owner | default('jenkins') }}"
-  group: "{{ override_pr_processor_group | default('jenkins') }}"
-  version: "{{ pr_processor_version }}"
+pr_processor_home: "/opt/tools/pr-processor/"
+pr_processor_owner: "jenkins"
+pr_processor_group: "jenkins"
+pr_processor_url: "https://repository.jboss.org/org/jboss/set/pull-processor/{{ pr_processor_version }}/pull-processor-{{ pr_processor_version }}.jar"
