@@ -1,4 +1,2 @@
 ---
-old_releases:
-  dir: "{{ old_releases_dir_override | default('/opt/old-as-releases') }}"
-  url: "{{ old_releases_url_override }}"
+old_releases_dir: "/opt/old-as-releases"
