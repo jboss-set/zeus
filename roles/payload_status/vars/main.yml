@@ -1,0 +1,17 @@
+---
+payload_status:
+  owner: jenkins
+  group: jenkins
+  git:
+    url: 'git@github.com:jboss-set/payload-status.git'
+    version: main
+    keyfile: "{{ github_keyfile }}"
+  home: "{{ payload_status_home }}"
+  dest: "{{ payload_status_dest }}"
+  context: /payload-status
+  react:
+    vars:
+      - name: 'REACT_APP_PRBZ_URL'
+        value: "{{ prbz_overview_url }}rest/api/"
+      - name: 'REACT_APP_VERSION'
+        value: '$npm_package_version'

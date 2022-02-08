@@ -1,17 +1,3 @@
 ---
-payload_status:
-  owner: jenkins
-  group: jenkins
-  git:
-    url: 'git@github.com:jboss-set/payload-status.git'
-    version: main
-    keyfile: "{{ github_keyfile }}"
-  home: "{{ override_payload_status_home | default('/home/jenkins/payload_status.git') }}"
-  dest: "{{ override_payload_status_dest | default('/home/nginx/static/payload_status') }}"
-  context: /payload-status
-  react:
-    vars:
-      - name: 'REACT_APP_PRBZ_URL'
-        value: "{{ override_prbz_overview_url }}rest/api/"
-      - name: 'REACT_APP_VERSION'
-        value: '$npm_package_version'
+payload_status_home: "/home/jenkins/payload_status.git"
+payload_status_dest: "/home/nginx/static/payload_status"
