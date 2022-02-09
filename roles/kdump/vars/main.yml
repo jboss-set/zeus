@@ -1,0 +1,3 @@
+---                                                  
+kdump:
+  level: "{{ kdump_level }}"

@@ -1,3 +1,2 @@
 ---
-kdump:
-  level: "{{ override_kdump_level | default('31') }}"
+kdump_level: "31"
