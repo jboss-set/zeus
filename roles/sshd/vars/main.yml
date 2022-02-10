@@ -1,0 +1,8 @@
+---                                                                         
+sshd:
+  port: 22
+  bind_addr: 0.0.0.0
+  generate_key: "{{ sshd_generate_key }}"
+  permit_root_login: "{{ sshd_permit_root_login }}"
+  password_auth: "yes"
+  x11_forwarding: "yes"
