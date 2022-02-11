@@ -1,2 +1,2 @@
 ---
-yum_cache_update : "{{ override_yum_cache_update | default('true') }}"
+yum_cache_update: "true"

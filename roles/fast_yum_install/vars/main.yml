@@ -1,0 +1,3 @@
+---
+yum:
+  cache_update : "{{ yum_cache_update }}"

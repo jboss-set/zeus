@@ -1,7 +1,7 @@
 ---
 - assert:
     that:
-      - yum_cache_update is defined
+      - yum.cache_update is defined
     quiet: true
 
 - block:
@@ -12,9 +12,9 @@
     register: rpm_info
     changed_when: rpm_info.failed
   rescue:
-  - name: "If package {{ package_name }} is missing, install package using yum.(cache update: {{ yum_cache_update }})"
+  - name: "If package {{ package_name }} is missing, install package using yum.(cache update: {{ yum.cache_update }})"
     yum:
       name: "{{ package_name }}"
-      update_cache: "{{ yum_cache_update }}"
+      update_cache: "{{ yum.cache_update }}"
       state: installed
     when: rpm_info.failed
