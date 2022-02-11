@@ -1,0 +1,13 @@
+---
+git:
+  ssl:
+    verify: false
+  users:
+    - user: root
+      email: rpelisse@redhat.com
+      name: 'Romain Pelisse'
+      home: /root
+    - user: jenkins
+      email: jboss-set@redhat.com
+      name: "JBoss SET"
+      home: "{{ jenkins_home }}"
