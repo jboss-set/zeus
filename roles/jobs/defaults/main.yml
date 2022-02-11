@@ -1,19 +1,7 @@
 ---
-jenkins_jobs_to_update_list: []
-jobs:
-  disabled: "{{ local_dev_env | default('false') }}"
-  descriptors:
-    home: "{{ override_jobs_home | default('/home/jenkins/jobs_definition') }}"
-  synchronizer:
-    home: "{{ override_jobs_synchronizer | default('/opt/tools/jobs-synchronizer/') }}"
-    script:
-      src: 'templates/synchronizer/jobs-sync.sh.j2'
-      name: 'jobs-sync.sh'
-    container:
-      src: 'templates/synchronizer/podman-jobs-sync.sh.j2'
-      name: 'podman-jobs-sync.sh'
-jenkinsfile:
-  git_repo: "{{ override_jenkinsfile_git_repo | default('https://github.com/jboss-set/cedalion') }}"
-  path: "{{ override_jenkinsfile_path | default('Jenkinsfile') }}"
-  eap_repo: "{{ git_repo_for_eap }}"
-  polling: "{{ override_jenkinsfile_polling | default('false') }}"
+local_dev_env: "false"
+jobs_home: "/home/jenkins/jobs_definition"
+jobs_synchronizer: "/opt/tools/jobs-synchronizer/"
+jenkinsfile_git_repo: "https://github.com/jboss-set/cedalion"
+jenkinsfile_path: "Jenkinsfile"
+jenkinsfile_polling: "false"

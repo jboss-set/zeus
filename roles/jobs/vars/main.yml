@@ -1,0 +1,19 @@
+---
+jenkins_jobs_to_update_list: []
+jobs:
+  disabled: "{{ local_dev_env }}"
+  descriptors:
+    home: "{{ jobs_home }}"
+  synchronizer:
+    home: "{{ jobs_synchronizer }}"
+    script:
+      src: 'templates/synchronizer/jobs-sync.sh.j2'
+      name: 'jobs-sync.sh'
+    container:
+      src: 'templates/synchronizer/podman-jobs-sync.sh.j2'
+      name: 'podman-jobs-sync.sh'
+jenkinsfile:
+  git_repo: "{{ jenkinsfile_git_repo }}"
+  path: "{{ jenkinsfile_path }}"
+  eap_repo: "{{ git_repo_for_eap }}"
+  polling: "{{ jenkinsfile_polling }}"
