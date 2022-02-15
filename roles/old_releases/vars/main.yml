@@ -1,4 +1,4 @@
----                                                                       
+---
 old_releases:
   dir: "{{ old_releases_dir }}"
   url: "{{ old_releases_url }}"
