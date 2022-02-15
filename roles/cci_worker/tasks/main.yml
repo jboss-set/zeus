@@ -1,46 +1,46 @@
 ---
 - assert:
     that:
-      - account is defined
-      - account.username is defined
-      - account.username != ""
-      - account.password is defined
-      - account.password != ""
-      - account.home is defined
+      - cci_worker.account is defined
+      - cci_worker.account.username is defined
+      - cci_worker.account.username != ""
+      - cci_worker.account.password is defined
+      - cci_worker.account.password != ""
+      - cci_worker.account.home is defined
     quiet: true
 
-- name: "Creating {{ account.username }} user."
+- name: "Creating {{ cci_worker.account.username }} user."
   user:
-    name: "{{ account.username }}"
+    name: "{{ cci_worker.account.username }}"
     state: present
-    password: "{{ account.password | password_hash('sha512', 'A512') }}"
+    password: "{{ cci_worker.account.password | password_hash('sha512', 'A512') }}"
     shell: /bin/bash
 
 - name: "Ensure path provided for home is valid"
   stat:
-    path: "{{ account.home }}"
+    path: "{{ cci_worker.account.home }}"
   register: account_home
 
-- name: "Ensure home directory {{ account.home }} exists."
+- name: "Ensure home directory {{ cci_worker.account.home }} exists."
   file:
     state: directory
-    path: "{{ account.home }}"
-    owner: "{{ account.username }}"
+    path: "{{ cci_worker.account.home }}"
+    owner: "{{ cci_worker.account.username }}"
   when: account_home.stat is defined
 
-- name: "Ensure ssh directory for {{ account.username }} exists"
+- name: "Ensure ssh directory for {{ cci_worker.account.username }} exists"
   file:
     state: directory
-    path: "{{ account.home }}/.ssh"
-    owner: "{{ account.username }}"
+    path: "{{ cci_worker.account.home }}/.ssh"
+    owner: "{{ cci_worker.account.username }}"
 
 - name: "Deploy authorized key"
   authorized_key:
-    user: "{{ account.username }}"
+    user: "{{ cci_worker.account.username }}"
     state: present
     key: "{{ item }}"
   with_file:
-    - "{{ account.pubkey_file }}"
+    - "{{ cci_worker.pubkey_file }}"
 
 - name: "Deploy fix_multicast script"
   copy:

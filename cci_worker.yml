@@ -9,7 +9,7 @@
     - vars/java.yml
 
   roles:
-    - cci_account
+    - cci_worker
     - sshd
     - sudoers
     - ssh
