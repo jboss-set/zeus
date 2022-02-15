@@ -1,4 +1,4 @@
----                                                                                                                                        
+---
 pr_processor:
   home: "{{ pr_processor_home }}"
   url: "{{ pr_processor_url }}"
