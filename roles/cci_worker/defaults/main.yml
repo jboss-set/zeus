@@ -4,4 +4,7 @@ cci_worker:
     username: "{{ cci_worker_username }}"
     password: "{{ cci_worker_password }}"
     home: "/home/{{ cci_worker_username }}"
+
   pubkey_file: "{{ override_cci_account_pubkey_file | default('vars/files/openstack_rsa.pub') }}"
+  jenkins:
+    url: "{{ cci_worker_jenkins_url }}"

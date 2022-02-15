@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0                           http://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+  <profiles>
+    <profile>
+      <id>prospero</id>
+      <repositories>
+        <repository>
+          <id>galleon-job</id>
+          <url>{{ cci_worker.jenkins.url }}/job/installer.next/job/galleon/lastSuccessfulBuild/artifact/mvn-repo/</url>
+        </repository>
+        <repository>
+          <id>galleon-plugins-job</id>
+          <url>{{ cci_worker.jenkins.url }}/job/installer.next/job/galleon-plugins/lastSuccessfulBuild/artifact/mvn-repo/</url>
+        </repository>
+        <repository>
+          <id>wildfly-channel-job</id>
+          <url>{{ cci_worker.jenkins.url }}/job/installer.next/job/wildfly-channel/lastSuccessfulBuild/artifact/mvn-repo/</url>
+        </repository>
+      </repositories>
+    </profile>
+  </profiles>
+
+</settings>

@@ -63,3 +63,17 @@
     name: "setup_multicast.service"
     state: started
     enabled: yes
+
+- name: "Ensure .m2 directory {{ cci_worker.account.home }} exists."
+  file:
+    state: directory
+    path: "{{ cci_worker.account.home }}/.m2"
+    owner: "{{ cci_worker.account.username }}"
+
+- name: "Deploy maven settings.xml"
+  template:
+    src: "templates/settings.xml.j2"
+    dest: "{{ cci_worker.account.home }}/.m2/settings.xml"
+    owner: jenkins
+    group: jenkins
+    mode: 0644
