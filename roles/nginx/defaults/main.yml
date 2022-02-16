@@ -1,60 +1,51 @@
 ---
-nginx: 
-  username: "{{ nginx_username_override | default('nginx') }}"
-  uid: "{{ nginx_uid_override | default('101') }}"
-  groupname: "{{ nginx_groupname_override | default('nginx') }}"
-  gid: "{{ nginx_gid_override | default('101') }}"
-  home: "{{ nginx_home_override | default('/home/nginx') }}" 
-  volume: "{{ nginx_volume_override | default('/etc/nginx') }}"
-  docroot: "{{ nginx_http_docroot_override | default('/home/nginx/static/') }}"
-  https:
-    ssl:
-      home: "{{ nginx_https_ssl_home_override | default('/home/nginx/ssl') }}"
-      cert: "{{ nginx_https_ssl_cert_override | default('nginx.crt') }}"
-      private_key: "{{ nginx_https_ssl_private_key_override | default('nginx.pem') }}"
-      csr: "{{ nginx_https_ssl_csr_override | default('nginx.csr') }}"
-      domain_name: "{{ ansible_nodename }}"
-  apps:
-    - { name: 'prbz_view', url: "{{ prbz_overview_url | default('/prbz-overview/') }}", logo: 'img/pr-bz-overview-logo.png' }
-    - { name: 'jenkins',   url: "https://{{ ansible_nodename }}/jenkins", logo: 'img/jenkins-logo.png' }
-    - { name: 'monit',     url: "https://{{ ansible_nodename }}/monit", logo: "img/monit-logo.png" }
-    - { name: 'payload-status', url: "https://{{ ansible_nodename }}/payload-status/index.html", logo: 'img/payload-status-logo.png' }
-  caches:
-    expires: '90d'
-    directories:
-      - { id: maven, name: 'maven_caches',  directory: '/home/jboss/maven_caches', max_size: '20g', inactive: '90d' }
-    entry:
-      -  { name: 'maven.central.cache', mirrorOf: 'central', desc: 'Maven Central Cache', path: '/maven/', port: '443', protocol: 'HTTPS', url: 'https://repo1.maven.org/maven2/' }
-      -  { name: 'spring.io.cache', mirrorOf: 'repository.spring.maven.libs', desc: 'Spring IO Cache', path: '/spring/', port: '443', protocol: 'HTTPS', url: 'https://repo.spring.io/libs-milestone/' }
-      -  { name: 'jboss.group.org.cache', mirrorOf: 'jboss-public-repository-group', desc: 'JBoss Public Repositories Cache', path: '/jboss/', port: '443', protocol: 'HTTPS', url: 'https://repository.jboss.org/nexus/content/groups/public/' }
-      -  { name: 'jboss.org.cache', mirrorOf: 'jboss-public-repository', desc: 'JBoss Public Repositories Cache', path: '/jboss-alt/', port: '443', protocol: 'HTTPS', url: 'https://repository.jboss.org/nexus/content/groups/public/' }
-      -  { name: 'jboss.org.plugin.cache', mirrorOf: 'jboss-public-plugin-repository-group', desc: 'JBoss Public Repositories Cache (Plugins)', path: '/public-jboss/', port: '443', protocol: 'HTTPS', url: 'https://repository.jboss.org/nexus/content/groups/public-jboss' }
-      -  { name: 'jboss.org.plugin.cache.alt', mirrorOf: 'jboss-public-repository-group-jboss', desc: 'JBoss Public Repositories Cache (Plugins) (Alt)', path: '/public-jboss-alt/', port: '443', protocol: 'HTTPS', url: 'https://repository.jboss.org/nexus/content/groups/public-jboss' } 
-      -  { name: 'maven.repository.redhat.com.ga', mirrorOf: 'redhat-ga-repository', desc: 'JBoss Public Repositories Cache', path: '/redhat-ga/', port: '443', protocol: 'HTTPS', url: 'https://maven.repository.redhat.com/ga/' }
-        #-  { name: 'atlassian.public', mirrorOf: 'atlassian-public', desc: 'Atlassian Public Repositories Cache', path: '/atlassian/', port: '443', protocol: 'HTTPS', url: 'https://maven.atlassian.com/maven-external/' }
-        # can't cache this for some, reason as nginx is runnig into  SSL_do_handshake() failed (SSL: error:... => unclear why
-        #      -  { name: 'maven.repository.redhat.com.ga.2', mirrorOf: 'jboss-enterprise-maven-repository', desc: 'JBoss Public Repositories Cache', path: '/redhat-ga-alt/', port: '443', protocol: 'HTTPS', url: 'https://maven.repository.redhat.com/ga/' }
-      -  { name: "{{ brew_repos.repo0.id }}", mirrorOf: "{{ brew_repos.repo0.mirrorOf }}", desc: "{{ brew_repos.repo0.desc }}", path: "{{ brew_repos.repo0.path }}", port: '443', protocol: 'HTTPS', url: "{{ brew_repos.repo0.url }}" }
-      -  { name: "{{ brew_repos.repo1.id }}", mirrorOf: "{{ brew_repos.repo1.mirrorOf }}", desc: "{{ brew_repos.repo1.desc }}", path: "{{ brew_repos.repo1.path }}", port: '443', protocol: 'HTTPS', url: "{{ brew_repos.repo1.url }}" }
-      -  { name: "{{ brew_repos.repo2.id }}", mirrorOf: "{{ brew_repos.repo2.mirrorOf }}", desc: "{{ brew_repos.repo2.desc }}", path: "{{ brew_repos.repo2.path }}", port: '443', protocol: 'HTTPS', url: "{{ brew_repos.repo2.url }}" }
-      -  { name: "{{ brew_repos.repo3.id }}", mirrorOf: "{{ brew_repos.repo3.mirrorOf }}", desc: "{{ brew_repos.repo3.desc }}", path: "{{ brew_repos.repo3.path }}", port: '443', protocol: 'HTTPS', url: "{{ brew_repos.repo3.url }}" }
-      -  { name: "{{ brew_repos.repo4.id }}", mirrorOf: "{{ brew_repos.repo4.mirrorOf }}", desc: "{{ brew_repos.repo4.desc }}", path: "{{ brew_repos.repo4.path }}", port: '443', protocol: 'HTTPS', url: "{{ brew_repos.repo4.url }}" }
-      -  { name: "{{ brew_repos.repo5.id }}", mirrorOf: "{{ brew_repos.repo5.mirrorOf }}", desc: "{{ brew_repos.repo5.desc }}", path: "{{ brew_repos.repo5.path }}", port: '443', protocol: 'HTTPS', url: "{{ brew_repos.repo5.url }}" }
-      -  { name: "{{ brew_repos.repo6.id }}", mirrorOf: "{{ brew_repos.repo6.mirrorOf }}", desc: "{{ brew_repos.repo6.desc }}", path: "{{ brew_repos.repo6.path }}", port: '443', protocol: 'HTTPS', url: "{{ brew_repos.repo6.url }}" }
-  service:
-    - name: nginx
-      image: 'docker.io/library/nginx'
-      ip: "{{ known_hosts.nginx.ip | default('10.88.0.2') }}"
-      readonly_volumes:
-        - { src: '/home/nginx/static', dest: '/usr/share/nginx/html' }
-        - { src: '/home/nginx/config/nginx.conf', dest: '/etc/nginx/nginx.conf' }
-        - { src: '/home/nginx/config/commons.d/', dest: '/etc/nginx/commons.d/' }
-        - { src: '/home/nginx/ssl/', dest: '/etc/nginx/ssl/' }
-      readwrite_volumes:
-        - { src: '/home/jboss/maven_caches/', dest: '/home/jboss/maven_caches/' }
-      add_hosts:
-        - { src: "{{ known_hosts.server.name  }}", ip: "{{ known_hosts.server.ip }}" }
-        - { src: "{{ known_hosts.podman.name }}", ip: "{{ known_hosts.podman.ip }}" }
-      ports_mapping:
-       - { src: '80', dest: '80' }
-       - { src: '443', dest: '443' }
+nginx_username: "nginx"
+nginx_uid: "101"
+nginx_groupname: "nginx"
+nginx_gid: "101"
+nginx_home: "/home/nginx"
+nginx_volume: "/etc/nginx"
+nginx_http_docroot: "/home/nginx/static/"
+nginx_https_ssl_home: "/home/nginx/ssl"
+nginx_https_ssl_cert: "nginx.crt"
+nginx_https_ssl_private_key: "nginx.pem"
+nginx_https_ssl_csr: "nginx.csr"
+nginx_apps:
+  - { name: 'prbz_view', url: "{{ prbz_overview_url | default('/prbz-overview/') }}", logo: 'img/pr-bz-overview-logo.png' }
+  - { name: 'jenkins',   url: "https://{{ ansible_nodename }}/jenkins", logo: 'img/jenkins-logo.png' }
+  - { name: 'monit',     url: "https://{{ ansible_nodename }}/monit", logo: "img/monit-logo.png" }
+  - { name: 'payload-status', url: "https://{{ ansible_nodename }}/payload-status/index.html", logo: 'img/payload-status-logo.png' }
+nginx_caches_directories:
+  - { id: maven, name: 'maven_caches',  directory: '/home/jboss/maven_caches', max_size: '20g', inactive: '90d' }
+nginx_caches_entry:
+  - { name: 'maven.central.cache', mirrorOf: 'central', desc: 'Maven Central Cache', path: '/maven/', port: '443', protocol: 'HTTPS', url: 'https://repo1.maven.org/maven2/' }
+  - { name: 'spring.io.cache', mirrorOf: 'repository.spring.maven.libs', desc: 'Spring IO Cache', path: '/spring/', port: '443', protocol: 'HTTPS', url: 'https://repo.spring.io/libs-milestone/' }
+  - { name: 'jboss.group.org.cache', mirrorOf: 'jboss-public-repository-group', desc: 'JBoss Public Repositories Cache', path: '/jboss/', port: '443', protocol: 'HTTPS', url: 'https://repository.jboss.org/nexus/content/groups/public/' }
+  - { name: 'jboss.org.cache', mirrorOf: 'jboss-public-repository', desc: 'JBoss Public Repositories Cache', path: '/jboss-alt/', port: '443', protocol: 'HTTPS', url: 'https://repository.jboss.org/nexus/content/groups/public/' }
+  - { name: 'jboss.org.plugin.cache', mirrorOf: 'jboss-public-plugin-repository-group', desc: 'JBoss Public Repositories Cache (Plugins)', path: '/public-jboss/', port: '443', protocol: 'HTTPS', url: 'https://repository.jboss.org/nexus/content/groups/public-jboss' }
+  - { name: 'jboss.org.plugin.cache.alt', mirrorOf: 'jboss-public-repository-group-jboss', desc: 'JBoss Public Repositories Cache (Plugins) (Alt)', path: '/public-jboss-alt/', port: '443', protocol: 'HTTPS', url: 'https://repository.jboss.org/nexus/content/groups/public-jboss' }
+  - { name: 'maven.repository.redhat.com.ga', mirrorOf: 'redhat-ga-repository', desc: 'JBoss Public Repositories Cache', path: '/redhat-ga/', port: '443', protocol: 'HTTPS', url: 'https://maven.repository.redhat.com/ga/' }
+  #-  { name: 'atlassian.public', mirrorOf: 'atlassian-public', desc: 'Atlassian Public Repositories Cache', path: '/atlassian/', port: '443', protocol: 'HTTPS', url: 'https://maven.atlassian.com/maven-external/' }
+  # can't cache this for some, reason as nginx is runnig into  SSL_do_handshake() failed (SSL: error:... => unclear why
+  #      -  { name: 'maven.repository.redhat.com.ga.2', mirrorOf: 'jboss-enterprise-maven-repository', desc: 'JBoss Public Repositories Cache', path: '/redhat-ga-alt/', port: '443', protocol: 'HTTPS', url: 'https://maven.repository.redhat.com/ga/' }
+  - { name: "{{ brew_repos.repo0.id }}", mirrorOf: "{{ brew_repos.repo0.mirrorOf }}", desc: "{{ brew_repos.repo0.desc }}", path: "{{ brew_repos.repo0.path }}", port: '443', protocol: 'HTTPS', url: "{{ brew_repos.repo0.url }}" }
+  - { name: "{{ brew_repos.repo1.id }}", mirrorOf: "{{ brew_repos.repo1.mirrorOf }}", desc: "{{ brew_repos.repo1.desc }}", path: "{{ brew_repos.repo1.path }}", port: '443', protocol: 'HTTPS', url: "{{ brew_repos.repo1.url }}" }
+  - { name: "{{ brew_repos.repo2.id }}", mirrorOf: "{{ brew_repos.repo2.mirrorOf }}", desc: "{{ brew_repos.repo2.desc }}", path: "{{ brew_repos.repo2.path }}", port: '443', protocol: 'HTTPS', url: "{{ brew_repos.repo2.url }}" }
+  - { name: "{{ brew_repos.repo3.id }}", mirrorOf: "{{ brew_repos.repo3.mirrorOf }}", desc: "{{ brew_repos.repo3.desc }}", path: "{{ brew_repos.repo3.path }}", port: '443', protocol: 'HTTPS', url: "{{ brew_repos.repo3.url }}" }
+  - { name: "{{ brew_repos.repo4.id }}", mirrorOf: "{{ brew_repos.repo4.mirrorOf }}", desc: "{{ brew_repos.repo4.desc }}", path: "{{ brew_repos.repo4.path }}", port: '443', protocol: 'HTTPS', url: "{{ brew_repos.repo4.url }}" }
+  - { name: "{{ brew_repos.repo5.id }}", mirrorOf: "{{ brew_repos.repo5.mirrorOf }}", desc: "{{ brew_repos.repo5.desc }}", path: "{{ brew_repos.repo5.path }}", port: '443', protocol: 'HTTPS', url: "{{ brew_repos.repo5.url }}" }
+  - { name: "{{ brew_repos.repo6.id }}", mirrorOf: "{{ brew_repos.repo6.mirrorOf }}", desc: "{{ brew_repos.repo6.desc }}", path: "{{ brew_repos.repo6.path }}", port: '443', protocol: 'HTTPS', url: "{{ brew_repos.repo6.url }}" }
+known_hosts.nginx.ip: "10.88.0.2"
+nginx_service_readonly_volumes:
+  - { src: '/home/nginx/static', dest: '/usr/share/nginx/html' }
+  - { src: '/home/nginx/config/nginx.conf', dest: '/etc/nginx/nginx.conf' }
+  - { src: '/home/nginx/config/commons.d/', dest: '/etc/nginx/commons.d/' }
+  - { src: '/home/nginx/ssl/', dest: '/etc/nginx/ssl/' }
+nginx_service_readwrite_volumes:
+  - { src: '/home/jboss/maven_caches/', dest: '/home/jboss/maven_caches/' }
+nginx_service_add_hosts:
+  - { src: "{{ known_hosts.server.name  }}", ip: "{{ known_hosts.server.ip }}" }
+  - { src: "{{ known_hosts.podman.name }}", ip: "{{ known_hosts.podman.ip }}" }
+nginx_service_ports_mapping:
+  - { src: '80', dest: '80' }
+  - { src: '443', dest: '443' }
