@@ -1,0 +1,29 @@
+---
+nginx:
+  username: "{{ nginx_username }}"
+  uid: "{{ nginx_uid }}"
+  groupname: "{{ nginx_groupname }}"
+  gid: "{{ nginx_gid }}"
+  home: "{{ nginx_home }}"
+  volume: "{{ nginx_volume }}"
+  docroot: "{{ nginx_http_docroot }}"
+  https:
+    ssl:
+      home: "{{ nginx_https_ssl_home }}"
+      cert: "{{ nginx_https_ssl_cert }}"
+      private_key: "{{ nginx_https_ssl_private_key }}"
+      csr: "{{ nginx_https_ssl_csr }}"
+      domain_name: "{{ ansible_nodename }}"
+  apps: "{{ nginx_apps }}"
+  caches:
+    expires: '90d'
+    directories: "{{ nginx_caches_directories }}"
+    entry: "{{ nginx_caches_entry }}"
+  service:
+    - name: nginx
+      image: 'docker.io/library/nginx'
+      ip: "{{ known_hosts.nginx.ip }}"
+      readonly_volumes: "{{ nginx_service_readonly_volumes }}"
+      readwrite_volumes: "{{ nginx_service_readwrite_volumes }}"
+      add_hosts: "{{ nginx_service_add_hosts }}"
+      ports_mapping: "{{ nginx_service_ports_mapping }}"
