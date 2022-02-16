@@ -1,15 +1,10 @@
 ---
-podman_services: []
-ares:
-  home: "{{ podman_images_home_override | default('/home/jenkins/ares.git') }}"
-  owner: "{{ podman_images_user_ovveride | default('jenkins') }}"
-  group: "{{ podman_images_user_ovveride | default('jenkins') }}"
-  git:
-    repo: "{{ podman_images_git_repo_override | default('git@github.com:jboss-set/ares.git') }}"
-    branch: "{{ podman_images_git_branch_override | default('olympus') }}"
-    keyfile: "{{ github_keyfile }}"
-  folder_name: "{{ podman_images_git_folder_name_override | default('ares.git') }}"
-  images_with_subs:
-    - molecule-slave
-  images_with_sshkey:
-    - molecule-slave
+podman_images_home: "/home/jenkins/ares.git"
+podman_images_user: "jenkins"
+podman_images_git_repo: "git@github.com:jboss-set/ares.git"
+podman_images_git_branch: "olympus"
+podman_images_git_folder_name: "ares.git"
+ares_images_with_subs:
+  - molecule-slave
+ares_images_with_sshkey:
+  - molecule-slave
