@@ -1,0 +1,13 @@
+---
+podman_services: []
+ares:
+  home: "{{ podman_images_home }}"
+  owner: "{{ podman_images_user }}"
+  group: "{{ podman_images_user }}"
+  git:
+    repo: "{{ podman_images_git_repo }}"
+    branch: "{{ podman_images_git_branch }}"
+    keyfile: "{{ github_keyfile }}"
+  folder_name: "{{ podman_images_git_folder_name }}"
+  images_with_subs: "{{ ares_images_with_subs }}"
+  images_with_sshkey: "{{ ares_images_with_sshkey }}"
