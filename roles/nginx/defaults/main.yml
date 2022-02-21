@@ -15,7 +15,7 @@ nginx:
       csr: "{{ nginx_https_ssl_csr_override | default('nginx.csr') }}"
       domain_name: "{{ ansible_nodename }}"
   apps:
-    - { name: 'prbz_view', url: "{{ override_prbz_overview_url | default('/prbz-overview/') }}", logo: 'img/pr-bz-overview-logo.png' }
+    - { name: 'prbz_view', url: "{{ prbz_overview_url | default('/prbz-overview/') }}", logo: 'img/pr-bz-overview-logo.png' }
     - { name: 'jenkins',   url: "https://{{ ansible_nodename }}/jenkins", logo: 'img/jenkins-logo.png' }
     - { name: 'monit',     url: "https://{{ ansible_nodename }}/monit", logo: "img/monit-logo.png" }
     - { name: 'payload-status', url: "https://{{ ansible_nodename }}/payload-status/index.html", logo: 'img/payload-status-logo.png' }
