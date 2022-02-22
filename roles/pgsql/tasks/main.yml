@@ -34,6 +34,6 @@
       - pgsql.instances is defined
 
   - set_fact:
-      podman_services: "{{ podman_services }} + {{ postgres_instances.services }}"
+      podman_services: "{{ postgres_instances.services }}"
   when:
     - pgsql_skip is not defined or ansible_check_mode
