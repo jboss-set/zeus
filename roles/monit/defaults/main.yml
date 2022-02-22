@@ -1,46 +1,37 @@
 ---
-max_nb_images_for_root: 10
-max_nb_images_for_jenkins: 15
-
-monit_custom_scripts_directory: "{{ override_monit_custom_scripts_directory | default('/opt/monit') }}"
-monit:
-  daemon: "{{ monit_daemon_override | default(60) }}"
-  email:
-    server: "{{ monit_mail_server_hostname | default('localhost') }}"
-    port: "{{ (monit_mail_server_port | default(399)) | int }}"
-    from: "{{ monit_mail_from | default('monit@example.com') }}"
-    to: "{{ monit_mail_to | default('monit@example.com') }}"
-  webapp:
-    port: "{{ monit_webapp_port | default('2812') }}"
-    bind_address: "{{ monit_webapp_bind_address | default('localhost') }}"
-    allow_from: "{{ monit_webapp_allow_from | default('127.0.0.0/16') }}"
-    username: "{{ monit_webapp_username | default('jboss') }}"
-    password: "{{ monit_webapp_password | default('jboss') }}"
-  alerts:
-    system:
-      - { name: "{{ ansible_hostname }}", src: 'monit.average_load.j2' }
-    dnsnames:
-      - { name: 'raw.githubusercontent.com' }
-      - { name: 'repository.jboss.org' }
-      - { name: 'repo1.maven.org' }
-    disk_usage:
-      - { name: 'boot', path: '/boot', threshold: '90%' }
-      - { name: 'root', path: '/', threshold: '90%' }
-        #      - { name: 'var-crash', path: '/var/crash', threshold: '90%' }
-      - { name: 'home', path: '/home', threshold: '90%' }
-        #      - { name: 'docker-part', path: '/var/lib/docker', threshold: '85%' }
-    services:
-      - { name: 'sshd', pidfile: '/var/run/sshd.pid', start_program: '/usr/bin/systemctl start sshd', stop_program: '/usr/bin/systemctl stop sshd' }
-      - { name: 'hephaestus', pidfile: '/var/run/hephaestus/hephaestus.pid', start_program: '/usr/bin/systemctl start hephaestus', stop_program: '/usr/bin/systemctl stop hephaestus' }
-      - { name: 'nginx', pidfile: '/var/run/nginx/nginx.pid', start_program: '/usr/bin/systemctl start nginx', stop_program: '/usr/bin/systemctl stop nginx' }
-      - { name: 'pgsql-mjolnir-predprod', pidfile: '/var/run/pgsql-mjolnir-predprod/pgsql-mjolnir-predprod.pid', start_program: '/usr/bin/systemctl start pgsql-mjolnir-predprod', stop_program: '/usr/bin/systemctl stop pgsql-mjolnir-predprod
-        ' }
-      - { name: 'pgsql-component-upgrade-dev', pidfile: '/var/run/pgsql-component-upgrade-dev/pgsql-component-upgrade-dev.pid', start_program: '/usr/bin/systemctl start pgsql-component-upgrade-dev', stop_program: '/usr/bin/systemctl stop pgsql-component-upgrade-dev' }
-    custom_scripts:
-      - { name: "jenkins-dead-containers", src: 'jenkins-dead-containers.sh.j2', dest: "{{ monit_custom_scripts_directory }}/jenkins-containers" }
-      - { name: "jenkins-running-containers", src: 'jenkins-running-containers.sh.j2', dest: "{{ monit_custom_scripts_directory }}/jenkins-dead-containers" }
-      - { name: "jenkins-podman-too-many-images", src: 'podman-too-many-images.sh.j2', dest: "{{ monit_custom_scripts_directory }}/jenkins-{{ max_nb_images_for_jenkins }}-podman-too-many-images.sh" }
-      - { name: "root-podman-too-many-images", src: 'podman-too-many-images.sh.j2', dest: "{{ monit_custom_scripts_directory }}/root-{{ max_nb_images_for_root }}-podman-too-many-images.sh" }
-      - { name: "yum-update", src: 'yum-update.sh.j2', dest: "{{ monit_custom_scripts_directory }}/yum-update" }
-epel:
-  url: 'https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm'
+override_monit_custom_scripts_directory: "/opt/monit"
+monit_daemon_override: "60"
+monit_mail_server_hostname: "localhost"
+monit_mail_server_port: "399"
+monit_mail_from: "monit@example.com"
+monit_mail_to: "monit@example.com"
+monit_webapp_port: "2812"
+monit_webapp_bind_address: "localhost"
+monit_webapp_allow_from: "127.0.0.0/16"
+monit_webapp_username: "jboss"
+monit_webapp_password: "jboss"
+monit_alerts_system:
+  - { name: "{{ ansible_hostname }}", src: 'monit.average_load.j2' }
+monit_alerts_dnsnames:
+  - { name: 'raw.githubusercontent.com' }
+  - { name: 'repository.jboss.org' }
+  - { name: 'repo1.maven.org' }
+monit_alerts_disk_usage:
+  - { name: 'boot', path: '/boot', threshold: '90%' }
+  - { name: 'root', path: '/', threshold: '90%' }
+  #      - { name: 'var-crash', path: '/var/crash', threshold: '90%' }
+  - { name: 'home', path: '/home', threshold: '90%' }
+  #      - { name: 'docker-part', path: '/var/lib/docker', threshold: '85%' }
+monit_alerts_services:
+  - { name: 'sshd', pidfile: '/var/run/sshd.pid', start_program: '/usr/bin/systemctl start sshd', stop_program: '/usr/bin/systemctl stop sshd' }
+  - { name: 'hephaestus', pidfile: '/var/run/hephaestus/hephaestus.pid', start_program: '/usr/bin/systemctl start hephaestus', stop_program: '/usr/bin/systemctl stop hephaestus' }
+  - { name: 'nginx', pidfile: '/var/run/nginx/nginx.pid', start_program: '/usr/bin/systemctl start nginx', stop_program: '/usr/bin/systemctl stop nginx' }
+  - { name: 'pgsql-mjolnir-predprod', pidfile: '/var/run/pgsql-mjolnir-predprod/pgsql-mjolnir-predprod.pid', start_program: '/usr/bin/systemctl start pgsql-mjolnir-predprod', stop_program: '/usr/bin/systemctl stop pgsql-mjolnir-predprod
+          ' }
+  - { name: 'pgsql-component-upgrade-dev', pidfile: '/var/run/pgsql-component-upgrade-dev/pgsql-component-upgrade-dev.pid', start_program: '/usr/bin/systemctl start pgsql-component-upgrade-dev', stop_program: '/usr/bin/systemctl stop pgsql-component-upgrade-dev' }
+monit_alerts_custom_scripts:
+  - { name: "jenkins-dead-containers", src: 'jenkins-dead-containers.sh.j2', dest: "{{ monit_custom_scripts_directory }}/jenkins-containers" }
+  - { name: "jenkins-running-containers", src: 'jenkins-running-containers.sh.j2', dest: "{{ monit_custom_scripts_directory }}/jenkins-dead-containers" }
+  - { name: "jenkins-podman-too-many-images", src: 'podman-too-many-images.sh.j2', dest: "{{ monit_custom_scripts_directory }}/jenkins-{{ max_nb_images_for_jenkins }}-podman-too-many-images.sh" }
+  - { name: "root-podman-too-many-images", src: 'podman-too-many-images.sh.j2', dest: "{{ monit_custom_scripts_directory }}/root-{{ max_nb_images_for_root }}-podman-too-many-images.sh" }
+  - { name: "yum-update", src: 'yum-update.sh.j2', dest: "{{ monit_custom_scripts_directory }}/yum-update" }
