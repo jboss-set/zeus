@@ -1,0 +1,39 @@
+---
+sql_script_to_run: []
+pgsql:
+  scripts:
+    home: /opt/tools/pgsql
+  instances:
+    mjolnir_preprod:
+      db_name: mjolnir
+      username: mjolnir
+      password: "{{ mjolnir_preprod_psql_password }}"
+      port: 5432
+      create_db:
+        name: 'mjolnir-preprod_create.sql'
+        url: "{{ mjolnir_prepord_create_db_url }}"
+      load_data:
+        name: 'mjolnir-preprod_data.sql'
+    component_upgrade:
+      db_name: component-upgrade
+      username: component-upgrade
+      password: "{{ component_upgrade_psql_password }}"
+      port: 15432
+      create_db:
+        name: 'component-upgrade-init.sql'
+        url: "{{ component_upgrade_create_db_url }}"
+postgres_instances:
+  services:
+    - name: pgsql-mjolnir-predprod
+      image: 'docker.io/library/postgres'
+      ip: "{{ known_hosts.pgsql_mjolnir.ip }}"
+      db_name: "{{ pgsql.instances.mjolnir_preprod.db_name }}"
+      ports_mapping: "{{ postgres_instances_services_ports_mapping }}"
+      vars: "{{ postgres_instances_services_vars }}"
+
+    - name: pgsql-component-upgrade-dev
+      image: 'docker.io/library/postgres'
+      ip: "{{ known_hosts.pgsql_mjolnir_upgrade.ip }}"
+      db_name: "{{ pgsql.instances.component_upgrade }}"
+      ports_mapping: "{{ postgres_instances_services_upgrade_ports_mapping }}"
+      vars: "{{ postgres_instances_services_upgrade_vars }}"
