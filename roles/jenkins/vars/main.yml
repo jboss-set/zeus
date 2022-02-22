@@ -1,0 +1,65 @@
+---
+jenkins:
+  groupname: "{{ jenkins_group }}"
+  bind_addr: "{{ jenkins_bind_addr }}"
+  port: "{{ jenkins_port }}"
+  username: "{{ jenkins_name }}"
+  uid: "{{ jenkins_uid }}"
+  gid: "{{ jenkins_gid }}"
+  home: "{{ jenkins_home }}"
+  home_next: "{{ jenkins_next_home }}"
+  tools:
+    home: "{{ jenkins_tools_home }}"
+  executors:
+    num: "{{ jenkins_num_executors }}"
+  default_jdk_home: '/opt/oracle/java'
+  default_mvn_home: '/opt/apache/maven'
+  default_mvn_settings: '/opt/tools/settings.xml'
+  jdk_list:
+    jdk8: '/opt/oracle/jdk1.8.0_181'
+    jdk17: '/opt/oracle/jdk-17.0.1'
+  admin:
+    id: 'admin'
+    password: "{{ jenkins_password }}"
+  ldap:
+    search:
+      group:
+        base: "{{ ldap_group_search_base }}"
+        filter: "{{ ldap_group_search_filter | default('') }}"
+    inhibit_root_dn: false
+    rootDn: "{{ ldap_root_dn | default('') }}"
+    host: "{{ ldap_host | default('') }}"
+    port: "{{ ldap_port | default('636') }}"
+    url: "{{ ldap_url | default('') }}"
+  root_ca:
+    url: "{{ root_ca_url | default('') }}"
+  role:
+    admin:
+      name: "{{ jenkins_role_admin_name }}"
+      group: "{{ jenkins_role_admin_group }}"
+      desc: "{{ jenkins_role_admin_desc }}"
+    ansibleCI:
+      name: "{{ jenkins_role_ansibleCI_name }}"
+      group: "{{ jenkins_role_admin_group }}"
+      desc: "{{ jenkins_role_ansibleCI_desc }}"
+    user:
+      name: "{{ jenkins_role_user_name }}"
+      group: "{{ jenkins_role_user_group }}"
+      desc: "{{ jenkins_role_user_desc }}"
+  view:
+  service:
+    - name: hephaestus
+      ip: "{{ known_hosts.jenkins.ip }}"
+      location: '/jenkins'
+      readwrite_volumes: "{{ jenkins_service_readwrite_volumes }}"
+      readonly_volumes: "{{ jenkins_service_readonly_volumes }}"
+      add_hosts: "{{ jenkins_service_add_hosts }}"
+      ports_mapping: "{{ jenkins_service_ports_mapping }}"
+    - name: hephaestus.next
+      ip: "{{ known_hosts.jenkins_next.ip }}"
+      location: '/jenkins.next'
+      state: stopped
+      readwrite_volumes: "{{ jenkins_service_next_readwrite_volumes }}"
+      readonly_volumes: "{{ jenkins_service_next_readonly_volumes }}"
+      add_hosts: "{{ jenkins_service_next_add_hosts }}"
+      ports_mapping: "{{ jenkins_service_next_ports_mapping }}"

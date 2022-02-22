@@ -1,82 +1,43 @@
 ---
-value_of_jenkins_home: "{{ override_jenkins_home | default('/home/jenkins/current') }}"
-value_of_jenkins_home_next: "{{ override_jenkins_next_home | default('/home/jenkins/next') }}"
-jenkins:
-  groupname: "{{ override_jenkins_group | default('jenkins') }}"
-  bind_addr: "{{ override_jenkins_bind_addr | default('localhost') }}"
-  port: "{{ override_jenkins_port | default('8080') }}"
-  username: "{{ override_jenkins_name | default('jenkins') }}"
-  uid: "{{ override_jenkins_uid | default(1000)  }}"
-  gid: "{{ override_jenkins_gid | default(1000)  }}"
-  home: "{{ value_of_jenkins_home }}"
-  home_next: "{{ value_of_jenkins_home_next }}"
-  tools:
-    home: "{{ override_jenkins_tools_home | default('/opt/tools') }}"
-  executors:
-    num: "{{ override_jenkins_num_executors | default(12) }}"
-  default_jdk_home: '/opt/oracle/java'
-  default_mvn_home: '/opt/apache/maven'
-  default_mvn_settings: '/opt/tools/settings.xml'
-  jdk_list:
-    jdk8: '/opt/oracle/jdk1.8.0_181'
-    jdk17: '/opt/oracle/jdk-17.0.1'
-  admin:
-    id: 'admin'
-    password: "{{ override_jenkins_password }}"
-  ldap:
-    search:
-      group:
-        base: "{{ override_ldap_group_search_base | default('') }}"
-        filter: "{{ override_ldap_group_search_filter | default('') }}"
-    inhibit_root_dn: false
-    rootDn: "{{ override_ldap_root_dn | default('') }}"
-    host: "{{ override_ldap_host | default('') }}"
-    port: "{{ override_ldap_port | default('636') }}"
-    url: "{{ override_ldap_url | default('') }}"
-  root_ca:
-    url: "{{ override_root_ca_url | default('') }}"
-  role:
-    admin:
-      name: "{{ override_jenkins_role_admin_name }}"
-      group: "{{ override_jenkins_role_admin_group }}"
-      desc: "{{ override_jenkins_role_admin_desc }}"
-    ansibleCI:
-      name: "{{ override_jenkins_role_ansibleCI_name }}"
-      group: "{{ override_jenkins_role_admin_group }}"
-      desc: "{{ override_jenkins_role_ansibleCI_desc }}"
-    user:
-      name: "{{ override_jenkins_role_user_name }}"
-      group: "{{ override_jenkins_role_user_group }}"
-      desc: "{{ override_jenkins_role_user_desc }}"
-  view:
-  service:
-    - name: hephaestus
-      ip: "{{ known_hosts.jenkins.ip | default('10.88.0.3') }}"
-      location: '/jenkins'
-      readwrite_volumes:
-        - { src: "{{ value_of_jenkins_home }}", dest: '/var/jenkins_home' }
-      readonly_volumes:
-        - { src: "/home/jenkins/.ssh", dest: '/var/jenkins_home/.ssh' }
-        - { src: "/home/jenkins/.netrc", dest: '/var/jenkins_home/.netrc' }
-        - { src: '/home/jenkins/.gitconfig', dest: '/var/jenkins_home/.gitconfig' }
-      add_hosts:
-        - { src: "{{ known_hosts.podman.name }}", ip: "{{ known_hosts.podman.ip }}" }
-        - { src: "{{ known_hosts.server.name }}", ip: "{{ known_hosts.server.ip }}" }
-      ports_mapping:
-       - { src: "{{ override_jenkins_port | default('8080') }}", dest: "{{ override_jenkins_port | default('8080') }}" }
-    - name: hephaestus.next
-      ip: "{{ known_hosts.jenkins_next.ip | default('10.88.1.0') }}"
-      location: '/jenkins.next'
-      state: stopped
-      readwrite_volumes:
-        - { src: "{{ value_of_jenkins_home_next }}", dest: '/var/jenkins_home' }
-      readonly_volumes:
-        - { src: "/home/jenkins/.ssh", dest: '/var/jenkins_home/.ssh' }
-        - { src: "/home/jenkins/.netrc", dest: '/var/jenkins_home/.netrc' }
-        - { src: '/home/jenkins/.gitconfig', dest: '/var/jenkins_home/.gitconfig' }
-      add_hosts:
-        - { src: "{{ known_hosts.podman.name }}", ip: "{{ known_hosts.podman.ip }}" }
-        - { src: "{{ known_hosts.server.name }}", ip: "{{ known_hosts.server.ip }}" }
-      ports_mapping:
-       - { src: "{{ override_jenkins_port | default('8080') }}", dest: "{{ override_jenkins_next_port | default('8180') }}" }
-
+jenkins_group: "jenkins"
+jenkins_bind_addr: "localhost"
+jenkins_port: "8080"
+jenkins_next_port: "8180"
+jenkins_name: "jenkins"
+jenkins_uid: "1000"
+jenkins_gid: "1000"
+jenkins_home: "/home/jenkins/current"
+jenkins_next_home: "/home/jenkins/next"
+jenkins_tools_home: "/opt/tools"
+jenkins_num_executors: "12"
+ldap_group_search_base: ""
+ldap_group_search_filter: ""
+ldap_root_dn: ""
+ldap_host: ""
+ldap_port: "636"
+ldap_url: ""
+root_ca_url: ""
+known_hosts.jenkins.ip: "10.88.0.3"
+jenkins_service_readwrite_volumes:
+  - { src: "{{ jenkins_home }}", dest: '/var/jenkins_home' }
+jenkins_service_readonly_volumes:
+  - { src: "/home/jenkins/.ssh", dest: '/var/jenkins_home/.ssh' }
+  - { src: "/home/jenkins/.netrc", dest: '/var/jenkins_home/.netrc' }
+  - { src: '/home/jenkins/.gitconfig', dest: '/var/jenkins_home/.gitconfig' }
+jenkins_service_add_hosts:
+  - { src: "{{ known_hosts.podman.name }}", ip: "{{ known_hosts.podman.ip }}" }
+  - { src: "{{ known_hosts.server.name }}", ip: "{{ known_hosts.server.ip }}" }
+jenkins_service_ports_mapping:
+  - { src: "{{ jenkins_port }}", dest: "{{ jenkins_port }}" }
+known_hosts.jenkins_next.ip: "10.88.1.0"
+jenkins_service_next_readwrite_volumes:
+  - { src: "{{ jenkins_next_home }}", dest: '/var/jenkins_home' }
+jenkins_service_next_readonly_volumes:
+  - { src: "/home/jenkins/.ssh", dest: '/var/jenkins_home/.ssh' }
+  - { src: "/home/jenkins/.netrc", dest: '/var/jenkins_home/.netrc' }
+  - { src: '/home/jenkins/.gitconfig', dest: '/var/jenkins_home/.gitconfig' }
+jenkins_service_next_add_hosts:
+  - { src: "{{ known_hosts.podman.name }}", ip: "{{ known_hosts.podman.ip }}" }
+  - { src: "{{ known_hosts.server.name }}", ip: "{{ known_hosts.server.ip }}" }
+jenkins_service_next_ports_mapping:
+  - { src: "{{ jenkins_port }}", dest: "{{ jenkins_next_port }}" }
