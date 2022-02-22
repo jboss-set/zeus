@@ -1,2 +1,26 @@
 ---
-# vars file for monit
+max_nb_images_for_root: 10
+max_nb_images_for_jenkins: 15
+
+monit_custom_scripts_directory: "{{ override_monit_custom_scripts_directory }}"
+monit:
+  daemon: "{{ monit_daemon_override }}"
+  email:
+    server: "{{ monit_mail_server_hostname }}"
+    port: "{{ monit_mail_server_port | int }}"
+    from: "{{ monit_mail_from }}"
+    to: "{{ monit_mail_to }}"
+  webapp:
+    port: "{{ monit_webapp_port }}"
+    bind_address: "{{ monit_webapp_bind_address }}"
+    allow_from: "{{ monit_webapp_allow_from }}"
+    username: "{{ monit_webapp_username }}"
+    password: "{{ monit_webapp_password }}"
+  alerts:
+    system: "{{ monit_alerts_system }}"
+    dnsnames: "{{ monit_alerts_dnsnames }}"
+    disk_usage: "{{ monit_alerts_disk_usage }}"
+    services: "{{ monit_alerts_services }}"
+    custom_scripts: "{{ monit_alerts_custom_scripts }}"
+epel:
+  url: 'https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm'
