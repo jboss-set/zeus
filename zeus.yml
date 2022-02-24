@@ -76,11 +76,11 @@
         name: account
       vars:
         account:
-          username: "{{ override_jenkins_name }}"
-          uid: "{{ override_jenkins_uid }}"
-          group: "{{ override_jenkins_group }}"
-          gid: "{{ override_jenkins_gid }}"
-          home: "{{ override_jenkins_home | default('/home/jenkins') }}"
+          username: "{{ jenkins_name }}"
+          uid: "{{ jenkins_uid }}"
+          group: "{{ jenkins_group }}"
+          gid: "{{ jenkins_gid }}"
+          home: "{{ jenkins_home | default('/home/jenkins') }}"
 
     - include_role:
         name: fast_yum_install
