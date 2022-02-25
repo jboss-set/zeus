@@ -30,26 +30,10 @@ jobs:
           pip install --user "molecule[podman,lint]"
           pip install --user "molecule[docker,lint]"
            
-      - name: "Run molecule tests: motd"
+      - name: "Run molecule tests"
         run: molecule test
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
           MOLECULE_DISTRO: rhel-8               
-        working-directory: 'roles/motd'
-
-      - name: "Run molecule tests: java"
-        run: molecule test
-        env:
-          PY_COLORS: '1'
-          ANSIBLE_FORCE_COLOR: '1'
-          MOLECULE_DISTRO: rhel-8
-        working-directory: 'roles/java'
-
-      - name: "Run molecule tests: java_certs"
-        run: molecule test
-        env:
-          PY_COLORS: '1'
-          ANSIBLE_FORCE_COLOR: '1'
-          MOLECULE_DISTRO: rhel-8
-        working-directory: 'roles/java_certs'
+        working-directory: '.'

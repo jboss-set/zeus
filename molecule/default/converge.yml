@@ -2,13 +2,26 @@
 - name: Converge
   hosts: all
   tasks:
-    - name: "Include default role variables"
-      include_vars: "../../defaults/main.yml"
+    # Including vars for testing
     - name: "Include test variables"
       include_vars: "main.yml"
 
-    # Preparation tasks for testing scenario:
+    # Including motd role for testing
+    - name: checking if motd file exists
+      stat:
+        path: "{{ motd_path }}"
+      register: file_details
+    - debug:
+        msg: "motd exists"
+      when: file_details.stat.exists
 
+    - name: "Include motd"
+      include_role:
+        name: "motd"
+
+    # Including java role for testing
+    - name: "Include default role variables"
+      include_vars: "../../roles/java/defaults/main.yml"
     # These are to avoid large downloads during CI
     - name: "Create {{ jdk_home_folder }}"
       file:
@@ -26,8 +39,6 @@
       copy:
         src: "dummy-apache-maven-3.6.3.tgz"
         dest: "{{ mvn_home_folder }}/apache-maven-3.6.3.tgz"
-
-    # Include roles for testing:
 
     - name: "Include java"
       include_role:
