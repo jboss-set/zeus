@@ -1,37 +1,12 @@
 ---
-- block:
-  - name: "Ensure jobs defs directory exists: {{ jobs.descriptors.home }}"
-    file:
-      path: "{{ jobs.descriptors.home }}"
-      state: directory
-      owner: jenkins
-      group: jenkins
-      mode: 0755
-  
-  - include_tasks: job-sync-deploy.yml
-  
-  - include_tasks: jobs_config.yml
-    loop: "{{ ci_server.jobs }}"
-    when:
-      - ci_server is defined
-      - ci_server.jobs is defined
-      - ci_server.jobs | length > 1
-  
-  - name: "Generate configfile for jobs"
-    template:
-      src: templates/component-alignment-config-template.csv.j2
-      dest: "/opt/tools/component-alignment-config-template.csv"
-      owner: jenkins
-      group: jenkins
-      mode: 0644
-    when:
-      - component_alignment is defined
-      - component_alignment.jobs is defined
-  
-  - name: "Ensure that all jobs with a descriptor exists on server"
-    include_tasks: sync_jobs.yml
-    vars:
-      item: ""
-    when:
-     - not jobs_sync_check_skip is defined
-  when: override_no_jobs_tasks is not defined 
+- name: "Generate configfile for jobs"
+  template:
+    src: templates/component-alignment-config-template.csv.j2
+    dest: "/opt/tools/component-alignment-config-template.csv"
+    owner: jenkins
+    group: jenkins
+    mode: 0644
+  when:
+    - component_alignment is defined
+    - component_alignment.jobs is defined
+
