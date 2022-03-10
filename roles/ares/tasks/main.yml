@@ -45,6 +45,7 @@
     group: "{{ ares.group }}"
   loop: "{{ ares.images_with_subs }}"
   when:
+    - not ansible_check_mode
     - ares.images_with_subs is defined
     - ares.images_with_subs | length > 0
 
