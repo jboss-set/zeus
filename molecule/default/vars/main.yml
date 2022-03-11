@@ -1,6 +1,5 @@
 ---
 # dummy variables for testing purpose.
-motd_path: /etc/motd
 jdk_list:
   - name: jdk1.8.0_181
     home: /opt/oracle/

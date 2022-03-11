@@ -1,0 +1,22 @@
+---
+- name: Prepare
+  hosts: all
+  vars_files:
+    - vars.yml
+  tasks:
+    - assert:
+        that:
+          - motd_path is defined
+        quiet: true
+
+    - stat:
+        path: "{{ motd_path }}"
+      register: file_details
+
+    - assert:
+        that:
+          - file_details is defined
+          - file_details.stat is defined
+          - file_details.stat.exists
+        quiet: true
+        fail_msg: "{{ motd_path }} does not exists."
