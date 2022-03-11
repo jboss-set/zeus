@@ -5,7 +5,7 @@
       - jdk_list is iterable
 
 - name: "Provisioning self-signed certificate to JDKs"
-  include: tasks/java_certs.yml
+  include_tasks: tasks/java_certs.yml
   loop: "{{ jdk_list }}"
   loop_control:
     loop_var: jdk
