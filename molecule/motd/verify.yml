@@ -6,7 +6,35 @@
   gather_facts: false
 
   tasks:
-    # TODO: Ranabir :)
+    - name: Add a duplicate motd
+      copy:
+        src: "../../roles/motd/files/motd.standard"
+        dest: /etc/duplicateMotd
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Get checksum of my original file
+      stat:
+        path: "{{ motd_path }}"
+      register: originalfile
+
+    - set_fact:
+        original: "{{ originalfile.stat.checksum }}"
+
+    - name: Get checksum of my duplicate file
+      stat:
+        path: "/etc/duplicateMotd"
+      register: duplicatefile
+
+    - set_fact:
+        duplicate: "{{ duplicatefile.stat.checksum }}"
+
+    - name: Compare both the files
+      debug:
+        msg: "File Compare"
+      failed_when: original != duplicate
+
     - name: Verify that motd role was properly executed
       assert:
         that: true
