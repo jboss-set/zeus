@@ -5,7 +5,7 @@
     - name: "Include test variables"
       include_vars: "main.yml"
     - name: "Include test variables from java role"
-      include_vars: "../../../../java/molecule/default/vars/main.yml"
+      include_vars: "../../../../molecule/java/vars.yml"
 
     # Preparation tasks for testing scenario:
 

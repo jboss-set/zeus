@@ -31,7 +31,7 @@ jobs:
           pip install --user "molecule[docker,lint]"
            
       - name: "Run molecule tests"
-        run: molecule test
+        run: molecule test --all
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'

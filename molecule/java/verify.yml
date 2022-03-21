@@ -1,0 +1,24 @@
+---
+- name: Verify for java role
+  hosts: localhost
+  vars_files:
+    - vars.yml
+  gather_facts: false
+
+  tasks:
+    - name: Check if java is installed.
+      command: "java -version"
+      register: java_result
+
+    - debug:
+        msg: "Java is not installed."
+      when: java_result is failed
+
+    - name: Check if maven is installed.
+      command: "mvn -version"
+      register: maven_result
+      ignore_errors: True
+
+    - debug:
+        msg: "maven is not installed."
+      when: maven_result is failed

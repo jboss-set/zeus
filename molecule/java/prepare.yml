@@ -1,0 +1,21 @@
+---
+- name: Prepare
+  hosts: all
+  vars_files:
+    - vars.yml
+  tasks:
+    - assert:
+        that:
+          - jdk_list is defined
+          - mvn_list is defined
+          - jdk_default is defined
+          - jdk_default != ""
+          - jdk_default is defined
+          - jdk_default_link != ""
+          - jdk_default_link is defined
+          - mvn_default != ""
+          - mvn_default is defined
+          - mvn_default_link != ""
+          - mvn_default_link is defined
+        quiet: true
+        fail_msg: "Please check provide variables again."
