@@ -1,0 +1,13 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: Test source profile
+      shell: source /etc/bashrc
+      register: func_result
+
+    - name: check result
+      debug:
+        var: func_result.stdout
