@@ -1,7 +1,0 @@
----
-local_dev_env: "false"
-jobs_home: "/home/jenkins/jobs_definition"
-jobs_synchronizer: "/opt/tools/jobs-synchronizer/"
-jenkinsfile_git_repo: "https://github.com/jboss-set/cedalion"
-jenkinsfile_path: "Jenkinsfile"
-jenkinsfile_polling: "false"

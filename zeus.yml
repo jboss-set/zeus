@@ -36,7 +36,6 @@
     - ares
     - java
     - jenkins
-    - jenkins_job_builder
     - pgsql
     - nginx
     - old_releases
@@ -49,7 +48,6 @@
     - pr_processor
     - aphrodite
     - netrc
-    - jobs
     # monitoring
     - monit
     - cron

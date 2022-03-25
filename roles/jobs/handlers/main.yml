@@ -1,9 +1,0 @@
----
-- name: sync_jobs
-  include_tasks: sync_jobs.yml
-  loop: "{{ jenkins_jobs_to_update_list }}"
-  when:
-    - override_jobs_sync is not defined
-    - jenkins_jobs_to_update_list is defined
-    - jenkins_jobs_to_update_list | length > 0
-
