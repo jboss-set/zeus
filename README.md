@@ -22,10 +22,7 @@ Recommended way to install molecule on a developer machine:
 
 (See https://molecule.readthedocs.io/en/latest/installation.html for official guide.)
 
-### Using Molecule
+### How to run Molecule test in Zeus
 
-* Go to the role directory: `cd zeus/roles/java`
-* Create container to execute the role on: `molecule create`
-* Check the container is up: `molecule list`
-* Run the Ansible role on a previously created container: `molecule converge`
-* Run the full sequence (create container, execute role, destroy container): `molecule test`
+* From root of the repo, Run `$ molecule test --all` to run the whole testsuite.
+* From root of the repo, Run `$ molecule test -s role_name` to run individual role test.
