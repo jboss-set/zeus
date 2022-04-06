@@ -3,9 +3,13 @@ Zeus
 
 These are Ansible configuration scripts for the Olympus JBoss SET CI server.
 
+### Prerequisites:
+* Ansible [core] 2.12 or newer (check using `ansible --version`, see [official guide](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html))
+* Python 3.8 or newer (check using `python3 --version`, see [official guide](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/configuring_basic_system_settings/assembly_installing-and-using-python_configuring-basic-system-settings))
+
 ## Testability Notes
 
-Some roles in this repository have been integrated with Molecule (those roles contain the `molecule` directory). 
+Some roles in this repository have been integrated with Molecule. 
 Molecule is a library that makes it possible to execute Ansible roles on disposable containers to perform testing.
 
 ### Molecule Installation Steps
