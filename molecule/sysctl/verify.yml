@@ -1,0 +1,15 @@
+---
+- name: Verify for sysctl role
+  hosts: localhost
+  vars_files:
+    - vars.yml
+  gather_facts: false
+
+  tasks:
+    - name: Check if sysctl setup is successful.
+      command: "sysctl -a"
+      register: sysctl_result
+
+    - debug:
+        msg: "sysctl setup is unsuccessful."
+      when: sysctl_result is failed
