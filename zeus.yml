@@ -20,39 +20,17 @@
       - vars/pgsql.yml
       - vars/hosts.yml
       - vars/qualys.yml
-  roles:
-    # stage 1 - OS settings and optimizations
-    - selinux
-    - motd
-    - bashrc
-    - kdump
-    - sysctl
-    - tuned
-    - hosts
-    # stage 2 - main services
-    - git
-    - sshd
-    - ssh
-    - ares
-    - java
-    - jenkins
-    - pgsql
-    - nginx
-    - old_releases
-    - podman
-    - systemd
-    - java_certs
-    - payload_status
-    # stage 3 - auth and sudoers.yml
-    - component_alignment
-    - pr_processor
-    - aphrodite
-    - netrc
-    # monitoring
-    - monit
-    - cron
-    - infosec.qualys-cloud-agent
+
   pre_tasks:
+    - name: Register
+      community.general.redhat_subscription:
+          state: present
+          username: "{{ cci_worker_rhel_subscription_username }}"
+          password: "{{ cci_worker_rhel_subscription_password }}"
+          autosubscribe: yes
+      when:
+        - cci_worker_rhel_subscription_username is defined
+        - cci_worker_rhel_subscription_password is defined
 
     - set_fact:
         secrets_filename: "{{ override_secrets_filename  | default('/etc/ansible/secrets.yml') }}"
@@ -80,7 +58,50 @@
           gid: "{{ jenkins_gid }}"
           home: "{{ jenkins_home | default('/home/jenkins') }}"
 
-    - include_role:
+    - ansible.builtin.include_role:
         name: fast_yum_install
       vars:
         package_name: firewalld
+
+    - ansible.builtin.include_role:
+        name: "{{ item }}"
+      with_items:
+        # OS settings and optimizations
+        - selinux
+        - motd
+        - bashrc
+        - kdump
+        - sysctl
+        - tuned
+        - hosts
+
+  tasks:
+    - ansible.builtin.include_role:
+        name: "{{ item }}"
+      with_items:
+        # main services
+        - git
+        - sshd
+        - ssh
+        - ares
+        - java
+        - jenkins
+        - pgsql
+        - nginx
+        - podman
+        - systemd
+        - java_certs
+        # auth and sudoers.yml
+        - netrc
+
+  post_tasks:
+    - ansible.builtin.include_role:
+        name: "{{ item }}"
+      with_items:
+        # monitoring
+        - monit
+        - cron
+        - infosec.qualys-cloud-agent
+
+- ansible.builtin.import_playbook: jenkins.yml
+

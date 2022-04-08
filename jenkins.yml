@@ -1,12 +1,13 @@
 ---
-- name: Automate VM with Ansible
-  hosts: all
-  gather_facts: true
+- hosts: "{{ hosts_group_name | default('localhost') }}"
+  gather_facts: yes
   become: yes
-
+  become_user: root
   vars_files:
-    - vars/cci.yml
-    - vars/java.yml
+    - vars/olympus.yml
+    - vars/component-alignment.yml
+    - vars/aphrodite.yml
+    - vars/jobs.yml
 
   pre_tasks:
     - name: Register
@@ -33,10 +34,8 @@
     - ansible.builtin.include_role:
         name: "{{ item }}"
       with_items:
-        - cci_worker
-        - sshd
-        - sudoers
-        - ssh
-        - java
-        - java_certs
         - old_releases
+        - payload_status
+        - component_alignment
+        - pr_processor
+        - aphrodite
