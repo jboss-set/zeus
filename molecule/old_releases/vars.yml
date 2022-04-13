@@ -1,0 +1,3 @@
+---
+old_releases_dir: "/opt/old-as-releases"
+old_releases_url: http://download.devel.redhat.com/released/middleware

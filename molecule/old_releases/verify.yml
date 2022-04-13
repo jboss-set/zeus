@@ -1,0 +1,49 @@
+---
+- name: Verify for motd role
+  hosts: all
+  vars_files:
+    - vars.yml
+  gather_facts: false
+
+  tasks:
+    - name: Checking old EAP7 releases
+      stat:
+        path: "{{ old_releases_dir }}/jboss-eap-{{ item }}.zip"
+      with_items:
+        - 7.0.0
+        - 7.1.0
+        - 7.2.0
+        - 7.3.0
+        - 7.4.0
+      register: eap7_oldfile
+
+    - debug:
+        msg: "old EAP7 releases zip files don't exist."
+      when: eap7_oldfile is failed
+
+    - name: Checking old EAP6 releases
+      stat:
+        path: "{{ old_releases_dir }}/jboss-eap-{{ item }}.zip"
+      with_items:
+        - 6.1.0
+        - 6.1.1
+        - 6.2.0
+        - 6.3.0
+        - 6.4.0
+      register: eap6_oldfile
+
+    - debug:
+        msg: "old EAP6 releases zip files don't exist."
+      when: eap6_oldfile is failed
+
+    - name: Checking 6.0.x EAP6 releases
+      stat:
+        path: "{{ old_releases_dir }}/jboss-eap-{{ item }}.zip"
+      with_items:
+        - 6.0.0
+        - 6.0.1
+      register: eap6_file
+
+    - debug:
+        msg: "6.0.x EAP6 releases zip files don't exist."
+      when: eap6_file is failed
