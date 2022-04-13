@@ -1,0 +1,40 @@
+---
+- name: Prepare
+  hosts: all
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: "Create {{ old_releases_dir }}"
+      file:
+        state: directory
+        path: "{{ old_releases_dir }}"
+
+    - name: Include dummy old EAP7 releases
+      copy:
+        src: "dummy-old-eap7.zip"
+        dest: "{{ old_releases_dir }}/jboss-eap-{{ item }}.zip"
+      with_items:
+        - 7.0.0
+        - 7.1.0
+        - 7.2.0
+        - 7.3.0
+        - 7.4.0
+
+    - name: Include dummy old EAP6 releases
+      copy:
+        src: "dummy-old-eap6.zip"
+        dest: "{{ old_releases_dir }}/jboss-eap-{{ item }}.zip"
+      with_items:
+        - 6.1.0
+        - 6.1.1
+        - 6.2.0
+        - 6.3.0
+        - 6.4.0
+
+    - name: Include dummy 6.0.x EAP6 releases
+      copy:
+        src: "dummy-eap6.zip"
+        dest: "{{ old_releases_dir }}/jboss-eap-{{ item }}.zip"
+      with_items:
+        - 6.0.0
+        - 6.0.1
