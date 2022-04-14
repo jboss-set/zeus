@@ -4,6 +4,10 @@
       - certificate_list is defined
       - certificate_list is iterable
 
+# reset cacerts_file fact between iterations
+- set_fact:
+    cacerts_file: ''
+
 # determine the location of cacerts file
 - stat:
     path: "{{ jdk.home }}/{{ jdk.name }}/jre/lib/security/cacerts"
@@ -16,18 +20,28 @@
 - stat:
     path: "{{ jdk.home }}/{{ jdk.name }}/lib/security/cacerts"
   register: cacerts_file_stat_alt
-  when: not cacerts_file is defined
+  when: cacerts_file == ''
 
 - set_fact:
     cacerts_file: "{{ jdk.home }}/{{ jdk.name }}/lib/security/cacerts"
   when:
-    - not cacerts_file_stat is defined
-    - not cacerts_file_stat.stat.exists
+    - (not cacerts_file_stat is defined) or (not cacerts_file_stat.stat.exists)
     - cacerts_file_stat_alt.stat.exists
 
 - assert:
     that:
       cacerts_file is defined
+
+- name: Remove Root CA  in {{ jdk.name }}
+  when: rebuild_keystore|default(false)
+  java_cert:
+    cert_path: "{{ jdk_home }}/Root-CA.crt"
+    keystore_path: "{{ cacerts_file }}"
+    cert_alias: "internal.redhat.com"
+    executable: "{{ jdk.home }}/{{ jdk.name }}/bin/keytool"
+    keystore_pass: changeit
+    keystore_create: no
+    state: absent
 
 - name: Remove SSL certificates in {{ jdk.name }}
   when: rebuild_keystore|default(false)
@@ -40,6 +54,16 @@
     keystore_create: no
     state: absent
   with_items: "{{ certificate_list }}"
+
+- name: Import Root CA in {{ jdk.name }} {{ cacerts_file }}
+  java_cert:
+    cert_path: "{{ jdk_home }}/Root-CA.crt"
+    keystore_path: "{{ cacerts_file }}"
+    cert_alias: "internal.redhat.com"
+    executable: "{{ jdk.home }}/{{ jdk.name }}/bin/keytool"
+    keystore_pass: changeit
+    keystore_create: no
+    state: present
 
 - name: Import SSL certificates in {{ jdk.name }}
   java_cert:
