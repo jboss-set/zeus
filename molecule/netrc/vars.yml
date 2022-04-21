@@ -1,0 +1,9 @@
+---
+netrc:
+  users:
+    - { name: 'jenkins',
+        machines: [
+          { name: 'github.com', login: "pull-processor", password: "XXXX" },
+          { name: 'api.github.com', login: "processor", password: "YYYY}" } ]
+    }
+user_name: jenkins

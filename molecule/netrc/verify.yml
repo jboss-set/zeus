@@ -1,0 +1,43 @@
+---
+- name: Verify for netrc role
+  hosts: all
+  vars_files:
+    - vars.yml
+  gather_facts: false
+
+  tasks:
+    - name: Add a duplicate netrc config
+      template:
+        src: "../../roles/netrc/templates/netrc.j2"
+        dest: /etc/duplicateNetrc
+        owner: "{{ user.name }}"
+        group: "{{ user.group | default(user.name) }}"
+        mode: 0644
+      loop: "{{ netrc.users }}"
+      loop_control:
+        loop_var: user
+
+    - name: Get checksum of my original file
+      stat:
+        path: "{{ user_home | default('/home/' + user_name) }}/.netrc"
+      register: originalfile
+
+    - set_fact:
+        original: "{{ originalfile.stat.checksum }}"
+
+    - name: Get checksum of my duplicate file
+      stat:
+        path: "/etc/duplicateNetrc"
+      register: duplicatefile
+
+    - set_fact:
+        duplicate: "{{ duplicatefile.stat.checksum }}"
+
+    - name: Compare both the netrc files
+      debug:
+        msg: "File Compare"
+      failed_when: original != duplicate
+
+    - name: Verify that netrc role was properly executed
+      assert:
+        that: true
