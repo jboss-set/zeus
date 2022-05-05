@@ -1,0 +1,4 @@
+---
+package_name: "nginx"
+yum:
+  cache_update : "true"
