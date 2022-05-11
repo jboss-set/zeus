@@ -101,17 +101,6 @@ jenkins:
   views:
   - all:
       name: "all"
-  - dashboard:
-      name: "Component Alignment"
-      columns:
-{% for col in jenkins.view.tabs.columns  %}
-        - "{{ col }}"
-{% endfor %}
-      includeStdJobList: true
-      jobNames:
-{% for ca_job in component_alignment.jobs %}
-        - "{{ ca_job.id }}"
-{% endfor %}
 
   - dashboard:
       name: "cryo"
