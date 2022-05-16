@@ -1,0 +1,13 @@
+---
+- name: Prepare
+  hosts: all
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Creates directory
+      file:
+        path: /opt/tools
+        state: directory
+        owner: root
+        group: root
+        mode: 0745

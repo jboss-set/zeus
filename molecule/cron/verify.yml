@@ -1,0 +1,14 @@
+---
+- name: Verify for cron role
+  hosts: all
+  vars_files:
+    - vars.yml
+  gather_facts: false
+
+  tasks:
+  - name: Removes cron tasks
+    ansible.builtin.cron:
+      name: "{{ item.name }}"
+      user: root
+      state: absent
+    loop: "{{ cronjobs }}"
