@@ -43,7 +43,13 @@
     group: "{{ component_alignment.group }}"
     mode: 0644
 
-- name: "Ensure component_alignment.config.dir }} exists"
+- name: "Create link with stable name to alignment jar"
+  file:
+    src: "{{ component_alignment.path }}"
+    dest: "{{ component_alignment_home }}/alignment-cli.jar"
+    state: link
+
+- name: "Ensure {{ component_alignment.config.dir }} exists"
   file:
     state: directory
     path: "{{ component_alignment.config.dir }}"
