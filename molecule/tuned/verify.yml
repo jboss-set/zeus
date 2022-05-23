@@ -1,0 +1,43 @@
+---
+- name: Verify for tuned role
+  hosts: localhost
+  vars_files:
+    - vars.yml
+  gather_facts: false
+
+  tasks:
+    - name: Restarted tuned to check if the setup is done perfectly
+      service:
+        name: tuned
+        state: restarted
+        enabled: yes
+
+    - name: Add a duplicate tuned profile
+        template:
+          src: "../../roles/tuned/templates/tuned_profile.fact.j2"
+          dest: /etc/ansible/facts.d/tuned-duplicate.fact
+
+    - name: Get checksum of my original file
+        stat:
+          path: "{{ tuned.fact.file }}"
+      register: originalfile
+
+    - set_fact:
+        original: "{{ originalfile.stat.checksum }}"
+
+    - name: Get checksum of my duplicate file
+      stat:
+        path: "/etc/ansible/facts.d/tuned-duplicate.fact"
+      register: duplicatefile
+
+    - set_fact:
+        duplicate: "{{ duplicatefile.stat.checksum }}"
+
+    - name: Compare both the tuned profile files
+      debug:
+        msg: "File Compare"
+      failed_when: original != duplicate
+
+    - name: Verify that tuned role was properly executed
+      assert:
+        that: true

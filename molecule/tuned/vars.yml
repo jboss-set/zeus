@@ -1,0 +1,7 @@
+---
+tuned_profile_target : 'throughput-performance'
+tuned:
+  fact:
+    home: "/etc/ansible/facts.d/"
+    file: "/etc/ansible/facts.d/tuned-profile.fact"
+  bin: "/usr/sbin/tuned-adm"
