@@ -1,0 +1,9 @@
+---
+- name: "Replace content of Windows specific tasks, that are not Ansible 2.21 compliant"
+  template:
+    dest: "{{ item }}"
+    src: templates/dummy.j2
+  loop:
+    - '/root/.ansible/roles/infosec.qualys-cloud-agent/tasks/setup-Windows.yml'
+    - '/root/.ansible/roles/infosec.qualys-cloud-agent/tasks/uninstall-Windows.yml'
+

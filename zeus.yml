@@ -53,6 +53,12 @@
     - cron
     - infosec.qualys-cloud-agent
   pre_tasks:
+    - ansible.builtin.include_role:
+        name: qualys_fix
+    - ansible.builtin.include_role:
+        name: fast_yum_install
+      vars:
+        package_name: python3-pyOpenSSL.noarch
 
     - set_fact:
         secrets_filename: "{{ override_secrets_filename  | default('/etc/ansible/secrets.yml') }}"

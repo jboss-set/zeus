@@ -6,6 +6,6 @@
       - selinux.state != ""
     quiet: true
 
-- selinux:
+- ansible.posix.selinux:
     policy: targeted
     state: "{{ selinux.state }}"

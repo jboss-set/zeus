@@ -52,7 +52,6 @@
 - name: "Add {{ ares.owner }} SSH key to containers that requires it"
   file:
     src: "/home/{{ ares.owner }}/.ssh/id_rsa.pub"
-    remote_src: yes
     dest: '{{ ares.home }}/{{ item }}'
     state: hard
   loop: "{{ ares.images_with_sshkey }}"
