@@ -47,16 +47,18 @@
         - monit.webapp.password is defined
 
     - name: "Deploy nginx configuration"
-      ansible.builtin.template:
-        src: "{{ item.src }}"
-        dest: "{{ item.dest }}"
+      template:
+        src: "{{ files.src }}"
+        dest: "{{ files.dest }}"
         owner: root
         group: root
         mode: 0644
-      loop:
+      with_items:
         - { src: templates/nginx.conf.j2, dest: "{{ nginx_config_dir }}/nginx.conf" }
         - { src: templates/commons.d/sites.conf.j2, dest: "{{ nginx_config_dir }}/commons.d/sites.conf" }
         - { src: templates/commons.d/proxy.conf.j2, dest: "{{ nginx_config_dir }}/commons.d/proxy.conf" }
+      loop_control:
+        loop_var: files
       notify:
         - restart nginx
   when: nginx_config_dir_path is defined
