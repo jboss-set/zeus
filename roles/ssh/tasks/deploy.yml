@@ -1,24 +1,24 @@
 ---
-- assert:
+- ansible.builtin.assert:
     that:
       - item is defined
       - item.username is defined
       - item.hosts is defined
     quiet: true
 
-- set_fact:
+- ansible.builtin.set_fact:
     ssh_home: "{{ item.home | default('/home/' + item.username) }}"
     group: "{{ item.group | default(item.username) }}"
 
 - name: "Ensure {{ ssh_home }}/.ssh exists."
-  file:
+  ansible.builtin.file:
     path: "{{ ssh_home }}/.ssh"
     state: directory
     owner: "{{ item.username }}"
     group: "{{ group }}"
 
 - name: "Deploy identity file into {{ ssh_home }}"
-  copy:
+  ansible.builtin.copy:
     src: "{{ key.path }}"
     dest: "{{ ssh_home }}/.ssh/"
     owner: "{{ item.username }}"
@@ -32,7 +32,7 @@
     - item.ssh_keys | length > 0
 
 - block:
-  - assert:
+  - ansible.builtin.assert:
       that:
         - host.nick is defined
         - host.name is defined
@@ -43,7 +43,7 @@
       loop_var: host
 
   - name: "Deploy ssh config for user jenkins"
-    template:
+    ansible.builtin.template:
       src: templates/config.j2
       dest: "{{ ssh_home }}/.ssh/config"
       owner: "{{ item.username }}"

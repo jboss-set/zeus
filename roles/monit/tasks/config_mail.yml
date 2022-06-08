@@ -1,5 +1,5 @@
 ---
-- assert:
+- ansible.builtin.assert:
     that:
       - monit.email.server is defined
       - monit.email.server != ""
@@ -13,7 +13,7 @@
     fail_msg: "Invalid or missing informations"
 
 - name: "Monit Mail Settings"
-  template:
+  ansible.builtin.template:
     src: templates/monit.mail.j2
     dest: /etc/monit.d/mail
     owner: root

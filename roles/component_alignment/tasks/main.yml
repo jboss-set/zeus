@@ -20,14 +20,14 @@
     quiet: true
 
 - name: "Ensures component alignment home exists: {{ component_alignment.home }}"
-  file:
+  ansible.builtin.file:
     state: directory
     path: "{{ component_alignment.home }}"
     owner: "{{ component_alignment.owner }}"
     group: "{{ component_alignment.group }}"
 
 - name: "Fetch component-alignment jar from {{ component_alignment.url }}"
-  get_url:
+  ansible.builtin.get_url:
     url: "{{ component_alignment.url }}"
     dest: "{{ component_alignment.path }}"
     owner: "{{ component_alignment.owner }}"
@@ -37,31 +37,31 @@
   delay: 5
 
 - name: "Ensure {{ component_alignment.path }} has the appropriate owner, groups and privilege"
-  file:
+  ansible.builtin.file:
     path: "{{ component_alignment.path }}"
     owner: "{{ component_alignment.owner }}"
     group: "{{ component_alignment.group }}"
     mode: 0644
 
 - name: "Create link with stable name to alignment jar"
-  file:
+  ansible.builtin.file:
     src: "{{ component_alignment.path }}"
     dest: "{{ component_alignment_home }}/alignment-cli.jar"
     state: link
 
 - name: "Ensure {{ component_alignment.config.dir }} exists"
-  file:
+  ansible.builtin.file:
     state: directory
     path: "{{ component_alignment.config.dir }}"
     owner: "{{ component_alignment.owner }}"
     group: "{{ component_alignment.group }}"
     mode: 0755
 
-- include_tasks: tasks/deploy_config.yml
+- ansible.builtin.include_tasks: tasks/deploy_config.yml
   loop: "{{ component_alignment.config.files }}"
 
 - name: "Create component alignment config file"
-  template:
+  ansible.builtin.template:
     src: templates/smtp-settings.sh.j2
     dest: /opt/tools/smtp-settings.sh
     owner: jenkins

@@ -1,5 +1,5 @@
 ---
-- set_fact:
+- ansible.builtin.set_fact:
     podman_images: []
 
 - name: "Ensure remote images are downloaded"

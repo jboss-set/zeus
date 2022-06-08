@@ -1,4 +1,4 @@
 ---
-- include_tasks: tasks/setup.yml
-- include_tasks: tasks/images.yml
-- include_tasks: tasks/services.yml
+- ansible.builtin.include_tasks: tasks/setup.yml
+- ansible.builtin.include_tasks: tasks/images.yml
+- ansible.builtin.include_tasks: tasks/services.yml

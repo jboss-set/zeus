@@ -1,11 +1,11 @@
 ---
-- include_role:
+- ansible.builtin.include_role:
     name: fast_yum_install
   vars:
     package_name: openssh-server
 
 - name: "Checks SSHd configuration"
-  template: 
+  ansible.builtin.template:
     src: templates/sshd_config.j2 
     dest: /etc/ssh/sshd_config 
     group: root 
@@ -20,19 +20,19 @@
     state: enabled
 
 - name: "Ensure SSHd is running"
-  service:
+  ansible.builtin.service:
     name: sshd
     state: started
     enabled: yes
 
-- set_fact:
+- ansible.builtin.set_fact:
     root_ssh_folder: '/root/.ssh'
 
-- file:
+- ansible.builtin.file:
     path: "{{ root_ssh_folder }}"
     state: directory
 
-- set_fact:
+- ansible.builtin.set_fact:
     path_to_key: "{{ root_ssh_folder }}/{{ ansible_nodename }}_rsa"
 
 - name: "Generate SSH key for server {{ path_to_key }}"
@@ -47,7 +47,7 @@
   when: sshd.generate_key
 
 - name: "Hard link generated key to /root/.ssh/authorized_keys"
-  file:
+  ansible.builtin.file:
     state: hard
     src: "{{ path_to_key }}.pub"
     dest: "/root/.ssh/authorized_keys"

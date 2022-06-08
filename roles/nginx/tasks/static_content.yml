@@ -1,5 +1,5 @@
 ---
-- assert:
+- ansible.builtin.assert:
     that:
       - nginx.docroot is defined
       - nginx.docroot != ""
@@ -11,32 +11,32 @@
     fail_msg: "Missing required parameter for nginx static content set up."
 
 - name: "Ensure that provided docroot is a valid path: {{ nginx.docroot }}"
-  stat:
+  ansible.builtin.stat:
     path: "{{ nginx.docroot }}"
   register: nginx_docroot_path
 
-- assert:
+- ansible.builtin.assert:
     that:
       - nginx_docroot_path is defined
       - nginx_docroot_path.stat is defined
     quiet: true
 
 - name: "Create {{ nginx.docroot }} folder"
-  file:
+  ansible.builtin.file:
     path: "{{ nginx.docroot }}"
     state: directory
     owner: "{{ nginx.username }}"
     group: "{{ nginx.groupname }}"
  
 - name: "Create {{ nginx.docroot }}/img/ folder for landing page"
-  file:
+  ansible.builtin.file:
     path: "{{ nginx.docroot }}/img"
     state: directory
     owner: "{{ nginx.username }}"
     group: "{{ nginx.groupname }}"
 
 - name: "Deploy tools logo for landing page"
-  copy:
+  ansible.builtin.copy:
     src: "files/{{ item.logo }}"
     dest: "{{ nginx.docroot }}/img/"
     owner: "{{ nginx.username }}"
@@ -44,7 +44,7 @@
   with_items: "{{ nginx.apps }}"
 
 - name: "Deploy landing page"
-  template:
+  ansible.builtin.template:
     src: templates/index.html.j2
     dest: "{{ nginx.docroot }}/index.html"
     owner: "{{ nginx.username }}"

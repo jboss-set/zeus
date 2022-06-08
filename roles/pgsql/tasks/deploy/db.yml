@@ -1,5 +1,5 @@
 ---
-- assert:
+- ansible.builtin.assert:
     that:
       - script is defined
       - script.name is defined
@@ -8,7 +8,7 @@
     quiet: true
 
 - name: "Ensures {{ script.name }} exists."
-  template:
+  ansible.builtin.template:
     src: "{{ script.name }}.j2"
     dest: "{{ dest }}"
   register: script_template_execution
@@ -17,7 +17,7 @@
   notify: run sql init scripts
 
 - name: "Ensures {{ script.name }} exists (source: {{ script.url }}."
-  get_url:
+  ansible.builtin.get_url:
     url: "{{ script.url }}"
     dest: "{{ dest }}"
   register: script_geturl_execution
@@ -27,14 +27,14 @@
   notify: run sql init scripts
 
 - block:
-  - set_fact:
+  - ansible.builtin.set_fact:
       path_to_sql_script_to_run: 
         - { path: "{{ dest }}", instance: "{{ db_info }}" }
   
-  - set_fact:
+  - ansible.builtin.set_fact:
       sql_script_to_run: "{{ sql_script_to_run }} + {{ path_to_sql_script_to_run }}"
 
-  - debug:
+  - ansible.builtin.debug:
       msg: "{{ sql_script_to_run }}"
   when: 
     - script_geturl_execution.changed or script_template_execution.changed

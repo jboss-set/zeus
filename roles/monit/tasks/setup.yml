@@ -1,35 +1,35 @@
 ---
 
-- stat:
+- ansible.builtin.stat:
     path: /etc/yum.repos.d/epel.repo
   register: epel_path
 
-- assert:
+- ansible.builtin.assert:
     that:
       - epel_path is defined
       - epel_path.stat is defined
     quiet: true
 
 - name: "Ensures EPEL repo are installed: {{ vpn.epel.url }}"
-  yum:
+  ansible.builtin.yum:
     name: "{{ epel.url }}"
     disable_gpg_check: yes
     state: present
   when:
     - not epel_path.stat.exists
 
-- include_role:
+- ansible.builtin.include_role:
     name: fast_yum_install
   vars:
     package_name: NetworkManager-openvpn
 
 
-- include_role:
+- ansible.builtin.include_role:
     name: fast_yum_install
   vars:
     package_name: monit
 
-- assert:
+- ansible.builtin.assert:
     that:
       - monit is defined
       - monit.daemon is defined
@@ -38,7 +38,7 @@
     fail_msg: "Invalid Monit configuration"
 
 - name: "Deploy Monit main config"
-  template:
+  ansible.builtin.template:
     src: templates/monitrc.j2
     dest: /etc/monitrc
     mode: 0700
@@ -47,7 +47,7 @@
   notify:
     - restart monit
 - name: "Ensures monit.conf.d is properly created and set"
-  file:
+  ansible.builtin.file:
     state: directory
     path: /etc/monit.d/
     owner: root
@@ -62,7 +62,7 @@
     - monit.webapp.port is defined
     - (monit.webapp.port | int) > 0
 
-- service:
+- ansible.builtin.service:
     name: monit
     state: started
     enabled: yes
