@@ -1,27 +1,27 @@
 ---
-- assert:
+- ansible.builtin.assert:
     that:
       - motd.home is defined
       - motd.home != ""
     quiet: true
 
-- stat:
+- ansible.builtin.stat:
     path: "{{ motd.home }}"
   register: is_motd_home
 
-- assert:
+- ansible.builtin.assert:
     that:
       - is_motd_home.stat.exists
     quiet: true
 
-- set_fact:
+- ansible.builtin.set_fact:
     file_to_remove: "{{ motd.home }}{{ item }}"
 
-- stat:
+- ansible.builtin.stat:
     path: "{{ file_to_remove }}"
   register: is_file_to_remove
 
-- file:
+- ansible.builtin.file:
     path: "{{ file_to_remove }}"
     state: absent
   when: is_file_to_remove.stat.exists

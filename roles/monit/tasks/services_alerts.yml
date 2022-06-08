@@ -1,5 +1,5 @@
 ---
-- assert:
+- ansible.builtin.assert:
     that:
       - monit is defined
       - monit.alerts is defined
@@ -8,7 +8,7 @@
     quiet: true
 
 - name: "Ensure required services are running under Monit control"
-  template:
+  ansible.builtin.template:
     src: templates/monit.service.j2
     dest: "/etc/monit.d/{{ item.name }}"
     owner: root

@@ -1,11 +1,11 @@
 ---
-- assert:
+- ansible.builtin.assert:
     that:
       - sysctl_entries is defined
       - sysctl_entries is iterable
     quiet: true
 
-- include_tasks: tasks/sysctl.yml
+- ansible.builtin.include_tasks: tasks/sysctl.yml
   loop: "{{ sysctl_entries }}"
   loop_control:
     loop_var: sysctl

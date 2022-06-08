@@ -1,5 +1,5 @@
 ---
-- assert:
+- ansible.builtin.assert:
     that:
       - podman is defined
       - podman.home is defined
@@ -8,7 +8,7 @@
     quiet: yes
 
 - name: "Ensure podman home is created: {{ podman.home }}"
-  file:
+  ansible.builtin.file:
     path: "{{ podman.home }}"
     owner: root
     group: root
@@ -16,7 +16,7 @@
     mode: '0755'
 
 - name: "Deploy script to start/stop podman based services"
-  template:
+  ansible.builtin.template:
     src: templates/podman-service.sh.j2
     dest: "{{ podman.home }}/podman-service.sh"
     owner: root
@@ -24,7 +24,7 @@
     mode: 0755
 
 - name: "Add podman based services to systemd"
-  include_role:
+  ansible.builtin.include_role:
     name: systemd
     tasks_from: podman.yml
   loop: "{{ podman_services }}"

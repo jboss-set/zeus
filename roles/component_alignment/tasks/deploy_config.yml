@@ -1,5 +1,5 @@
 ---
-- assert: 
+- ansible.builtin.assert:
     that:
       - item is defined
       - component_alignment is defined
@@ -8,15 +8,15 @@
       - component_alignment.config.baseurl is defined
     quiet: true
 
-- set_fact:
+- ansible.builtin.set_fact:
    config_file_url: "{{ component_alignment.config.baseurl }}/{{ item }}"
    config_file_path: "{{ component_alignment.config.dir }}/{{ item }}"
 
-- debug:
+- ansible.builtin.debug:
     msg: "{{ config_file_url }}"
 
 - name: "Ensure component_alignment config file for {{ item }} is deployed as {{ config_file_path }}"
-  get_url:
+  ansible.builtin.get_url:
     url: "{{ config_file_url }}"
     dest: "{{ config_file_path }}"
     validate_certs: no
@@ -26,7 +26,7 @@
     - not ansible_check_mode
  
 - name: "Ensure config file {{ config_file_path }} has appropriate owner, group and mode."
-  file:
+  ansible.builtin.file:
     path: "{{ config_file_path }}"
     owner: jenkins
     group: jenkins

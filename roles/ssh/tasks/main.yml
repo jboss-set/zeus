@@ -1,10 +1,10 @@
 ---
-- assert:
+- ansible.builtin.assert:
     that:
       - ssh is defined
       - ssh.users is defined
       - ssh.users | length > 0
     quiet: true
 
-- include_tasks: tasks/deploy.yml
+- ansible.builtin.include_tasks: tasks/deploy.yml
   loop: "{{ ssh.users }}"

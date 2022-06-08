@@ -1,5 +1,5 @@
 ---
-- assert:
+- ansible.builtin.assert:
     that:
       - item is defined
       - item.name is defined
@@ -11,7 +11,7 @@
     quiet: true
 
 - name: "Ensures script job for {{ item.name }} is deployed"
-  template:
+  ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     owner: root
@@ -19,7 +19,7 @@
     mode: 0745
 
 - name: "Ensures cron task for {{ item.name }} is defined."
-  cron:
+  ansible.builtin.cron:
     name: "{{ item.name }}"
     job: "{{ item.dest }}"
     special_time: "{{ item.special_time }}"
@@ -27,7 +27,7 @@
     - item.special_time is defined
 
 - name: "Ensures cron task for {{ item.name }} is defined."
-  cron:
+  ansible.builtin.cron:
     name: "{{ item.name }}"
     job: "{{ item.dest }}"
     weekday: "{{ item.weekday | default(omit) }}"

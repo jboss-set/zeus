@@ -1,9 +1,9 @@
 ---
-- set_fact:
+- ansible.builtin.set_fact:
     yum_module_name: container-tools
 
 - name: "Check if {{ yum_module_name }}"
-  command: >
+  ansible.builtin.command: >
     yum module list --installed  {{ yum_module_name }}
   args:
     warn: false
@@ -12,28 +12,28 @@
   changed_when: false
 
 - name: "Install yum module for Podman"
-  command: >
+  ansible.builtin.command: >
     yum module install -y container-tools
   when:
     - is_yum_module_installed is defined
     - is_yum_module_installed.rc is defined
     - is_yum_module_installed.rc
 
-- include_role:
+- ansible.builtin.include_role:
     name: fast_yum_install
   vars:
     package_name: "{{ item }}"
   loop: "{{ podman.packages }}"
 
 - name: "Ensure user namespaces has been increased"
-  template:
+  ansible.builtin.template:
     src: templates/userns.conf.j2
     dest: "{{ podman.kernel.user_namespaces_config_file }}"
   notify:
     - sysctl-userns
 
 - name: "Ensure podman service is running"
-  service:
+  ansible.builtin.service:
     name: "{{ item.name }}"
     state: "{{ item.state }}"
     enabled: "{{ item.enabled }}"
@@ -43,11 +43,11 @@
       #    - { name: podman.slice, enabled: yes, state: stopped }
 
 - name: "Ensures jenkins can use podman"
-  command: loginctl enable-linger jenkins
+  ansible.builtin.command: loginctl enable-linger jenkins
   changed_when: false
 
 - name: "Ensures any user can access podman keys (podman pull)"
-  file:
+  ansible.builtin.file:
     dest: /etc/docker/certs.d/
     owner: root
     group: root

@@ -1,6 +1,6 @@
 ---
 - name: Check bashrc configuration
-  template:
+  ansible.builtin.template:
     src: templates/bashrc.j2
     dest: /etc/bashrc
     mode: 644

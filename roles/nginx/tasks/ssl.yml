@@ -1,5 +1,5 @@
 ---
-- assert:
+- ansible.builtin.assert:
     that:
       - nginx.https is defined
       - nginx.https.ssl is defined
@@ -9,19 +9,19 @@
       - nginx.home != ""
     quiet: true
 
-- file:
+- ansible.builtin.file:
     path: "{{ nginx.https.ssl.home }}"
     state: directory
     owner: nginx
     group: nginx
     mode: 0755 
 
-- stat: 
+- ansible.builtin.stat:
     path: nginx.https.ssl.cert
   register: ssl_cert
 
 # if the cert is not provided, we generate them
-- include_role:
+- ansible.builtin.include_role:
     name: certs_gen
   vars:
     cert: "{{ nginx.https.ssl.home }}/{{ nginx.https.ssl.cert }}"
@@ -32,7 +32,7 @@
 
 # otherwise, let's deploy the one provided
 - block:
-  - assert:
+  - ansible.builtin.assert:
       that:
         - nginx.https.ssl.cert is defined
         - nginx.https.ssl.cert != ""
@@ -42,21 +42,21 @@
         - nginx.https.ssl.csr != ""
       quiet: true
 
-  - stat:
+  - ansible.builtin.stat:
       path: nginx.https.ssl.private_key
     register: private_key
   
-  - stat:
+  - ansible.builtin.stat:
       path: nginx.https.ssl.csr
     register: csr
 
-  - assert:
+  - ansible.builtin.assert:
       that:
         - private_key.stat.exists
         - csr.stat.exists
       quiet: true 
   
-  - file:
+  - ansible.builtin.file:
       src: "{{ item }}"
       dest: "{{ nginx.https.ssl.home }}/{{ item }}"
       owner: nginx
@@ -68,7 +68,7 @@
 
   when: ssl_cert.stat.exists
 
-- template:
+- ansible.builtin.template:
     src: templates/commons.d/ssl.conf.j2
     dest: "{{ nginx.home }}/config/commons.d/ssl.conf"
     owner: nginx

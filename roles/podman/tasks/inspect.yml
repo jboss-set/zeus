@@ -1,26 +1,26 @@
 ---
-- assert:
+- ansible.builtin.assert:
     that:
       - item is defined
       - item.owner is defined
       - item.tag is defined
 
-- set_fact:
+- ansible.builtin.set_fact:
     podman_find_image_by_tag: "/usr/bin/podman images -q -n {{ item.tag }}"
 
 - name: "Retrieve image id for tag {{ item.tag }} if exists."
-  command: "/usr/sbin/runuser -l {{ item.owner }} -c 'podman images -q -n {{ item.tag }}'"
+  ansible.builtin.command: "/usr/sbin/runuser -l {{ item.owner }} -c 'podman images -q -n {{ item.tag }}'"
   register: inspect_results
   changed_when: false
 
-- set_fact:
+- ansible.builtin.set_fact:
     image_id: "{{ inspect_results.stdout }}"
   when:
     - inspect_results is defined
     - inspect_results.stdout is defined
     - inspect_results.stdout != ""
 
-- debug:
+- ansible.builtin.debug:
     image_id: "No image exists for {{ item.tag }}"
   when:
     - image_id is not defined

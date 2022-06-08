@@ -1,5 +1,5 @@
 ---
-- assert:
+- ansible.builtin.assert:
     that:
       - nginx is defined
       - nginx.groupname is defined
@@ -13,7 +13,7 @@
     quiet: true
     fail_msg: "Missing or invalid information in {{ nginx }}"
 
-- include_role:
+- ansible.builtin.include_role:
     name: account
   vars:
     account: 

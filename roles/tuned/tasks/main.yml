@@ -1,34 +1,34 @@
 ---
-- assert:
+- ansible.builtin.assert:
     that:
       - tuned_profile_target is defined
       - tuned_profile_target != ""
 
-- include_role:
+- ansible.builtin.include_role:
     name: fast_yum_install
   vars:
     package_name: tuned
 
 - name: Started required service
-  service:
+  ansible.builtin.service:
     name: tuned
     state: started
     enabled: yes
 
 - name: "Configure tuned profile"
-  command: >
+  ansible.builtin.command: >
     "{{ tuned.bin }}" profile "{{ tuned_profile_target }}"
   args:
     creates: "{{ tuned.fact.file }}"
   when : tuned_profile_target is defined or (tuned_profile != tuned_profile_target)
 
 - name: "Ensure facts home folder exists: {{ tuned.fact.home }}"
-  file:
+  ansible.builtin.file:
     path: "{{ tuned.fact.home }}"
     state: directory
 
 - name: Add tuned profile to facts.d
-  template:
+  ansible.builtin.template:
     src: tuned_profile.fact.j2
     dest: "{{ tuned.fact.file }}"
   when: (tuned_profile is not defined and tuned_profile_target is defined) or (tuned_profile_target != tuned_profile)

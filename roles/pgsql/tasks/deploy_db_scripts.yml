@@ -1,10 +1,10 @@
 ---
-- assert:
+- ansible.builtin.assert:
     that:
       - item is defined
     quiet: true
 
-- include_tasks: deploy/db.yml
+- ansible.builtin.include_tasks: deploy/db.yml
   vars:
     script: "{{ item.create_db }}"
     dest: "{{ pgsql.scripts.home }}/{{ item.create_db.name }}"
@@ -13,7 +13,7 @@
     - item.create_db is defined
     - item.create_db.name is defined
 
-- include_tasks: deploy/db.yml
+- ansible.builtin.include_tasks: deploy/db.yml
   vars:
     script: "{{ item.load_data }}"
     dest: "{{ pgsql.scripts.home }}/{{ item.load_data.name }}"

@@ -1,40 +1,40 @@
 ---
-- assert:
+- ansible.builtin.assert:
     that:
       - certificate_list is defined
       - certificate_list is iterable
 
 # reset cacerts_file fact between iterations
-- set_fact:
+- ansible.builtin.set_fact:
     cacerts_file: ''
 
 # determine the location of cacerts file
-- stat:
+- ansible.builtin.stat:
     path: "{{ jdk.home }}/{{ jdk.name }}/jre/lib/security/cacerts"
   register: cacerts_file_stat
 
-- set_fact:
+- ansible.builtin.set_fact:
     cacerts_file: "{{ jdk.home }}/{{ jdk.name }}/jre/lib/security/cacerts"
   when: cacerts_file_stat.stat.exists
 
-- stat:
+- ansible.builtin.stat:
     path: "{{ jdk.home }}/{{ jdk.name }}/lib/security/cacerts"
   register: cacerts_file_stat_alt
   when: cacerts_file == ''
 
-- set_fact:
+- ansible.builtin.set_fact:
     cacerts_file: "{{ jdk.home }}/{{ jdk.name }}/lib/security/cacerts"
   when:
     - (not cacerts_file_stat is defined) or (not cacerts_file_stat.stat.exists)
     - cacerts_file_stat_alt.stat.exists
 
-- assert:
+- ansible.builtin.assert:
     that:
       cacerts_file is defined
 
 - name: Remove Root CA  in {{ jdk.name }}
   when: rebuild_keystore|default(false)
-  java_cert:
+  community.general.java_cert:
     cert_path: "{{ jdk_home }}/Root-CA.crt"
     keystore_path: "{{ cacerts_file }}"
     cert_alias: "internal.redhat.com"
@@ -45,7 +45,7 @@
 
 - name: Remove SSL certificates in {{ jdk.name }}
   when: rebuild_keystore|default(false)
-  java_cert:
+  community.general.java_cert:
     cert_url: "{{ item.cert_url }}"
     keystore_path: "{{ cacerts_file }}"
     cert_alias: "{{ item.alias }}"
@@ -56,7 +56,7 @@
   with_items: "{{ certificate_list }}"
 
 - name: Import Root CA in {{ jdk.name }} {{ cacerts_file }}
-  java_cert:
+  community.general.java_cert:
     cert_path: "{{ jdk_home }}/Root-CA.crt"
     keystore_path: "{{ cacerts_file }}"
     cert_alias: "internal.redhat.com"
@@ -66,7 +66,7 @@
     state: present
 
 - name: Import SSL certificates in {{ jdk.name }}
-  java_cert:
+  community.general.java_cert:
     cert_url: "{{ item.cert_url }}"
     keystore_path: "{{ cacerts_file }}"
     cert_alias: "{{ item.alias }}"
