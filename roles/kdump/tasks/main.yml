@@ -1,12 +1,12 @@
 ---
-- assert:
+- ansible.builtin.assert:
     that:
       - kdump is defined
       - kdump.level is defined
       - kdump.level != ""
 
 - name: Check kdump configuration
-  template:
+  ansible.builtin.template:
     src: templates/kdump.j2
     dest: /etc/kdump.conf
     mode: 644

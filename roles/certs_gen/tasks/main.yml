@@ -1,5 +1,5 @@
 ---
-- assert:
+- ansible.builtin.assert:
     that:
       - private_key is defined
       - private_key != ""
@@ -12,7 +12,7 @@
     quiet: true
 
 # fails if not a path ?
-- stat:
+- ansible.builtin.stat:
     path: "{{ item }}"
   loop:
     - private_key
@@ -20,17 +20,17 @@
     - csr
 
 - name: Generate an OpenSSL private key with the default values (4096 bits, RSA)
-  openssl_privatekey:
+  community.crypto.openssl_privatekey:
     path: "{{ private_key }}"
 
 - name: Generate an OpenSSL Certificate Signing Request
-  openssl_csr:
+  community.crypto.openssl_csr:
     path: "{{ csr }}"
     privatekey_path: "{{ private_key }}"
     common_name: "{{ domain_name }}"
 
 - name: Generate a Self Signed OpenSSL certificate
-  openssl_certificate:
+  community.crypto.x509_certificate:
     path: "{{ cert }}"
     privatekey_path: "{{ private_key }}"
     csr_path: "{{ csr }}"

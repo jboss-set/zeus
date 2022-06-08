@@ -1,11 +1,11 @@
 ---
-- include_role:
+- ansible.builtin.include_role:
     name: fast_yum_install
   vars:
     package_name: git
   
 - name: "Ensures gitconfig is deployed for user root"
-  template:
+  ansible.builtin.template:
     src: templates/gitconfig.j2
     dest: "{{ item.home }}/.gitconfig"
     owner: "{{ item.user }}"

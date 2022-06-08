@@ -1,20 +1,20 @@
 ---
-- include_tasks: setup.yml
+- ansible.builtin.include_tasks: setup.yml
 
-- include_tasks: config_mail.yml
+- ansible.builtin.include_tasks: config_mail.yml
   when: monit.email is defined
 
-- include_tasks: system_alerts.yml
+- ansible.builtin.include_tasks: system_alerts.yml
   when: monit.alerts.system is defined
 
-- include_tasks: dns_alerts.yml
+- ansible.builtin.include_tasks: dns_alerts.yml
   when: monit.alerts.dnsnames is defined
 
-- include_tasks: disk_usage_alerts.yml
+- ansible.builtin.include_tasks: disk_usage_alerts.yml
   when: monit.alerts.disk_usage is defined
 
 - name: "Ensures custom scripts folder exists"
-  file:
+  ansible.builtin.file:
     path: "{{ monit_custom_scripts_directory }}"
     state: directory
     owner: root
@@ -24,12 +24,12 @@
     - monit_custom_scripts_directory is defined
     - monit.alerts.custom_scripts is defined
 
-- include_tasks: custom_alerts.yml
+- ansible.builtin.include_tasks: custom_alerts.yml
   when:
     - monit is defined and monit.alerts is defined
     - monit.alerts.custom_scripts is defined
     - monit.alerts.custom_scripts | length > 0
   loop: "{{ monit.alerts.custom_scripts }}"
 
-- include_tasks: services_alerts.yml
+- ansible.builtin.include_tasks: services_alerts.yml
   when: monit.alerts.services is defined

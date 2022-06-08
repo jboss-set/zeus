@@ -8,7 +8,7 @@
     quiet: true
 
 - name: "Deploy aphrodite configuration to {{ aphrodite.path }}"
-  template:
+  ansible.builtin.template:
     src: "{{ aphrodite.template }}"
     dest: "{{ aphrodite.path }}"
     owner: jenkins

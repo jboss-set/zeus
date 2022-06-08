@@ -1,14 +1,14 @@
 ---
 - name: "Podman based services under Systemd control:"
-  debug:
+  ansible.builtin.debug:
     msg: "- {{ item.name }}"
   loop: "{{ podman_services }}"
 
-- include_tasks: podman.yml
+- ansible.builtin.include_tasks: podman.yml
   loop: "{{ podman_services }}"
 
 - name: "Following services needs to be refreshed"
-  debug:
+  ansible.builtin.debug:
     msg: "{{ item.name }}"
   loop: "{{ systemd_services_to_refresh }}"
   when:
@@ -20,7 +20,7 @@
   notify: "Refresh services"
 
 - name: "Ensures podman_services are running"
-  service:
+  ansible.builtin.service:
     name: "{{ item.name }}"
     state: "{{ item.state | default('started') }}"
     enabled: yes

@@ -1,5 +1,5 @@
 ---
-- assert:
+- ansible.builtin.assert:
     that: 
       - item is defined
       - item.name is defined
@@ -7,7 +7,7 @@
     quiet: yes
 
 - name: "Deploy service script for podman based systemd service called {{ item.name }}"
-  template:
+  ansible.builtin.template:
     src: templates/service-settings.sh.j2
     dest: "{{ podman.home}}/{{ item.name }}.config.sh"
     owner: root
@@ -15,7 +15,7 @@
     mode: 0755
 
 - name: "Deploy systemd config for service"
-  template:
+  ansible.builtin.template:
     src: templates/systemd.podman.config.j2
     dest: "/usr/lib/systemd/system/{{ item.name }}.service"
     owner: root
@@ -25,7 +25,7 @@
     - Systemd Daemon reload
 
 - name: "Create symlink for service"
-  file:
+  ansible.builtin.file:
     src: "{{ podman.home }}/podman-service.sh"
     dest: "{{ podman.home }}/{{ item.name }}-service.sh"
     owner: root

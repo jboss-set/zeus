@@ -1,43 +1,43 @@
 ---
-- assert:
+- ansible.builtin.assert:
     that:
       - ares.home is defined
       - ares.home != ""
     quiet: true
 
-- include_role:
+- ansible.builtin.include_role:
     name: fast_yum_install
   vars:
     package_name: rsync
 
-- stat:
+- ansible.builtin.stat:
     path: "{{ ares.home }}"
   register: ares_home
  
-- assert:
+- ansible.builtin.assert:
     that:
       - ares_home is defined
       - ares_home.stat is defined
       - ares_home.stat.exists
     quiet: true
 
-- stat:
+- ansible.builtin.stat:
     path: "{{ payload_status.git.keyfile}}"
   register: github_keyfile_path
 
-- assert:
+- ansible.builtin.assert:
     that:
       - github_keyfile_path is defined
       - github_keyfile_path.stat is defined
       - github_keyfile_path.stat.exists
     quiet: true
 
-- stat:
+- ansible.builtin.stat:
     path: "{{ payload_status.home }}/build"
   register: payload_build_dir_path
 
 - name: "Checkout payload_status from git: {{ payload_status.git.url }}"
-  git:
+  ansible.builtin.git:
     repo: "{{ payload_status.git.url }}"
     dest: "{{ payload_status.home }}"
     version: "{{ payload_status.git.version }}"
@@ -45,7 +45,7 @@
   register: git_results
 
 - name: "Ensure {{ payload_status.home }} belongs to {{ payload_status.owner }}"
-  command:
+  ansible.builtin.command:
     # just to be faster, file: takes ages...
     cmd: "chown -R {{ payload_status.owner }}:{{ payload_status.group }} {{ payload_status.home }}"
     warn: false
@@ -58,14 +58,14 @@
   changed_when: false # weirdly this task always ends up in changed=true
 
 - name: "Ensures yarn build env vars are set"
-  template:
+  ansible.builtin.template:
     src: templates/env.j2
     dest: "{{ payload_status.home }}/.env"
     owner: "{{ payload_status.owner }}"
     group: "{{ payload_status.group }}"
   register: payload_env
 
-- include_role:
+- ansible.builtin.include_role:
     name: podman
 
 - name: "Running the payload_status container"
@@ -81,40 +81,40 @@
   when:
     - git_results.changed or payload_env.changed
 
-- set_fact:
+- ansible.builtin.set_fact:
     build_dir: "{{ payload_status.home }}/build"
 
-- stat:
+- ansible.builtin.stat:
     path: "{{ build_dir }}"
   register: path_to_build_dir
 
-- assert:
+- ansible.builtin.assert:
     that:
       - path_to_build_dir is defined
       - path_to_build_dir.stat is defined
         #   - path_to_build_dir.stat.exists
     quiet: true
 
-- set_fact:
+- ansible.builtin.set_fact:
     payload_status_deploy_dir: "{{ nginx.docroot }}/payload-status"
   when:
     - nginx is defined
     - nginx.docroot is defined
 
 - name: "Delete previous deployment"
-  file:
+  ansible.builtin.file:
     state: absent
     path: "{{ payload_status_deploy_dir }}"
   when:
     - git_results.changed
 
-- stat:
+- ansible.builtin.stat:
     path: "{{ payload_status_deploy_dir }}"
   register: path_to_payload_status_deploy_dir
 
 - name: "Create new deployment dir if needed"
   block:
-    - file:
+    - ansible.builtin.file:
         state: directory
         path: "{{ payload_status_deploy_dir }}"
         owner: "{{ nginx.username }}"

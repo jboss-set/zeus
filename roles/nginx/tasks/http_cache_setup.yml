@@ -1,12 +1,12 @@
 ---
-- assert:
+- ansible.builtin.assert:
     that:
       - nginx_config_dir is defined
       - nginx_config_dir != ""
     quiet: true
 
 - name: "Ensure HTTP cache common config is created"
-  template:
+  ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     owner: "{{ nginx.username }}" 
@@ -19,7 +19,7 @@
     - restart nginx
 
 - name: "Ensure Maven Central cache directory is created"
-  file:
+  ansible.builtin.file:
     path: "{{ item.directory }}"
     state: directory
     owner: nginx
@@ -28,7 +28,7 @@
   loop: "{{ nginx.caches.directories }}"
 
 - name: "Deploy settings.xml to use the caches"
-  template:
+  ansible.builtin.template:
     src: templates/settings.xml.j2
     dest: /opt/tools/settings.xml
     owner: jenkins
@@ -36,7 +36,7 @@
     mode: 0644
 
 - name: "Deploy settings-64.xml"
-  template:
+  ansible.builtin.template:
     src: templates/settings-64.xml.j2
     dest: /opt/tools/settings-64.xml
     owner: jenkins

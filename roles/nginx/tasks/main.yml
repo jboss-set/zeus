@@ -1,25 +1,25 @@
 ---
-- include_tasks: user_setup.yml
+- ansible.builtin.include_tasks: user_setup.yml
 
-- set_fact:
+- ansible.builtin.set_fact:
     nginx_config_dir: "{{ nginx.home }}/config"
 
-- assert:
+- ansible.builtin.assert:
     that:
       - nginx_config_dir is defined
       - nginx_config_dir != ""
     quiet: true
     fail_msg: "Invalid parameters"
 
-- stat:
+- ansible.builtin.stat:
     path: "{{ nginx_config_dir }}"
   register: nginx_config_dir_path
 
-- assert:
+- ansible.builtin.assert:
     that:
       - nginx_config_dir_path is defined
 
-- file:
+- ansible.builtin.file:
     state: directory
     path: "{{ nginx_config_dir }}"
     owner: "{{ nginx.username }}"
@@ -27,23 +27,23 @@
   when:
     - not nginx_config_dir_path.stat.exists
 
-- include_tasks: nginx_config.yml
+- ansible.builtin.include_tasks: nginx_config.yml
 
-- include_tasks: static_content.yml
+- ansible.builtin.include_tasks: static_content.yml
 
-- include_tasks: http_cache_setup.yml
+- ansible.builtin.include_tasks: http_cache_setup.yml
   when: nginx.caches is defined
 
-- include_tasks: ssl.yml
+- ansible.builtin.include_tasks: ssl.yml
   when: nginx.https is defined
 
-- include_tasks: jenkins.yml
+- ansible.builtin.include_tasks: jenkins.yml
   when:
     - jenkins is defined
     - jenkins.service is defined
 
 - name: permit traffic in default zone for https service
-  firewalld:
+  ansible.posix.firewalld:
     service: "{{ item }}"
     permanent: yes
     state: enabled
@@ -51,6 +51,5 @@
     - http
     - https
 
-
-- set_fact:
+- ansible.builtin.set_fact:
     podman_services: "{{ podman_services }} + {{ nginx.service }}"

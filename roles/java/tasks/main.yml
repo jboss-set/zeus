@@ -4,13 +4,13 @@
       - home_folder is defined
 
 - name: "Install tar"
-  include_role:
+  ansible.builtin.include_role:
     name: fast_yum_install
   vars:
     package_name: tar
 
 - name: "Install JDK versions"
-  include_tasks: tasks/tool_install.yml
+  ansible.builtin.include_tasks: tasks/tool_install.yml
   vars:
     home_folder: "{{ jdk_home_folder }}"
     default_version: "{{ jdk_default }}"
@@ -22,7 +22,7 @@
     - jdk_home_folder is defined
 
 - name: "Install maven versions"
-  include_tasks: tasks/tool_install.yml
+  ansible.builtin.include_tasks: tasks/tool_install.yml
   vars:
     home_folder: "{{ mvn_home_folder }}"
     default_version: "{{ mvn_default }}"

@@ -1,5 +1,5 @@
 ---
-- assert:
+- ansible.builtin.assert:
     that:
       - sysctl is defined
       - sysctl.name is defined
@@ -8,7 +8,7 @@
       - sysctl.value != ""
 
 - name: "Configure Kernel setting {{ systcl.name }}"
-  sysctl:
+  ansible.posix.sysctl:
     name: "{{ sysctl.name }}"
     value: "{{ sysctl.value }}"
     state: present

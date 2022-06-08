@@ -12,17 +12,17 @@
     command: "./build.sh"
   become_user: "{{ payload_status.owner }}"
 
-- set_fact:
+- ansible.builtin.set_fact:
     build_dir: "{{ payload_status.home }}/build"
 
-- stat:
+- ansible.builtin.stat:
     path: "{{ build_dir }}"
   register: path_to_build_dir
 
-- debug:
+- ansible.builtin.debug:
     msg: "{{ path_to_build_dir }}"
 
-- assert:
+- ansible.builtin.assert:
     that:
       - path_to_build_dir is defined
       - path_to_build_dir.stat is defined
@@ -30,7 +30,7 @@
    quiet: true
 
 - name: "Ensure symlink to nginx docroot is set"
-  file:
+  ansible.builtin.file:
     state: link
     src: "{{ payload_status.home }}"
     dest: "{{ nginx.docroot }}/payload_status }}"

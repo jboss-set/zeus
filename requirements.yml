@@ -1,4 +1,7 @@
 ---
 collections:
   - community.general
+  - community.crypto
+  - community.postgresql
   - ansible.posix
+  - containers.podman

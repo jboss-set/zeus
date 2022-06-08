@@ -1,39 +1,39 @@
 ---
 - block:
-    - debug:
+    - ansible.builtin.debug:
         msg: "The PGSQL role does not support dry-run, be aware its content will be skipped."
   when:
     - ansible_check_mode
 
 - block:
-  - assert:
+  - ansible.builtin.assert:
       that:
         - pgsql is defined
         - pgsql.scripts is defined
         - pgsql.scripts.home is defined
       quiet: true
 
-  - include_role:
+  - ansible.builtin.include_role:
       name: fast_yum_install
     vars:
       package_name: python3-psycopg2
 
   - name: "Ensures {{ pgsql.scripts.home }} exists."
-    file:
+    ansible.builtin.file:
       path: "{{ pgsql.scripts.home }}"
       state: directory
       owner: jenkins
       group: jenkins
 
   - name: "Deploys pgsql SQL scripts for each instance"
-    include_tasks: deploy_db_scripts.yml
+    ansible.builtin.include_tasks: deploy_db_scripts.yml
     loop:
       - "{{ pgsql.instances.mjolnir_preprod }}"
       - "{{ pgsql.instances.component_upgrade }}"
     when:
       - pgsql.instances is defined
 
-  - set_fact:
+  - ansible.builtin.set_fact:
       podman_services: "{{ postgres_instances.services }}"
   when:
     - pgsql_skip is not defined or ansible_check_mode

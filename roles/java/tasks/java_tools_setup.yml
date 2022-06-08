@@ -1,5 +1,5 @@
 ---
-- assert:
+- ansible.builtin.assert:
     that:
       - home_folder is defined
       - home_folder != ""
@@ -12,15 +12,15 @@
       - item.owner != ""
     quiet: true
 
-- set_fact:
+- ansible.builtin.set_fact:
     path_to_archive: "{{ home_folder }}/{{ item.name }}.tgz"
 
-- stat:
+- ansible.builtin.stat:
     path: "{{ path_to_archive }}"
   register: archive
 
 - name: "Download archive from {{ item.source }}"
-  get_url:
+  ansible.builtin.get_url:
     url: "{{ item.source }}"
     dest: "{{ path_to_archive }}"
   retries: 3
@@ -30,7 +30,7 @@
     - archive.stat is defined
     - not archive.stat.exists
 
-- stat:
+- ansible.builtin.stat:
     path: "{{ item.home }}"
   register: path_to_home
 
@@ -46,18 +46,18 @@
 #        state: directory
 #        path: "{{ item.home }}"
 
-    - stat:
+    - ansible.builtin.stat:
         path: "{{ item.home }}/{{ item.name }}"
       register: path_to_home
 
-    - assert:
+    - ansible.builtin.assert:
         that:
           - path_to_home is defined
           - path_to_home.stat is defined
         quiet: true
 
     - name: "Decompress archive {{ path_to_archive }}"
-      unarchive:
+      ansible.builtin.unarchive:
         src: "{{ path_to_archive }}"
         dest: "{{ item.home }}"
         remote_src: yes
@@ -71,7 +71,7 @@
       #- not path_to_home.stat.exists
 
 - name: "Ensure appropriate owner/group: {{ item.home }}."
-  file:
+  ansible.builtin.file:
     state: directory
     path: "{{ item.home }}"
     owner: "{{ item.owner }}"

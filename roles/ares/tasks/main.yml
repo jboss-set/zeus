@@ -1,5 +1,5 @@
 ---
-- assert:
+- ansible.builtin.assert:
     that:
       - ares is defined
       - ares.home is defined
@@ -10,7 +10,7 @@
       - ares.git.keyfile is defined
     quiet: true
 
-- stat:
+- ansible.builtin.stat:
     path: "{{ ares.git.keyfile }}"
   register: github_keyfile_path
 
@@ -22,14 +22,14 @@
     quiet: true
 
 - name: "Fetch images defintion from {{ ares.git.repo }} from branch {{ ares.git.branch }}."
-  git:
+  ansible.builtin.git:
     repo: "{{ ares.git.repo }}"
     dest: "{{ ares.home }}"
     version: "{{ ares.git.branch }}"
     key_file: "{{ ares.git.keyfile }}"
 
 - name: "Ensure {{ ares.home }} belongs to {{ ares.owner }}"
-  file:
+  ansible.builtin.file:
     path: "{{ ares.home }}"
     recurse: yes
     owner: "{{ ares.owner }}"
@@ -37,7 +37,7 @@
   changed_when: false # weirdly this task always ends up in changed=true
 
 - name: "Add redhat.repo to images that needs to use host's subs"
-  copy:
+  ansible.builtin.copy:
     src: /etc/yum.repos.d/redhat.repo
     remote_src: yes
     dest: "{{ ares.home }}/{{ item }}"
@@ -50,7 +50,7 @@
     - ares.images_with_subs | length > 0
 
 - name: "Add {{ ares.owner }} SSH key to containers that requires it"
-  file:
+  ansible.builtin.file:
     src: "/home/{{ ares.owner }}/.ssh/id_rsa.pub"
     dest: '{{ ares.home }}/{{ item }}'
     state: hard

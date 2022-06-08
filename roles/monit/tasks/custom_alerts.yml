@@ -1,5 +1,5 @@
 ---
-- assert:
+- ansible.builtin.assert:
     that:
       - item is defined
       - item.src is defined
@@ -8,7 +8,7 @@
     quiet: true
 
 - name: "Ensures custom script {{ item.dest }} is deployed"
-  template:
+  ansible.builtin.template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
     owner: root
@@ -16,7 +16,7 @@
     mode: 0755
 
 - name: "Ensures associate Monit check is enabled ({{ item.name }})"
-  template:
+  ansible.builtin.template:
     src: templates/monit.script.j2
     dest: "/etc/monit.d/{{ item.name }}"
     owner: root

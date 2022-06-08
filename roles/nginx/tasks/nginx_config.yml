@@ -1,15 +1,15 @@
 ---
-- assert:
+- ansible.builtin.assert:
     that:
       - nginx_config_dir is defined
       - nginx_config_dir != ""
     quiet: true
 
-- stat:
+- ansible.builtin.stat:
     path: "{{ nginx_config_dir }}"
   register: nginx_config_dir_path
 
-- file:
+- ansible.builtin.file:
     path: "{{ nginx_config_dir }}"
     state: directory
     owner: "{{ nginx.username }}" 
@@ -17,7 +17,7 @@
     mode: 0775
   when: nginx_config_dir_path.stat.exists
 
-- file:
+- ansible.builtin.file:
     state: link
     src: "{{ nginx_config_dir }}"
     dest: /etc/nginx
@@ -26,7 +26,7 @@
 
 - block:
     - name: "Ensure required subfolders exist"
-      file:
+      ansible.builtin.file:
         path: "{{ item }}"
         state: directory
         owner: "{{ nginx.username }}" 
@@ -36,9 +36,9 @@
         - "{{ nginx_config_dir }}/commons.d"
 
     - block:
-      - set_fact:
+      - ansible.builtin.set_fact:
           monit_username_password_string: "{{ monit.webapp.username }}:{{ monit.webapp.password }}"
-      - set_fact:
+      - ansible.builtin.set_fact:
           encoded_monit_username_password: "{{ monit_username_password_string | b64encode }}"
       when: 
         - monit is defined
@@ -47,7 +47,7 @@
         - monit.webapp.password is defined
 
     - name: "Deploy nginx configuration"
-      template:
+      ansible.builtin.template:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
         owner: root

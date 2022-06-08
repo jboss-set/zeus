@@ -1,5 +1,5 @@
 ---
-- include_tasks: tasks/vpn.yml
+- ansible.builtin.include_tasks: tasks/vpn.yml
   when:
     - vpn_is_required is defined
     - vpn_is_required

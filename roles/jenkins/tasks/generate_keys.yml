@@ -1,5 +1,5 @@
 ---
-- assert:
+- ansible.builtin.assert:
     that:
       - homedir is defined
       - jenkins is defined
@@ -10,14 +10,14 @@
     quiet: true
 
 - name: "Ensures SSH folder exists"
-  file:
+  ansible.builtin.file:
     state: directory
     path: "{{ homedir }}/.ssh/"
     owner: "{{ jenkins.username }}"
     group: "{{ jenkins.groupname }}"
 
 - name: "Generate SSH key {{ homedir }}/.ssh/id_rsa"
-  openssh_keypair:
+  community.crypto.openssh_keypair:
     path: "{{ homedir }}/.ssh/id_rsa"
     type: rsa
     size: 4096
@@ -27,7 +27,7 @@
     group: "{{ jenkins.groupname }}"
 
 - name: "Hard link generated key to {{ homedir }}/.ssh/authorized_keys"
-  file:
+  ansible.builtin.file:
     state: hard
     src: "{{ homedir }}/.ssh/id_rsa.pub"
     dest: "{{ homedir }}/.ssh/authorized_keys"

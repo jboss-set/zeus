@@ -1,5 +1,5 @@
 ---
-- assert:
+- ansible.builtin.assert:
     that: 
       - old_releases.dir is defined
       - old_releases.dir != ""
@@ -7,13 +7,13 @@
       - old_releases.url != ""
     quiet: true
 
-- stat:
+- ansible.builtin.stat:
     path: "{{ old_releases.dir }}"
   register: old_releases_dir_path
 
 - block:
   - name: "Create old releases folder for test jobs"
-    file:
+    ansible.builtin.file:
       path: "{{ old_releases.dir }}"
       state: directory
       group: root
@@ -22,7 +22,7 @@
   
   # providing a file name for dest means those will only be downloaded if not present to start with
   - name: "Download old EAP7 releases"
-    get_url:
+    ansible.builtin.get_url:
       url: "{{ old_releases.url }}/eap7/{{ item }}/jboss-eap-{{ item }}.zip"
       dest: "{{ old_releases.dir }}/jboss-eap-{{ item }}.zip"
     retries: 3
@@ -35,7 +35,7 @@
       - 7.4.0
 
   - name: "Download old EAP6 releases"
-    get_url:
+    ansible.builtin.get_url:
       url: "{{ old_releases.url }}/eap6/{{ item }}/jboss-eap-{{ item }}.zip"
       dest: "{{ old_releases.dir }}/jboss-eap-{{ item }}.zip"
     retries: 3
@@ -49,7 +49,7 @@
   
   # URL pattern for 6.0.0 and 6.0.1 is different
   - name: "Download 6.0.x EAP6 releases"
-    get_url:
+    ansible.builtin.get_url:
       url: "{{ old_releases.url }}/eap6/{{ item }}/zip/jboss-eap-{{ item }}.zip"
       dest: "{{ old_releases.dir }}/jboss-eap-{{ item }}.zip"
     retries: 3

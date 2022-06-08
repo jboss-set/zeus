@@ -8,15 +8,15 @@
     quiet: true
 
 - name: "Ensures the home dir exits: {{ home_folder }}"
-  file:
+  ansible.builtin.file:
     state: directory
     path: "{{ home_folder }}"
 
-- include_tasks: tasks/java_tools_setup.yml
+- ansible.builtin.include_tasks: tasks/java_tools_setup.yml
   loop: "{{ list }}"
 
 - name: "Symlink {{ default_link }} to default version {{ default_version }}"
-  file:
+  ansible.builtin.file:
     src: "{{ default_version  }}"
     dest: "{{  default_link }}"
     state: link

@@ -1,10 +1,10 @@
 ---
-- assert:
+- ansible.builtin.assert:
     that:
       - cronjobs is defined
       - cronjobs | length > 0
 
-- include_role:
+- ansible.builtin.include_role:
     name: fast_yum_install
   vars:
     package_name: "{{ item }}"
@@ -12,5 +12,5 @@
     - mailx
     - cronie
 
-- include_tasks: cronjob.yml
+- ansible.builtin.include_tasks: cronjob.yml
   loop: "{{ cronjobs }}"
