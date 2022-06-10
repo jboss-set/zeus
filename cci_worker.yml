@@ -39,3 +39,9 @@
       with_items:
         - firewalld
         - zip
+        - podman
+
+    - name: "Ensure jaegertracing docker image is downloaded for tests"
+      containers.podman.podman_image:
+        name: "quay.io/jaegertracing/all-in-one:latest"
+      become_user: "{{cci_worker_username}}"
