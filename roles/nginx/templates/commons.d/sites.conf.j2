@@ -24,11 +24,6 @@ location {{ payload_status.context }} {
 
   include /etc/nginx/commons.d/maven.cache.conf;
   proxy_pass {{ cache.url }};
-  proxy_set_header   Host             {% if cache.server is defined %}"{{ cache.server }}";{% else %}$host;{% endif %}
-
-  proxy_ssl_name     {% if cache.server is defined %}"{{ cache.server }}";{% else %}$host;{% endif %}
-
-  proxy_ssl_server_name on;
 }
 
 {% endfor %}
@@ -38,11 +33,6 @@ location {{ payload_status.context }} {
 
   include /etc/nginx/commons.d/maven.cache.conf;
   proxy_pass {{ cache.url }};
-  proxy_set_header   Host             {% if cache.server is defined %}"{{ cache.server }}";{% else %}$host;{% endif %}
-
-  proxy_ssl_name     {% if cache.server is defined %}"{{ cache.server }}";{% else %}$host;{% endif %}
-
-  proxy_ssl_server_name on;
 }
 
 {% endfor %}
@@ -56,7 +46,6 @@ location /monit/ {
   proxy_pass http://podman.host:2812/;
   proxy_redirect     off;
   proxy_set_header Authorization "Basic {{ encoded_monit_username_password }}";
-  proxy_set_header   Host             $host;
   include /etc/nginx/commons.d/proxy.conf;
 }
 {% endif %}
