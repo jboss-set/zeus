@@ -23,6 +23,8 @@ location {{ payload_status.context }} {
   error_log /var/log/nginx/cache-{{ cache.name }}-error.log ;
 
   include /etc/nginx/commons.d/maven.cache.conf;
+  {% if  cache.ssl_server_name is defined %}proxy_ssl_server_name {{ cache.ssl_server_name }};
+{% endif %}
   proxy_pass {{ cache.url }};
 }
 
