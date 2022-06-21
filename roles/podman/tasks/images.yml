@@ -1,4 +1,25 @@
 ---
+- ansible.builtin.assert:
+    that: 
+      - podman_images_home is defined
+    quiet: True
+    fail_msg: "Required parameters podman_images_home is not defined."
+
+- ansible.builtin.stat:
+    path: "{{ podman_images_home }}"
+  register: podman_images_home_info
+
+- ansible.builtin.assert:
+    that:
+      - podman_images_home_info is defined
+      - podman_images_home_info.stat is defined
+      - podman_images_home_info.stat.exists is defined
+      - podman_images_home_info.stat.exists
+      - podman_images_home_info.stat.isdir is defined
+      - podman_images_home_info.stat.isdir 
+    quiet: True
+    fail_msg: "Invalid podman_images_home_info provided: {{ podman_images_home_info.stat.isdir }}."
+
 - ansible.builtin.set_fact:
     podman_images: []
 
@@ -11,7 +32,7 @@
 - name: "Ensure local images are successfully build"
   containers.podman.podman_image:
     name: "{{ item.tag }}"
-    path: "{{ ares.home }}/{{ item.name }}"
+    path: "{{ podman_images_home }}/{{ item.name }}"
     state: build
   become_user: "{{ item.owner | default('root') }}"
   loop: "{{ podman.images.locals }}"

@@ -1,6 +1,6 @@
 ---
 podman:
-  home: /opt/podman
+  home: "{{ podman_home | default('/opt/podman') }}"
   packages:
     - slirp4netns
     - podman
