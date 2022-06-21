@@ -1,34 +1,33 @@
 ---
-- assert:
+- ansible.builtin.assert:
     that:
-      - home_folder is defined
+      - jdk_home_folder is defined
+      - mvn_home_folder is defined
 
-- name: "Install tar"
-  ansible.builtin.include_role:
-    name: fast_yum_install
-  vars:
-    package_name: tar
+- name: "Ensures the tools home folder exits."
+  ansible.builtin.file:
+    state: directory
+    path: "{{ item }}"
+  loop:
+    - "{{ jdk_home_folder }}"
+    - "{{ mvn_home_folder }}"
 
 - name: "Install JDK versions"
-  ansible.builtin.include_tasks: tasks/tool_install.yml
+  ansible.builtin.include_tasks: install_and_default.yml
   vars:
     home_folder: "{{ jdk_home_folder }}"
-    default_version: "{{ jdk_default }}"
-    default_link: "{{ jdk_default_link }}"
     list: "{{ jdk_list }}"
+    tool_default: "{{ jdk_default }}"
+    tool_default_link: "{{ jdk_default_link }}"
   when:
     - jdk_list is defined
-    - jdk_list is iterable
-    - jdk_home_folder is defined
 
 - name: "Install maven versions"
-  ansible.builtin.include_tasks: tasks/tool_install.yml
+  ansible.builtin.include_tasks: install_and_default.yml
   vars:
     home_folder: "{{ mvn_home_folder }}"
-    default_version: "{{ mvn_default }}"
-    default_link: "{{ mvn_default_link }}"
     list: "{{ mvn_list }}"
+    tool_default: "{{ mvn_default }}"
+    tool_default_link: "{{ mvn_default_link }}"
   when:
     - mvn_list is defined
-    - mvn_list is iterable
-    - mvn_home_folder is defined

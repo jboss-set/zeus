@@ -1,18 +1,18 @@
 ---
 # dummy variables for java role testing purpose.
+jdk_home_folder: /opt/java
+mvn_home_folder: /opt/java
 jdk_list:
   - name: jdk-17.0.1
-    home: /opt/oracle
+    home: "{{ jdk_home_folder }}"
     source: 'https://download.java.net/java/GA/jdk17.0.1/2a2082e5a09d4267845be086888add4f/12/GPL/openjdk-17.0.1_linux-x64_bin.tar.gz'
-    owner: "{{ override_java_owner | default('root') }}"
-jdk_default: /opt/oracle/jdk-17.0.1
-jdk_default_link: /opt/oracle/java
+jdk_default: "{{ jdk_home_folder }}/jdk-17.0.1"
+jdk_default_link: /opt/java/java_default
 mvn_list:
   - name: apache-maven-3.6.3
-    home: /opt/apache/
+    home: "{{ mvn_home_folder }}"
     source: https://downloads.apache.org/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz
-    owner: "{{ override_java_owner | default('root') }}"
-mvn_default: /opt/apache/apache-maven-3.6.3/
-mvn_default_link: /opt/apache/maven
+mvn_default: "{{ mvn_home_folder }}/apache-maven-3.6.3"
+mvn_default_link: /opt/java/mvn_default
 yum:
   cache_update : "true"
