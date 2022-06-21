@@ -8,6 +8,7 @@
     - vars/component-alignment.yml
     - vars/aphrodite.yml
     - vars/jobs.yml
+    - vars/mailer.yml
 
   pre_tasks:
     - name: Register
@@ -16,6 +17,9 @@
         username: "{{ cci_worker_rhel_subscription_username }}"
         password: "{{ cci_worker_rhel_subscription_password }}"
         autosubscribe: yes
+      when: 
+        - cci_worker_rhel_subscription_password is defined
+        - cci_worker_rhel_subscription_username is defined
 
     - name: Update yum
       yum:
@@ -35,7 +39,6 @@
         name: "{{ item }}"
       with_items:
         - old_releases
-        - payload_status
         - component_alignment
         - pr_processor
         - aphrodite

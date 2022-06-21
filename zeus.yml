@@ -81,15 +81,16 @@
         - sysctl
         - tuned
         - hosts
+        - netrc
+        - git
+        - ssh
 
   tasks:
     - ansible.builtin.include_role:
         name: "{{ item }}"
       with_items:
         # main services
-        - git
         - sshd
-        - ssh
         - ares
         - java
         - jenkins
@@ -98,14 +99,12 @@
         - podman
         - systemd
         - java_certs
-        # auth and sudoers.yml
-        - netrc
+        - payload_status
 
   post_tasks:
     - ansible.builtin.include_role:
         name: "{{ item }}"
       with_items:
-        # monitoring
         - monit
         - cron
         - infosec.qualys-cloud-agent

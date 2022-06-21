@@ -1,7 +1,7 @@
 ---
 podman_services: []
 ares:
-  home: "{{ podman_images_home }}"
+  home: "{{ podman_images_home | default('/home/jenkins/ares.git')}}"
   owner: "{{ podman_images_user }}"
   group: "{{ podman_images_user }}"
   git:

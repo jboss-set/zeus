@@ -5,8 +5,8 @@ After=network-online.target
 
 [Service]
 Restart=on-failure
-ExecStart={{ podman.home }}/{{ item.name }}-service.sh start 
-ExecStop={{ podman.home }}/{{ item.name }}-service.sh stop
+ExecStart={{ podman_home }}/{{ item.name }}-service.sh start 
+ExecStop={{ podman_home }}/{{ item.name }}-service.sh stop
 PIDFile=/var/run/{{ item.name }}/{{ item.name }}.pid
 KillMode=none
 Type=forking

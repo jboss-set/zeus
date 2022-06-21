@@ -37,17 +37,15 @@
 
     - block:
       - ansible.builtin.set_fact:
-          monit_username_password_string: "{{ monit.webapp.username }}:{{ monit.webapp.password }}"
+          monit_username_password_string: "{{ monit_webapp_username }}:{{ monit_webapp_password }}"
       - ansible.builtin.set_fact:
-          encoded_monit_username_password: "{{ monit_username_password_string | b64encode }}"
+          encoded_monit_username_password: "{{ monit_webapp_password | b64encode }}"
       when: 
-        - monit is defined
-        - monit.webapp is defined
-        - monit.webapp.username is defined
-        - monit.webapp.password is defined
+        - monit_webapp_username is defined
+        - monit_webapp_password is defined
 
     - name: "Deploy nginx configuration"
-      template:
+      ansible.builtin.template:
         src: "{{ files.src }}"
         dest: "{{ files.dest }}"
         owner: root
