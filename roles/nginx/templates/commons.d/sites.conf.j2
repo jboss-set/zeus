@@ -10,8 +10,8 @@ location /publish {
     autoindex on;
 }
 
-{% if payload_status is defined and payload_status.context is defined %}
-location {{ payload_status.context }} {
+{% if payload_status_context is defined %}
+location {{ payload_status_context }} {
   index /index.html ;
   access_log /var/log/nginx/payload_status-access.log ;
   error_log /var/log/nginx/payload_status-error.log ;
@@ -52,11 +52,9 @@ location /monit/ {
 }
 {% endif %}
 
-{% if jenkins is defined %}
-{% for jenkins_server in jenkins.service %}
+{% for jenkins_server in jenkins_service %}
 include /etc/nginx/commons.d/{{ jenkins_server.name }}.conf;
 {% endfor %}
-{% endif %}
 
 # redirect server error pages to the static page /50x.html
 error_page   500 502 503 504  /50x.html;

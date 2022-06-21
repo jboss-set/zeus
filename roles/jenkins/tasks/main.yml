@@ -88,3 +88,6 @@
 
 - ansible.builtin.set_fact:
      podman_services: "{{ podman_services }} + {{ jenkins.service }}"
+
+- ansible.builtin.set_fact:
+     jenkins_service: "{{ jenkins.service }}"

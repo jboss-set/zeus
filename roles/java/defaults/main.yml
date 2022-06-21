@@ -1,6 +1,6 @@
 ---
 home_folder: /opt/tools
-jdk_home_folder: /opt/java
-mvn_home_folder: /opt/java
-jdk_default_link: /opt/java/java_default
-mvn_default_link: /opt/java/mvn_default
+jdk_home_folder: /opt/oracle
+mvn_home_folder: /opt/apache
+jdk_default_link: "{{ jdk_home_folder }}/java"
+mvn_default_link: "{{ mvn_home_folder }}/maven"

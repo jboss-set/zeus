@@ -17,7 +17,7 @@
         username: "{{ cci_worker_rhel_subscription_username }}"
         password: "{{ cci_worker_rhel_subscription_password }}"
         autosubscribe: yes
-      when: 
+      when:
         - cci_worker_rhel_subscription_password is defined
         - cci_worker_rhel_subscription_username is defined
 
