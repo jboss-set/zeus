@@ -92,14 +92,13 @@
     that:
       - path_to_build_dir is defined
       - path_to_build_dir.stat is defined
-        #   - path_to_build_dir.stat.exists
+      - nginx_http_docroot is defined
     quiet: true
 
 - ansible.builtin.set_fact:
-    payload_status_deploy_dir: "{{ nginx.docroot }}/payload-status"
+    payload_status_deploy_dir: "{{ nginx_http_docroot }}/payload-status"
   when:
-    - nginx is defined
-    - nginx.docroot is defined
+    - nginx_http_docroot is defined
 
 - name: "Delete previous deployment"
   ansible.builtin.file:

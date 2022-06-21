@@ -3,13 +3,13 @@
     that: 
       - item is defined
       - item.name is defined
-      - podman.home is defined
+      - podman_home is defined
     quiet: yes
 
 - name: "Deploy service script for podman based systemd service called {{ item.name }}"
   ansible.builtin.template:
     src: templates/service-settings.sh.j2
-    dest: "{{ podman.home}}/{{ item.name }}.config.sh"
+    dest: "{{ podman_home}}/{{ item.name }}.config.sh"
     owner: root
     group: root
     mode: 0755
@@ -26,8 +26,8 @@
 
 - name: "Create symlink for service"
   ansible.builtin.file:
-    src: "{{ podman.home }}/podman-service.sh"
-    dest: "{{ podman.home }}/{{ item.name }}-service.sh"
+    src: "{{ podman_home }}/podman-service.sh"
+    dest: "{{ podman_home }}/{{ item.name }}-service.sh"
     owner: root
     group: root
     state: link
