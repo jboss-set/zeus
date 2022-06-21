@@ -1,0 +1,25 @@
+---
+- name: "Check that the required parameters are provided"
+  ansible.builtin.assert:
+    that:
+     - home_folder is defined
+     - list is defined
+    quiet: True
+    fail_msg: "Missing required parameters."
+
+- name: "Ensures the home dir exits: {{ home_folder }}"
+  ansible.builtin.file:
+    state: directory
+    path: "{{ home_folder }}"
+
+- ansible.builtin.include_tasks: archive_tool_install.yml
+  loop: "{{ list }}"
+
+- name: "Symlink {{ tool_default_link }} to default version: {{ tool_default }}."
+  ansible.builtin.file:
+    src: "{{ tool_default }}"
+    dest: "{{ tool_default_link }}"
+    state: link
+  when:
+    - tool_default_link is defined
+    - tool_default is defined
