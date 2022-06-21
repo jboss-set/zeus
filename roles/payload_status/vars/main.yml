@@ -8,7 +8,7 @@ payload_status:
     keyfile: "{{ github_keyfile }}"
   home: "{{ payload_status_home }}"
   dest: "{{ payload_status_dest }}"
-  context: /payload-status
+  context: "{{ payload_status_context | default('/payload-status') }}"
   react:
     vars:
       - name: 'REACT_APP_PRBZ_URL'
