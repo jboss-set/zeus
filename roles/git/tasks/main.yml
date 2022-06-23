@@ -7,8 +7,10 @@
 - name: "Ensures gitconfig is deployed for user root"
   ansible.builtin.template:
     src: templates/gitconfig.j2
-    dest: "{{ item.home }}/.gitconfig"
-    owner: "{{ item.user }}"
-    group: "{{ item.user }}"
+    dest: "{{ config.home }}/.gitconfig"
+    owner: "{{ config.user }}"
+    group: "{{ config.user }}"
     mode: u=rw,g=r,o=r
-  loop: "{{ git.users }}"
+  with_items: "{{ git.users }}"
+  loop_control:
+    loop_var: config

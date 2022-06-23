@@ -1,10 +1,10 @@
-location {{ item.location }}/ {
+location {{ config.location }}/ {
   add_header X-Cache-Status $upstream_cache_status;
 
-  access_log /var/log/nginx/{{ item.name }}-access.log ;
-  error_log /var/log/nginx/{{ item.name }}-error.log ;
+  access_log /var/log/nginx/{{ config.name }}-access.log ;
+  error_log /var/log/nginx/{{ config.name }}-error.log ;
 
-  proxy_pass http://{{ item.ip }}:{{ item.ports_mapping[0].src }}{{ item.location }}/ ;
-  proxy_redirect     http://{{ item.ip }}:{{ item.ports_mapping[0].src }}/ https://{{ item.ip }};
+  proxy_pass http://{{ config.ip }}:{{ config.ports_mapping[0].src }}{{ config.location }}/ ;
+  proxy_redirect     http://{{ config.ip }}:{{ config.ports_mapping[0].src }}/ https://{{ config.ip }};
   include /etc/nginx/commons.d/proxy.conf;
 }

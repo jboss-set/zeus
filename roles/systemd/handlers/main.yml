@@ -4,8 +4,10 @@
     - systemd:
         state: restarted
         daemon_reload: no
-        name: "{{ item.name }}"
-      loop: "{{ systemd_services_to_refresh }}"
+        name: "{{ files.name }}"
+      with_items: "{{ systemd_services_to_refresh }}"
+      loop_control:
+        loop_var: files
   when:
     - systemd_services_to_refresh is defined
     - systemd_services_to_refresh | length > 0

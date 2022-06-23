@@ -1,26 +1,26 @@
-check process {{ item.name }} {% if item.pidfile is defined %} with pidfile {{ item.pidfile }} {% else %} matchung {{ item.name }} {%endif %}
+check process {{ files.name }} {% if files.pidfile is defined %} with pidfile {{ files.pidfile }} {% else %} matchung {{ files.name }} {%endif %}
 
-{% if item.start_program is defined %}
-    start program = "{{ item.start_program }} start"
+{% if files.start_program is defined %}
+    start program = "{{ files.start_program }} start"
 {% endif %}
-{% if item.stop_program is defined %}
-    stop program  = "{{ item.stop_program }} stop"
+{% if files.stop_program is defined %}
+    stop program  = "{{ files.stop_program }} stop"
 {% endif %}
 
-{% if item.bind_addr is defined %}
+{% if files.bind_addr is defined %}
 
-{% if item.protocol is defined %}
-{%   set protocol= item.protocol %}
+{% if files.protocol is defined %}
+{%   set protocol= files.protocol %}
 {% else %}
 {%   set protocol= 'HTTP' %}
 {% endif %}
 
-{% for check in item.checks %}
-if failed host {{ item.bind_addr }} port {{ item.port }}
+{% for check in files.checks %}
+if failed host {{ files.bind_addr }} port {{ files.port }}
           protocol {{ protocol }} request {{ check.context }} method GET with timeout {{ check.timeout }} seconds then {{ check.action }}
 {% endfor %}
 
-{% if item.name == 'nginx' %}
+{% if files.name == 'nginx' %}
 {% if maven_http_caches is defined and http_caches_config_folder is defined %}
 {% for http_cache in maven_http_caches %}
 include {{ http_caches_config_folder }}/{{ http_cache.name }}
@@ -30,6 +30,6 @@ include {{ http_caches_config_folder }}/{{ http_cache.name }}
 
 {% endif %}
 
-{% if item.nb_restarts is defined %}
-if {{ item.nb_restarts }} restarts within 9 cycles then unmonitor
+{% if files.nb_restarts is defined %}
+if {{ files.nb_restarts }} restarts within 9 cycles then unmonitor
 {% endif %}

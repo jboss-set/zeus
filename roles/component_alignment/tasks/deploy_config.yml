@@ -1,7 +1,7 @@
 ---
 - ansible.builtin.assert:
     that:
-      - item is defined
+      - files is defined
       - component_alignment is defined
       - component_alignment.config is defined
       - component_alignment.config.dir is defined   
@@ -9,13 +9,13 @@
     quiet: true
 
 - ansible.builtin.set_fact:
-   config_file_url: "{{ component_alignment.config.baseurl }}/{{ item }}"
-   config_file_path: "{{ component_alignment.config.dir }}/{{ item }}"
+   config_file_url: "{{ component_alignment.config.baseurl }}/{{ files }}"
+   config_file_path: "{{ component_alignment.config.dir }}/{{ files }}"
 
 - ansible.builtin.debug:
     msg: "{{ config_file_url }}"
 
-- name: "Ensure component_alignment config file for {{ item }} is deployed as {{ config_file_path }}"
+- name: "Ensure component_alignment config file for {{ files }} is deployed as {{ config_file_path }}"
   ansible.builtin.get_url:
     url: "{{ config_file_url }}"
     dest: "{{ config_file_path }}"

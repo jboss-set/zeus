@@ -44,12 +44,14 @@
 
 - name: permit traffic in default zone for https service
   ansible.posix.firewalld:
-    service: "{{ item }}"
+    service: "{{ files }}"
     permanent: yes
     state: enabled
-  loop:
+  with_items:
     - http
     - https
+  loop_control:
+    loop_var: files
 
 - ansible.builtin.set_fact:
     podman_services: "{{ podman_services }} + {{ nginx.service }}"

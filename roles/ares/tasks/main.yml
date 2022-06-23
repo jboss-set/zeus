@@ -21,7 +21,7 @@
       - github_keyfile_path.stat.exists
     quiet: true
 
-- name: "Fetch images defintion from {{ ares.git.repo }} from branch {{ ares.git.branch }}."
+- name: "Fetch images definition from {{ ares.git.repo }} from branch {{ ares.git.branch }}."
   ansible.builtin.git:
     repo: "{{ ares.git.repo }}"
     dest: "{{ ares.home }}"
@@ -40,10 +40,12 @@
   ansible.builtin.copy:
     src: /etc/yum.repos.d/redhat.repo
     remote_src: yes
-    dest: "{{ ares.home }}/{{ item }}"
+    dest: "{{ ares.home }}/{{ images }}"
     owner: "{{ ares.owner }}"
     group: "{{ ares.group }}"
-  loop: "{{ ares.images_with_subs }}"
+  with_items: "{{ ares.images_with_subs }}"
+  loop_control:
+    loop_var: images
   when:
     - not ansible_check_mode
     - ares.images_with_subs is defined
@@ -52,9 +54,11 @@
 - name: "Add {{ ares.owner }} SSH key to containers that requires it"
   ansible.builtin.file:
     src: "/home/{{ ares.owner }}/.ssh/id_rsa.pub"
-    dest: '{{ ares.home }}/{{ item }}'
+    dest: '{{ ares.home }}/{{ keys }}'
     state: hard
-  loop: "{{ ares.images_with_sshkey }}"
+  with_items: "{{ ares.images_with_sshkey }}"
+  loop_control:
+    loop_var: keys
   when:
     - ares.images_with_sshkey is defined
     - ares.images_with_sshkey | length > 0

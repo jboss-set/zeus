@@ -57,14 +57,16 @@
       quiet: true 
   
   - ansible.builtin.file:
-      src: "{{ item }}"
-      dest: "{{ nginx.https.ssl.home }}/{{ item }}"
+      src: "{{ files }}"
+      dest: "{{ nginx.https.ssl.home }}/{{ files }}"
       owner: nginx
       group: nginx
-    loop:  
+    with_items:
       - "{{ nginx.https.ssl.cert }}"
       - "{{ nginx.https.ssl.private_key }}"
       - "{{ nginx.https.ssl.csr }}"
+    loop_control:
+      loop_var: files
 
   when: ssl_cert.stat.exists
 

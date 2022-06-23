@@ -22,8 +22,10 @@
 - ansible.builtin.include_role:
     name: fast_yum_install
   vars:
-    package_name: "{{ item }}"
-  loop: "{{ podman.packages }}"
+    package_name: "{{ files }}"
+  with_items: "{{ podman.packages }}"
+  loop_control:
+    loop_var: files
 
 - name: "Ensure user namespaces has been increased"
   ansible.builtin.template:
@@ -34,13 +36,15 @@
 
 - name: "Ensure podman service is running"
   ansible.builtin.service:
-    name: "{{ item.name }}"
-    state: "{{ item.state }}"
-    enabled: "{{ item.enabled }}"
-  loop:
+    name: "{{ service.name }}"
+    state: "{{ service.state }}"
+    enabled: "{{ service.enabled }}"
+  with_items:
     - { name: podman.socket, enabled: yes, state: started }
     - { name: podman, enabled: yes, state: stopped }
       #    - { name: podman.slice, enabled: yes, state: stopped }
+  loop_control:
+    loop_var: service
 
 - name: "Ensures jenkins can use podman"
   ansible.builtin.command: loginctl enable-linger jenkins

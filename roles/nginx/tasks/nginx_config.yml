@@ -27,13 +27,15 @@
 - block:
     - name: "Ensure required subfolders exist"
       ansible.builtin.file:
-        path: "{{ item }}"
+        path: "{{ subfolders }}"
         state: directory
         owner: "{{ nginx.username }}" 
         group: "{{ nginx.groupname }}"
         mode: 0775
-      loop:
+      with_items:
         - "{{ nginx_config_dir }}/commons.d"
+      loop_control:
+        loop_var: subfolders
 
     - block:
       - ansible.builtin.set_fact:

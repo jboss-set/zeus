@@ -24,11 +24,13 @@
     - ansible.builtin.include_role:
         name: fast_yum_install
       vars:
-        package_name: "{{ item }}"
+        package_name: "{{ pretaskfiles }}"
       with_items:
         - firewalld
         - zip
         - podman
+      loop_control:
+        loop_var: pretaskfiles
 
     - name: "Ensure jaegertracing docker image is downloaded for tests"
       containers.podman.podman_image:
@@ -37,7 +39,7 @@
 
   tasks:
     - ansible.builtin.include_role:
-        name: "{{ item }}"
+        name: "{{ taskfiles }}"
       with_items:
         - cci_worker
         - sshd
@@ -46,3 +48,5 @@
         - java
         - java_certs
         - old_releases
+      loop_control:
+        loop_var: taskfiles

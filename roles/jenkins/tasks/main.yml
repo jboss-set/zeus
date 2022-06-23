@@ -18,12 +18,14 @@
 - name: "Ensures data folder for Jenkins and Jenkins.next exists."
   ansible.builtin.file:
     state: directory
-    path: "{{ item }}"
+    path: "{{ folder }}"
     owner: "{{ jenkins.username }}"
     group: "{{ jenkins.groupname | default(jenkins.username) }}"
-  loop:
+  with_items:
     - "{{ jenkins.home_next }}"
     - "{{ jenkins.home }}"
+  loop_control:
+    loop_var: folder
 
 - name: "Ensures tools home directory ({{ jenkins.tools.home }} exists."
   ansible.builtin.file:
@@ -68,23 +70,27 @@
 - name: "Deploy fetchLastSuccessfulBuildId.sh"
   ansible.builtin.template:
     src: templates/fetchLastSuccessfulBuildId.sh.j2
-    dest: "{{ item }}/fetchLastSuccessfulBuildId.sh"
+    dest: "{{ files }}/fetchLastSuccessfulBuildId.sh"
     owner: jenkins
     group: jenkins
     mode: 0755
-  loop:
+  with_items:
     - "{{ jenkins.home }}"
     - "{{ jenkins.home_next }}"
+  loop_control:
+    loop_var: files
 
 - name: "Ensures data folder for Jenkins.next exists."
   ansible.builtin.file:
     state: directory
-    path: "{{ item }}"
+    path: "{{ folder }}"
     owner: "{{ jenkins.username }}"
     group: "{{ jenkins.username }}"
-  loop:
+  with_items:
     - "{{ jenkins.home_next }}"
     - "{{ jenkins.home }}"
+  loop_control:
+    loop_var: folder
 
 - ansible.builtin.set_fact:
      podman_services: "{{ podman_services }} + {{ jenkins.service }}"

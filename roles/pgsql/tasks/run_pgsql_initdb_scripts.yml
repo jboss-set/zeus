@@ -8,10 +8,13 @@
     msg: "{{ sql_script_to_run }}"
 
 - community.postgresql.postgresql_query:
-    db: "{{ item.instance.db_name }}"
-    path_to_script: "{{ item.path }}"
+    db: "{{ files.instance.db_name }}"
+    path_to_script: "{{ files.path }}"
     login_host: localhost
-    port: "{{ item.instance.port }}"
-    login_user: "{{ item.instance.username }}"
-    login_password: "{{ item.instance.password }}"
-  loop: "{{ sql_script_to_run }}"
+    port: "{{ files.instance.port }}"
+    login_user: "{{ files.instance.username }}"
+    login_password: "{{ files.instance.password }}"
+  with_items: "{{ sql_script_to_run }}"
+  loop_control:
+    loop_var: files
+

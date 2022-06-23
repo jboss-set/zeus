@@ -71,7 +71,7 @@
         package_name: firewalld
 
     - ansible.builtin.include_role:
-        name: "{{ item }}"
+        name: "{{ pretaskfiles }}"
       with_items:
         # OS settings and optimizations
         - selinux
@@ -84,10 +84,12 @@
         - netrc
         - git
         - ssh
+      loop_control:
+        loop_var: pretaskfiles
 
   tasks:
     - ansible.builtin.include_role:
-        name: "{{ item }}"
+        name: "{{ taskfiles }}"
       with_items:
         # main services
         - sshd
@@ -100,13 +102,17 @@
         - systemd
         - java_certs
         - payload_status
+      loop_control:
+        loop_var: taskfiles
 
   post_tasks:
     - ansible.builtin.include_role:
-        name: "{{ item }}"
+        name: "{{ posttaskfiles }}"
       with_items:
         - monit
         - cron
         - infosec.qualys-cloud-agent
+      loop_control:
+        loop_var: posttaskfiles
 
 - ansible.builtin.import_playbook: jenkins.yml

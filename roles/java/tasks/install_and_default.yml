@@ -13,7 +13,9 @@
     path: "{{ home_folder }}"
 
 - ansible.builtin.include_tasks: archive_tool_install.yml
-  loop: "{{ list }}"
+  with_items: "{{ list }}"
+  loop_control:
+    loop_var: files
 
 - name: "Symlink {{ tool_default_link }} to default version: {{ tool_default }}."
   ansible.builtin.file:

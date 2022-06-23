@@ -13,11 +13,12 @@
 
 # fails if not a path ?
 - ansible.builtin.stat:
-    path: "{{ item }}"
-  loop:
+    path: "{{ files }}"
+  with_items:
     - private_key
     - cert
-    - csr
+  loop_control:
+    loop_var: files
 
 - name: Generate an OpenSSL private key with the default values (4096 bits, RSA)
   community.crypto.openssl_privatekey:

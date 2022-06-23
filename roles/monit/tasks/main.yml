@@ -29,7 +29,9 @@
     - monit is defined and monit.alerts is defined
     - monit.alerts.custom_scripts is defined
     - monit.alerts.custom_scripts | length > 0
-  loop: "{{ monit.alerts.custom_scripts }}"
+  with_items: "{{ monit.alerts.custom_scripts }}"
+  loop_control:
+    loop_var: alerts
 
 - ansible.builtin.include_tasks: services_alerts.yml
   when: monit.alerts.services is defined
