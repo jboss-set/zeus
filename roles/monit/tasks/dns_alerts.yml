@@ -10,9 +10,11 @@
 - name: "Set up Monit alert on commonly uses services"
   ansible.builtin.template:
     src: templates/monit.ping.j2
-    dest: "/etc/monit.d/{{ item.name }}"
+    dest: "/etc/monit.d/{{ files.name }}"
     owner: root
     group: root
   notify:
     - restart monit
   with_items: "{{ monit.alerts.dnsnames }}"
+  loop_control:
+    loop_var: files

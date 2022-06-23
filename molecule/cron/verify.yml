@@ -8,7 +8,9 @@
   tasks:
   - name: Removes cron tasks
     ansible.builtin.cron:
-      name: "{{ item.name }}"
+      name: "{{ files.name }}"
       user: root
       state: absent
-    loop: "{{ cronjobs }}"
+    with_items: "{{ cronjobs }}"
+    loop_control:
+      loop_var: files

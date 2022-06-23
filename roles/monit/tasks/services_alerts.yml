@@ -10,10 +10,12 @@
 - name: "Ensure required services are running under Monit control"
   ansible.builtin.template:
     src: templates/monit.service.j2
-    dest: "/etc/monit.d/{{ item.name }}"
+    dest: "/etc/monit.d/{{ files.name }}"
     owner: root
     group: root
     mode: 0755
   notify:
     - restart monit
   with_items: "{{ monit.alerts.services }}"
+  loop_control:
+    loop_var: files

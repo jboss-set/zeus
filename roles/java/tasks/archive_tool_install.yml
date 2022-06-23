@@ -3,23 +3,23 @@
     that:
       - home_folder is defined
       - home_folder != ""
-      - item is defined
-      - item.name is defined
-      - item.name != ""
-      - item.source is defined
-      - item.source != ""
+      - files is defined
+      - files.name is defined
+      - files.name != ""
+      - files.source is defined
+      - files.source != ""
     quiet: true
 
 - ansible.builtin.set_fact:
-    path_to_archive: "{{ home_folder }}/{{ item.name }}.tgz"
+    path_to_archive: "{{ home_folder }}/{{ files.name }}.tgz"
 
 - ansible.builtin.stat:
     path: "{{ path_to_archive }}"
   register: archive
 
-- name: "Download archive from {{ item.source }}"
+- name: "Download archive from {{ files.source }}"
   ansible.builtin.get_url:
-    url: "{{ item.source }}"
+    url: "{{ files.source }}"
     dest: "{{ path_to_archive }}"
   retries: 3
   delay: 5
@@ -29,17 +29,17 @@
     - not archive.stat.exists
 
 - ansible.builtin.stat:
-    path: "{{ item.home }}"
+    path: "{{ files.home }}"
   register: path_to_home
 
 - ansible.builtin.stat:
-    path: "{{ item.home }}/{{ item.name }}"
+    path: "{{ files.home }}/{{ files.name }}"
   register: path_to_home
 
-- name: "Unpack archive {{ path_to_archive }} to {{ item.home }}"
+- name: "Unpack archive {{ path_to_archive }} to {{ files.home }}"
   ansible.builtin.unarchive:
     src: "{{ path_to_archive }}"
-    dest: "{{ item.home }}"
+    dest: "{{ files.home }}"
     remote_src: yes
   when:
     - path_to_home is defined

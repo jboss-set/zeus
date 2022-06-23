@@ -7,5 +7,7 @@
 - name: "Deploy nginx config for jenkins servers"
   ansible.builtin.template:
     src: templates/commons.d/jenkins.conf.j2
-    dest: "{{ nginx_config_dir }}/commons.d/{{ item.name }}.conf"
-  loop: "{{ jenkins.service }}"
+    dest: "{{ nginx_config_dir }}/commons.d/{{ config.name }}.conf"
+  with_items: "{{ jenkins.service }}"
+  loop_control:
+    loop_var: config

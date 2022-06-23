@@ -2,5 +2,7 @@
   ansible.builtin.include_role:
     name: fast_yum_install
   vars:
-    package_name: "{{ item }}"
-  loop: "{{ tools.package_names }}"
+    package_name: "{{ files }}"
+  with_items: "{{ tools.package_names }}"
+  loop_control:
+    loop_var: files

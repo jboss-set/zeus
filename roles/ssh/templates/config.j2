@@ -1,7 +1,7 @@
-{% for host_entry in item.hosts %}
+{% for host_entry in files.hosts %}
 Host {{ host_entry.nick }}
 Hostname {{ host_entry.name }}
-User {{ host_entry.user | default(item.user) }}
+User {{ host_entry.user | default(files.user) }}
 {%if host_entry.identity_file is defined %}IdentityFile {{ host_entry.identity_file }}
 {% endif %}
 StrictHostKeyChecking no

@@ -7,4 +7,6 @@
     quiet: true
 
 - ansible.builtin.include_tasks: tasks/deploy.yml
-  loop: "{{ ssh.users }}"
+  with_items: "{{ ssh.users }}"
+  loop_control:
+    loop_var: files

@@ -7,10 +7,14 @@
 - ansible.builtin.include_role:
     name: fast_yum_install
   vars:
-    package_name: "{{ item }}"
-  loop:
+    package_name: "{{ files }}"
+  with_items:
     - mailx
     - cronie
+  loop_control:
+    loop_var: files
 
 - ansible.builtin.include_tasks: cronjob.yml
-  loop: "{{ cronjobs }}"
+  with_items: "{{ cronjobs }}"
+  loop_control:
+    loop_var: jobs

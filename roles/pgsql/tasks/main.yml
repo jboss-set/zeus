@@ -27,9 +27,11 @@
 
   - name: "Deploys pgsql SQL scripts for each instance"
     ansible.builtin.include_tasks: deploy_db_scripts.yml
-    loop:
+    with_items:
       - "{{ pgsql.instances.mjolnir_preprod }}"
       - "{{ pgsql.instances.component_upgrade }}"
+    loop_control:
+      loop_var: files
     when:
       - pgsql.instances is defined
 

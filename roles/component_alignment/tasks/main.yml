@@ -58,7 +58,9 @@
     mode: 0755
 
 - ansible.builtin.include_tasks: tasks/deploy_config.yml
-  loop: "{{ component_alignment.config.files }}"
+  with_items: "{{ component_alignment.config.files }}"
+  loop_control:
+    loop_var: files
 
 - name: "Create component alignment config file"
   ansible.builtin.template:

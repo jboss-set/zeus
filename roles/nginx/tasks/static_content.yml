@@ -37,11 +37,13 @@
 
 - name: "Deploy tools logo for landing page"
   ansible.builtin.copy:
-    src: "files/{{ item.logo }}"
+    src: "files/{{ logo.logo }}"
     dest: "{{ nginx.docroot }}/img/"
     owner: "{{ nginx.username }}"
     group: "{{ nginx.groupname }}"
   with_items: "{{ nginx.apps }}"
+  loop_control:
+    loop_var: logo
 
 - name: "Deploy landing page"
   ansible.builtin.template:
