@@ -1,24 +1,24 @@
 ---
 - ansible.builtin.assert:
     that:
-      - item is defined
-      - item.src is defined
-      - item.dest is defined
-      - item.name is defined
+      - alerts is defined
+      - alerts.src is defined
+      - alerts.dest is defined
+      - alerts.name is defined
     quiet: true
 
-- name: "Ensures custom script {{ item.dest }} is deployed"
+- name: "Ensures custom script {{ alerts.dest }} is deployed"
   ansible.builtin.template:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
+    src: "{{ alerts.src }}"
+    dest: "{{ alerts.dest }}"
     owner: root
     group: root
     mode: 0755
 
-- name: "Ensures associate Monit check is enabled ({{ item.name }})"
+- name: "Ensures associate Monit check is enabled ({{ alerts.name }})"
   ansible.builtin.template:
     src: templates/monit.script.j2
-    dest: "/etc/monit.d/{{ item.name }}"
+    dest: "/etc/monit.d/{{ alerts.name }}"
     owner: root
     group: root
     mode: 0755

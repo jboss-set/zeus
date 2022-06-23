@@ -23,8 +23,8 @@
   # providing a file name for dest means those will only be downloaded if not present to start with
   - name: "Download old EAP7 releases"
     ansible.builtin.get_url:
-      url: "{{ old_releases.url }}/eap7/{{ item }}/jboss-eap-{{ item }}.zip"
-      dest: "{{ old_releases.dir }}/jboss-eap-{{ item }}.zip"
+      url: "{{ old_releases.url }}/eap7/{{ files }}/jboss-eap-{{ files }}.zip"
+      dest: "{{ old_releases.dir }}/jboss-eap-{{ files }}.zip"
     retries: 3
     delay: 5
     with_items:
@@ -33,11 +33,13 @@
       - 7.2.0
       - 7.3.0
       - 7.4.0
+    loop_control:
+      loop_var: files
 
   - name: "Download old EAP6 releases"
     ansible.builtin.get_url:
-      url: "{{ old_releases.url }}/eap6/{{ item }}/jboss-eap-{{ item }}.zip"
-      dest: "{{ old_releases.dir }}/jboss-eap-{{ item }}.zip"
+      url: "{{ old_releases.url }}/eap6/{{ files }}/jboss-eap-{{ files }}.zip"
+      dest: "{{ old_releases.dir }}/jboss-eap-{{ files }}.zip"
     retries: 3
     delay: 5
     with_items:
@@ -46,15 +48,19 @@
       - 6.2.0
       - 6.3.0
       - 6.4.0
+    loop_control:
+      loop_var: files
   
   # URL pattern for 6.0.0 and 6.0.1 is different
   - name: "Download 6.0.x EAP6 releases"
     ansible.builtin.get_url:
-      url: "{{ old_releases.url }}/eap6/{{ item }}/zip/jboss-eap-{{ item }}.zip"
-      dest: "{{ old_releases.dir }}/jboss-eap-{{ item }}.zip"
+      url: "{{ old_releases.url }}/eap6/{{ files }}/zip/jboss-eap-{{ files }}.zip"
+      dest: "{{ old_releases.dir }}/jboss-eap-{{ files }}.zip"
     retries: 3
     delay: 5
     with_items:
       - 6.0.0
       - 6.0.1
+    loop_control:
+      loop_var: files
   when: old_releases_dir_path is defined

@@ -29,16 +29,20 @@
     - ansible.builtin.include_role:
         name: fast_yum_install
       vars:
-        package_name: "{{ item }}"
+        package_name: "{{ pretaskfiles }}"
       with_items:
         - firewalld
         - zip
+      loop_control:
+        loop_var: pretaskfiles
 
   tasks:
     - ansible.builtin.include_role:
-        name: "{{ item }}"
+        name: "{{ taskfiles }}"
       with_items:
         - old_releases
         - component_alignment
         - pr_processor
         - aphrodite
+      loop_control:
+        loop_var: taskfiles

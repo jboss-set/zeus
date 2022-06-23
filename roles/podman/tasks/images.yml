@@ -25,14 +25,18 @@
 
 - name: "Ensure remote images are downloaded"
   containers.podman.podman_image:
-    name: "{{ item.name }}"
-  become_user: "{{ item.owner | default('root') }}"
-  loop: "{{ podman.images.remotes }}"
+    name: "{{ files.name }}"
+  become_user: "{{ files.owner | default('root') }}"
+  with_items: "{{ podman.images.remotes }}"
+  loop_control:
+    loop_var: files
 
 - name: "Ensure local images are successfully build"
   containers.podman.podman_image:
-    name: "{{ item.tag }}"
-    path: "{{ podman_images_home }}/{{ item.name }}"
+    name: "{{ files.tag }}"
+    path: "{{ podman_images_home }}/{{ files.name }}"
     state: build
-  become_user: "{{ item.owner | default('root') }}"
-  loop: "{{ podman.images.locals }}"
+  become_user: "{{ files.owner | default('root') }}"
+  with_items: "{{ podman.images.locals }}"
+  loop_control:
+    loop_var: files

@@ -1,23 +1,23 @@
 ---
 - ansible.builtin.assert:
     that:
-      - item is defined
+      - files is defined
     quiet: true
 
 - ansible.builtin.include_tasks: deploy/db.yml
   vars:
-    script: "{{ item.create_db }}"
-    dest: "{{ pgsql.scripts.home }}/{{ item.create_db.name }}"
-    db_info: "{{ item }}"
+    script: "{{ files.create_db }}"
+    dest: "{{ pgsql.scripts.home }}/{{ files.create_db.name }}"
+    db_info: "{{ files }}"
   when: 
-    - item.create_db is defined
-    - item.create_db.name is defined
+    - files.create_db is defined
+    - files.create_db.name is defined
 
 - ansible.builtin.include_tasks: deploy/db.yml
   vars:
-    script: "{{ item.load_data }}"
-    dest: "{{ pgsql.scripts.home }}/{{ item.load_data.name }}"
-    db_info: "{{ item }}"
+    script: "{{ files.load_data }}"
+    dest: "{{ pgsql.scripts.home }}/{{ files.load_data.name }}"
+    db_info: "{{ files }}"
   when:
-    - item.load_data is defined
-    - item.load_data.name is defined
+    - files.load_data is defined
+    - files.load_data.name is defined

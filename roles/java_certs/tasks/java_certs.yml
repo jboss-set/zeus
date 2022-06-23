@@ -46,14 +46,16 @@
 - name: Remove SSL certificates in {{ jdk.name }}
   when: rebuild_keystore|default(false)
   community.general.java_cert:
-    cert_url: "{{ item.cert_url }}"
+    cert_url: "{{ removessl.cert_url }}"
     keystore_path: "{{ cacerts_file }}"
-    cert_alias: "{{ item.alias }}"
+    cert_alias: "{{ removessl.alias }}"
     executable: "{{ jdk.home }}/{{ jdk.name }}/bin/keytool"
     keystore_pass: changeit
     keystore_create: no
     state: absent
   with_items: "{{ certificate_list }}"
+  loop_control:
+    loop_var: removessl
 
 - name: Import Root CA in {{ jdk.name }} {{ cacerts_file }}
   community.general.java_cert:
@@ -67,11 +69,13 @@
 
 - name: Import SSL certificates in {{ jdk.name }}
   community.general.java_cert:
-    cert_url: "{{ item.cert_url }}"
+    cert_url: "{{ importssl.cert_url }}"
     keystore_path: "{{ cacerts_file }}"
-    cert_alias: "{{ item.alias }}"
+    cert_alias: "{{ importssl.alias }}"
     executable: "{{ jdk.home }}/{{ jdk.name }}/bin/keytool"
     keystore_pass: changeit
     keystore_create: no
     state: present
   with_items: "{{ certificate_list }}"
+  loop_control:
+    loop_var: importssl

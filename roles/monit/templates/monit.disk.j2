@@ -1,2 +1,2 @@
-check device {{ item.name }} with path {{ item.path }}
-    if SPACE usage > {{ item.threshold }} then alert
+check device {{ files.name }} with path {{ files.path }}
+    if SPACE usage > {{ files.threshold }} then alert

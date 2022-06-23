@@ -38,9 +38,11 @@
   ansible.posix.authorized_key:
     user: "{{ cci_worker.account.username }}"
     state: present
-    key: "{{ item }}"
+    key: "{{ files }}"
   with_file:
     - "{{ cci_worker.pubkey_file }}"
+  loop_control:
+    loop_var: files
 
 - name: "Deploy fix_multicast script"
   ansible.builtin.copy:

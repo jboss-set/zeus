@@ -7,25 +7,29 @@
 
 - name: "Ensure HTTP cache common config is created"
   ansible.builtin.template:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
+    src: "{{ config.src }}"
+    dest: "{{ config.dest }}"
     owner: "{{ nginx.username }}" 
     group: "{{ nginx.groupname }}"
     mode: 0644
-  loop:
+  with_items:
     - { src: templates/commons.d/maven.cache.conf.j2, dest: "{{ nginx_config_dir }}/commons.d/maven.cache.conf" }
     - { src: templates/commons.d/caches.conf.j2, dest: "{{ nginx_config_dir }}/commons.d/caches.conf" }
+  loop_control:
+    loop_var: config
   notify:
     - restart nginx
 
 - name: "Ensure Maven Central cache directory is created"
   ansible.builtin.file:
-    path: "{{ item.directory }}"
+    path: "{{ files.directory }}"
     state: directory
     owner: nginx
     group: nginx
     mode: 0775
-  loop: "{{ nginx.caches.directories }}"
+  with_items: "{{ nginx.caches.directories }}"
+  loop_control:
+    loop_var: files
 
 - name: "Deploy settings.xml to use the caches"
   ansible.builtin.template:

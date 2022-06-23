@@ -1,2 +1,2 @@
-check host {{ item.name }} with address {{ item.name }}
+check host {{ files.name }} with address {{ files.name }}
     if failed ping with timeout 15 seconds then alert
