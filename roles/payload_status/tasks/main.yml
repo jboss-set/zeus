@@ -116,10 +116,10 @@
     - ansible.builtin.file:
         state: directory
         path: "{{ payload_status_deploy_dir }}"
-        owner: "{{ nginx.username }}"
-        group: "{{ nginx.groupname }}"
+        owner: "{{ nginx_username }}"
+        group: "{{ nginx_groupname }}"
 
-    - command: "rsync -Avrz {{ build_dir }}/ {{ nginx.docroot }}/payload-status/"
+    - command: "rsync -Avrz {{ build_dir }}/ {{ nginx_http_docroot }}/payload-status/"
       register: rsync_results
   when:
     - path_to_payload_status_deploy_dir is defined
