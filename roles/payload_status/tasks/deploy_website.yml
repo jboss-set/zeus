@@ -29,16 +29,16 @@
       - path_to_build_dir.stat.exists
    quiet: true
 
-- name: "Ensure symlink to nginx docroot is set"
+- name: "Ensure symlink to nginx_http_docroot is set"
   ansible.builtin.file:
     state: link
     src: "{{ payload_status.home }}"
-    dest: "{{ nginx.docroot }}/payload_status }}"
-    owner: "{{ nginx.username }}"
-    group: "{{ nginx.groupename }}"
+    dest: "{{ nginx_http_docroot }}/payload_status }}"
+    owner: "{{ nginx_username }}"
+    group: "{{ nginx_groupname }}"
   when:
     - path_to_build_dir.stat.exists
     - nginx is defined
-    - nginx.docroot is defined
-    - nginx.username is defined
+    - nginx_http_docroot is defined
+    - nginx_username is defined
 
