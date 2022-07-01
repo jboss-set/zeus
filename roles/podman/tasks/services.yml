@@ -28,3 +28,5 @@
     name: systemd
     tasks_from: podman.yml
   loop: "{{ podman_services }}"
+  loop_control:
+    loop_var: podman_service

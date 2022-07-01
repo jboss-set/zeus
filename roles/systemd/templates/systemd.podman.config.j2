@@ -1,13 +1,13 @@
 [Unit]
-Description=Podman container-{{ item.name }}.service
+Description=Podman container-{{ podman_service.name }}.service
 Wants=network.target
 After=network-online.target
 
 [Service]
 Restart=on-failure
-ExecStart={{ podman_home }}/{{ item.name }}-service.sh start 
-ExecStop={{ podman_home }}/{{ item.name }}-service.sh stop
-PIDFile=/var/run/{{ item.name }}/{{ item.name }}.pid
+ExecStart={{ podman_home }}/{{ podman_service.name }}-service.sh start 
+ExecStop={{ podman_home }}/{{ podman_service.name }}-service.sh stop
+PIDFile=/var/run/{{ podman_service.name }}/{{ podman_service.name }}.pid
 KillMode=none
 Type=forking
 
