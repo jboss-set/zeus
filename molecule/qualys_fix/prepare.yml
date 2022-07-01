@@ -1,0 +1,10 @@
+---
+- name: Prepare
+  hosts: all
+
+  tasks:
+    - name: Creates directory
+      ansible.builtin.file:
+        path: /root/.ansible/roles/infosec.qualys-cloud-agent/tasks/
+        state: directory
+        mode: 0644
