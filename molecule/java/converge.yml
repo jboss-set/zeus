@@ -5,5 +5,5 @@
     - vars.yml
   tasks:
     - name: "Include java"
-      include_role:
+      ansible.builtin.include_role:
         name: "java"

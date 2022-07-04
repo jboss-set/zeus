@@ -7,9 +7,9 @@
 
   tasks:
     - name: Check fast_yum_install role is working.
-      command: "nginx -v"
+      ansible.builtin.command: "nginx -v"
       register: nginx_result
 
-    - debug:
+    - ansible.builtin.debug:
         msg: "fast_yum_install role is not working."
       when: nginx_result is failed

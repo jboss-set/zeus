@@ -5,9 +5,9 @@
 
   tasks:
     - name: Test source profile
-      shell: source /etc/bashrc
+      ansible.builtin.shell: source /etc/bashrc
       register: func_result
 
     - name: check result
-      debug:
+      ansible.builtin.debug:
         var: func_result.stdout
