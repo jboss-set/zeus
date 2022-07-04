@@ -7,7 +7,7 @@
 
   tasks:
     - name: Add a duplicate motd
-      copy:
+      ansible.builtin.copy:
         src: "../../roles/motd/files/motd.standard"
         dest: /etc/duplicateMotd
         owner: root
@@ -15,27 +15,27 @@
         mode: 0644
 
     - name: Get checksum of my original file
-      stat:
+      ansible.builtin.stat:
         path: "{{ motd_path }}"
       register: originalfile
 
-    - set_fact:
+    - ansible.builtin.set_fact:
         original: "{{ originalfile.stat.checksum }}"
 
     - name: Get checksum of my duplicate file
-      stat:
+      ansible.builtin.stat:
         path: "/etc/duplicateMotd"
       register: duplicatefile
 
-    - set_fact:
+    - ansible.builtin.set_fact:
         duplicate: "{{ duplicatefile.stat.checksum }}"
 
     - name: Compare both the files
-      debug:
+      ansible.builtin.debug:
         msg: "File Compare"
       failed_when: original != duplicate
 
     - name: Verify that motd role was properly executed
-      assert:
+      ansible.builtin.assert:
         that: true
 

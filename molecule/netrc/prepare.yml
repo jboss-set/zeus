@@ -8,7 +8,7 @@
       ansible.builtin.user:
         name: jenkins
     - name: Creates directory
-      file:
+      ansible.builtin.file:
         path: /home/jenkins
         state: directory
         owner: jenkins

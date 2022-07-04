@@ -4,7 +4,7 @@
   vars_files:
     - vars.yml
   tasks:
-    - assert:
+    - ansible.builtin.assert:
         that:
           - jdk_list is defined
           - mvn_list is defined

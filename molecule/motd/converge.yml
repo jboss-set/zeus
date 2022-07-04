@@ -5,5 +5,5 @@
     - vars.yml
   tasks:
     - name: "Include motd"
-      include_role:
+      ansible.builtin.include_role:
         name: "motd"
