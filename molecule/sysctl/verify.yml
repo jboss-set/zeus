@@ -7,9 +7,9 @@
 
   tasks:
     - name: Check if sysctl setup is successful.
-      command: "sysctl -a"
+      ansible.builtin.command: "sysctl -a"
       register: sysctl_result
 
-    - debug:
+    - ansible.builtin.debug:
         msg: "sysctl setup is unsuccessful."
       when: sysctl_result is failed

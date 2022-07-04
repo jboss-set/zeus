@@ -7,9 +7,9 @@
 
   tasks:
     - name: Check if Git is installed.
-      command: "git --version"
+      ansible.builtin.command: "git --version"
       register: git_result
 
-    - debug:
+    - ansible.builtin.debug:
         msg: "Git is not installed."
       when: git_result is failed

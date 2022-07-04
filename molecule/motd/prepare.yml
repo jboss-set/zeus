@@ -4,16 +4,16 @@
   vars_files:
     - vars.yml
   tasks:
-    - assert:
+    - ansible.builtin.assert:
         that:
           - motd_path is defined
         quiet: true
 
-    - stat:
+    - ansible.builtin.stat:
         path: "{{ motd_path }}"
       register: file_details
 
-    - assert:
+    - ansible.builtin.assert:
         that:
           - file_details is defined
           - file_details.stat is defined

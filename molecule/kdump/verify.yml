@@ -7,7 +7,7 @@
 
   tasks:
     - name: Add a duplicate kdump configuration
-      template:
+      ansible.builtin.template:
         src: "../../roles/kdump/templates/kdump.j2"
         dest: /etc/duplicateKdump.conf
         owner: root
@@ -15,26 +15,26 @@
         mode: 0644
 
     - name: Get checksum of my original file
-      stat:
+      ansible.builtin.stat:
         path: "/etc/kdump.conf"
       register: originalfile
 
-    - set_fact:
+    - ansible.builtin.set_fact:
         original: "{{ originalfile.stat.checksum }}"
 
     - name: Get checksum of my duplicate file
-      stat:
+      ansible.builtin.stat:
         path: "/etc/duplicateKdump.conf"
       register: duplicatefile
 
-    - set_fact:
+    - ansible.builtin.set_fact:
         duplicate: "{{ duplicatefile.stat.checksum }}"
 
     - name: Compare both the kdump configuration files
-      debug:
+      ansible.builtin.debug:
         msg: "File Compare"
       failed_when: original != duplicate
 
     - name: Verify that kdump role was properly executed
-      assert:
+      ansible.builtin.assert:
         that: true
