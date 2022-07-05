@@ -1,0 +1,21 @@
+---
+- name: Prepare
+  hosts: all
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: "Include fast_yum_install"
+      ansible.builtin.include_role:
+        name: "fast_yum_install"
+
+    - name: Creates /etc/fake_hosts directory
+      ansible.builtin.file:
+        path: /etc/fake_hosts
+        state: touch
+        mode: 0644
+
+    - name: Creates /etc/real_hosts directory
+      ansible.builtin.file:
+        path: /etc/real_hosts
+        state: touch
+        mode: 0644
