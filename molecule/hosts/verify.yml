@@ -1,0 +1,41 @@
+---
+- name: Verify for hosts role
+  hosts: all
+  vars_files:
+    - vars.yml
+  gather_facts: false
+
+  tasks:
+    - name: Add Ansible inventory mappings to /etc/fake_hosts
+      become: true
+      ansible.builtin.blockinfile:
+        path: "/etc/fake_hosts"
+        block: |
+          {% for host in hosts %}
+          {{ host.ip }} {{ host.names }}
+          {% endfor %}
+
+    - name: Get checksum of original Ansible inventory
+      ansible.builtin.stat:
+        path: "{{ hosts_path_to_file }}"
+      register: originalfile
+
+    - ansible.builtin.set_fact:
+        original: "{{ originalfile.stat.checksum }}"
+
+    - name: Get checksum of duplicate Ansible inventory
+      ansible.builtin.stat:
+        path: "/etc/fake_hosts"
+      register: duplicatefile
+
+    - ansible.builtin.set_fact:
+        duplicate: "{{ duplicatefile.stat.checksum }}"
+
+    - name: Compare both the Ansible inventory files
+      ansible.builtin.debug:
+        msg: "File Compare"
+      failed_when: original != duplicate
+
+    - name: Verify that hosts role was properly executed
+      ansible.builtin.assert:
+        that: true

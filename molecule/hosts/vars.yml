@@ -1,0 +1,5 @@
+---
+package_name: "sudo"
+hosts_path_to_file: /etc/real_hosts
+hosts:
+  - { ip: 10.30.12.14, names: "gitlab.corp.redhat.com	qualys_repo" }
