@@ -1,0 +1,32 @@
+---
+- name: Verify for account role
+  hosts: all
+  vars_files:
+    - vars.yml
+  gather_facts: false
+
+  tasks:
+    - name: "Ensure group {{ account.group }} exists."
+      ansible.builtin.group:
+        name: "{{ account.group }}"
+        gid: "{{ account.gid }}"
+        state: present
+      register: group_result
+
+    - ansible.builtin.assert:
+        that:
+          - group_result is not changed
+        fail_msg: "{{ account.group }} doesn’t exist."
+
+    - name: "Ensure user {{ account.username }} exists."
+      ansible.builtin.user:
+        name: "{{ account.username }}"
+        uid: "{{ account.uid }}"
+        group: "{{ account.group }}"
+        state: present
+      register: user_result
+
+    - ansible.builtin.assert:
+        that:
+          - user_result is not changed
+        fail_msg: "{{ account.username }} doesn’t exist."

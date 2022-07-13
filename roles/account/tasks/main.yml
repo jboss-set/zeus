@@ -13,7 +13,7 @@
     quiet: true
 
 - name: "Ensure group {{ account.group }} exists."
-  group:
+  ansible.builtin.group:
     name: "{{ account.group }}"
     gid: "{{ account.gid }}"
     state: present
