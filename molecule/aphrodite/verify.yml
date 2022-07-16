@@ -1,0 +1,40 @@
+---
+- name: Verify for aphrodite role
+  hosts: all
+  vars_files:
+    - vars.yml
+  gather_facts: false
+
+  tasks:
+    - name: Deploy a duplicate aphrodite configuration
+      ansible.builtin.template:
+        src: "../../roles/aphrodite/templates/aphrodite.json.j2"
+        dest: /opt/tools/duplicateaphrodite.json
+        owner: jenkins
+        group: jenkins
+        mode: 0644
+
+    - name: Get checksum of my original file
+      ansible.builtin.stat:
+        path: "{{ aphrodite.path }}"
+      register: originalfile
+
+    - ansible.builtin.set_fact:
+        original: "{{ originalfile.stat.checksum }}"
+
+    - name: Get checksum of my duplicate file
+      ansible.builtin.stat:
+        path: /opt/tools/duplicateaphrodite.json
+      register: duplicatefile
+
+    - ansible.builtin.set_fact:
+        duplicate: "{{ duplicatefile.stat.checksum }}"
+
+    - name: Compare both the aphrodite configurations
+      ansible.builtin.debug:
+        msg: "File Compare"
+      failed_when: original != duplicate
+
+    - name: Verify that aphrodite role was properly executed
+      ansible.builtin.assert:
+        that: true

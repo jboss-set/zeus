@@ -1,0 +1,43 @@
+---
+dependency:
+  name: galaxy
+  options:
+    ignore-certs: True
+    ignore-errors: True
+    requirements-file: molecule/default/requirements.yml
+driver:
+  name: podman
+platforms:
+  - name: rhel8
+    image: registry.access.redhat.com/ubi8/ubi-init
+    tmpfs:
+      - /run
+      - /tmp
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    capabilities:
+      - SYS_ADMIN
+    command: "/usr/sbin/init"
+    pre_build_image: true
+provisioner:
+  name: ansible
+  playbooks:
+    converge: converge.yml
+    verify: verify.yml
+    prepare: prepare.yml
+  lint:
+    name: ansible-lint
+  env:
+    ANSIBLE_ROLES_PATH: "../../roles"
+  config_options:
+    defaults:
+      interpreter_python: auto_silent
+      callback_enabled: profile_tasks, timer, yaml
+    ssh_connection:
+      pipelining: false
+verifier:
+  name: ansible
+  lint: |
+    set -e
+    yamllint .
+    ansible-lint .

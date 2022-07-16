@@ -1,0 +1,29 @@
+---
+aphrodite:
+  trackers:
+    bugzilla:
+      url: 'https://bugzilla.redhat.com/'
+      password: 'AAAA'
+      type: 'BUGZILLA'
+      limit: 10
+    jira:
+      url: 'https://issues.redhat.com/'
+      password: 'BBBB'
+      type: 'JIRA'
+      limit: '10'
+  repos:
+    github:
+      url: 'https://github.com/'
+      username: "RanabirChakraborty"
+      password: "CCCC"
+      type: 'GITHUB'
+    gitlab:
+      url: 'https://gitlab.cee.redhat.com/'
+      username: 'RanabirChakraborty'
+      password: 'DDDD'
+      type: 'GITLAB'
+  streams:
+    url: 'https://raw.githubusercontent.com/jboss-set/jboss-streams/master/streams.json'
+    type: 'JSON'
+  path: /opt/tools/aphrodite.json
+  template: templates/aphrodite.json.j2
