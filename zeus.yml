@@ -83,6 +83,7 @@
         - hosts
         - netrc
         - git
+        - ansible
         - ssh
 
   tasks:
