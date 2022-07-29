@@ -1,0 +1,21 @@
+---
+- name: "Ensure required parameters are provided."
+  ansible.builtin.assert:
+    that:
+      - ansible is defined
+      - ansible.automation_hub is defined
+      - ansible.automation_hub.token is defined
+      - ansible.automation_hub.token != ""
+      - ansible.config is defined
+      - ansible.config.path is defined
+      - ansible.config.path != ""
+    quiet: True
+    fail_msg: "Missing required parameters"
+
+- name: "Ensures Ansible configuration is deployed."
+  ansible.builtin.template:
+    src: templates/ansible.cfg.j2
+    dest: "{{ ansible.config.path }}"
+    owner: "{{ jenkins_name | default(omit) }}"
+    group: "{{ jenkins_group | default(omit) }}"
+    mode: 0644
