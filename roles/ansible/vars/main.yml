@@ -1,6 +1,6 @@
 ---
 ansible:
   config:
-    path: /home/jenkins/current
+    path: /home/jenkins/ansible.cfg
   automation_hub:
     token: "{{ ansible_automation_hub_token }}"
