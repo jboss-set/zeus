@@ -1,6 +1,6 @@
 ---
 - name: Verify for sysctl role
-  hosts: localhost
+  hosts: all
   vars_files:
     - vars.yml
   gather_facts: false
