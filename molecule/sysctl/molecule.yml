@@ -8,7 +8,7 @@ dependency:
 driver:
   name: podman
 platforms:
-  - name: rhel8
+  - name: instance
     image: registry.access.redhat.com/ubi8/ubi-init
     tmpfs:
       - /run
