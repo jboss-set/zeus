@@ -22,6 +22,8 @@
       ansible.builtin.command: "{{ mvn_default }}/bin/mvn -version"
       register: maven_result
       ignore_errors: True
+      environment:
+        JAVA_HOME: "{{ jdk_default }}"
 
     - ansible.builtin.assert:
         that:
