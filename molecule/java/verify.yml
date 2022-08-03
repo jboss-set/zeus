@@ -4,21 +4,30 @@
   vars_files:
     - vars.yml
   gather_facts: false
-
   tasks:
     - name: Check if java is installed.
-      ansible.builtin.command: "java -version"
+      ansible.builtin.command: "{{ jdk_default }}/bin/java -version"
       register: java_result
 
-    - ansible.builtin.debug:
-        msg: "Java is not installed."
-      when: java_result is failed
+    - ansible.builtin.assert:
+        that:
+          - java_result is defined
+          - java_result.rc is defined
+          - java_result.rc == 0
+          - java_result.stderr is defined
+          - java_result.stderr is search(jdk_version)
+        quiet: True
 
     - name: Check if maven is installed.
-      ansible.builtin.command: "mvn -version"
+      ansible.builtin.command: "{{ mvn_default }}/bin/mvn -version"
       register: maven_result
       ignore_errors: True
 
-    - ansible.builtin.debug:
-        msg: "maven is not installed."
-      when: maven_result is failed
+    - ansible.builtin.assert:
+        that:
+          - maven_result is defined
+          - maven_result.rc is defined
+          - maven_result.rc == 0
+          - maven_result.stdout is defined
+          - maven_result.stdout is search(mvn_version)
+        quiet: True
