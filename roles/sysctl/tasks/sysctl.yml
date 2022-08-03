@@ -12,4 +12,3 @@
     name: "{{ sysctl.name }}"
     value: "{{ sysctl.value }}"
     state: present
-  when: systctl is defined
