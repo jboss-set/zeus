@@ -1,0 +1,22 @@
+---
+- name: Verify for cron role
+  hosts: all
+  vars_files:
+    - vars.yml
+  gather_facts: false
+
+  tasks:
+    - name: "Ensure {{ tools.package_name }} is installed"
+      ansible.builtin.include_role:
+        name: fast_yum_install
+      vars:
+        package_name: "{{ files }}"
+      with_items: "{{ tools.package_names }}"
+      loop_control:
+        loop_var: files
+      register: tools_result
+
+    - ansible.builtin.assert:
+        that:
+          - tools_result is not changed
+        fail_msg: "tools are not installed."
