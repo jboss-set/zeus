@@ -11,8 +11,6 @@
       - component_alignment.group != ""
       - component_alignment.url is defined
       - component_alignment.path is defined
-      - component_alignment.config is defined
-      - component_alignment.config.dir is defined
       - mailer is defined
       - mailer.smtp is defined
       - mailer.smtp.host is defined
@@ -48,19 +46,6 @@
     src: "{{ component_alignment.path }}"
     dest: "{{ component_alignment_home }}/alignment-cli.jar"
     state: link
-
-- name: "Ensure {{ component_alignment.config.dir }} exists"
-  ansible.builtin.file:
-    state: directory
-    path: "{{ component_alignment.config.dir }}"
-    owner: "{{ component_alignment.owner }}"
-    group: "{{ component_alignment.group }}"
-    mode: 0755
-
-- ansible.builtin.include_tasks: tasks/deploy_config.yml
-  with_items: "{{ component_alignment.config.files }}"
-  loop_control:
-    loop_var: files
 
 - name: "Create component alignment config file"
   ansible.builtin.template:
