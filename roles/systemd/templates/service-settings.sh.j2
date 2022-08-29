@@ -1,51 +1,51 @@
 #!/bin/bash
 set -eo pipefail
 
-{% if item.image is defined %}
-export PODMAN_IMAGE_NAME='{{ item.image }}'
+{% if podman_service.image is defined %}
+export PODMAN_IMAGE_NAME='{{ podman_service.image }}'
 {% endif %}
 
-{% if item.readonly_volumes is defined %}
+{% if podman_service.readonly_volumes is defined %}
 declare -A READONLY_VOLUMES
-{% for vol in item.readonly_volumes %}
+{% for vol in podman_service.readonly_volumes %}
 READONLY_VOLUMES['{{ vol.src }}']='{{ vol.dest }}'
 {% endfor %}
 export READONLY_VOLUMES
 {% endif %}
 
-{% if item.readwrite_volumes is defined %}
+{% if podman_service.readwrite_volumes is defined %}
 declare -A READWRITE_VOLUMES
-{% for vol in item.readwrite_volumes %}
+{% for vol in podman_service.readwrite_volumes %}
 READWRITE_VOLUMES['{{ vol.src }}']='{{ vol.dest }}'
 {% endfor %}
 export READWRITE_VOLUMES
 {% endif %}
 
-{% if item.add_hosts is defined %}
+{% if podman_service.add_hosts is defined %}
 declare -A ADD_HOSTS
-{% for h in item.add_hosts %}
+{% for h in podman_service.add_hosts %}
 ADD_HOSTS['{{ h.src }}']='{{ h.ip }}'
 {% endfor %}
 export ADD_HOSTS
 {% endif %}
 
-{% if item.ports_mapping is defined %}
+{% if podman_service.ports_mapping is defined %}
 declare -A PORTS_MAPPING
-{% for p in item.ports_mapping %}
+{% for p in podman_service.ports_mapping %}
 PORTS_MAPPING['{{ p.src }}']='{{ p.dest }}'
 {% endfor %}
 export PORTS_MAPPING
 {% endif %}
 
-{% if item.vars is defined %}
+{% if podman_service.vars is defined %}
 declare -A VARS
-{% for v in item.vars %}
+{% for v in podman_service.vars %}
 VARS['{{ v.name }}']='{{ v.value }}'
 {% endfor %}
 export VARS
 {% endif %}
 
-{% if item.ip is defined %}
-readonly CONTAINER_STATIC_IP={{ item.ip }}
+{% if podman_service.ip is defined %}
+readonly CONTAINER_STATIC_IP={{ podman_service.ip }}
 export CONTAINER_STATIC_IP
 {% endif %}
