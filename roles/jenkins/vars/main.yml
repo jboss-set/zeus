@@ -40,7 +40,7 @@ jenkins:
       desc: "{{ jenkins_role_admin_desc }}"
     ansibleCI:
       name: "{{ jenkins_role_ansibleCI_name }}"
-      group: "{{ jenkins_role_admin_group }}"
+      group: "{{ jenkins_role_ansibleCI_group }}"
       desc: "{{ jenkins_role_ansibleCI_desc }}"
     user:
       name: "{{ jenkins_role_user_name }}"
