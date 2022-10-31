@@ -1,0 +1,16 @@
+---
+- ansible.builtin.assert:
+    that:
+      - known_host is defined
+    quiet: yes
+
+- name: get {{ known_host }} key
+  ansible.builtin.command: "ssh-keyscan -t ecdsa {{ known_host }} | grep ecdsa"
+  register: "host_key"
+  changed_when: false
+
+- name: add {{ known_host }} to known_hosts
+  ansible.builtin.known_hosts:
+    path: "{{ ssh_home }}/.ssh/known_hosts"
+    name: "{{ known_host }}"
+    key: "{{ host_key.stdout }}"

@@ -10,3 +10,8 @@
   with_items: "{{ ssh.users }}"
   loop_control:
     loop_var: files
+
+- ansible.builtin.include_tasks: known_hosts.yml
+  with_items: "{{ ssh.known_hosts }}"
+  loop_control:
+    loop_var: known_host
