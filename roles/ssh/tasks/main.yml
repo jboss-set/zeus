@@ -15,3 +15,4 @@
   with_items: "{{ ssh.known_hosts }}"
   loop_control:
     loop_var: known_host
+  when: not ansible_check_mode
