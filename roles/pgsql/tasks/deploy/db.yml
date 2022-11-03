@@ -11,6 +11,7 @@
   ansible.builtin.template:
     src: "{{ script.name }}.j2"
     dest: "{{ dest }}"
+    force: "yes"
   register: script_template_execution
   when:
     - script.url is not defined
@@ -20,21 +21,9 @@
   ansible.builtin.get_url:
     url: "{{ script.url }}"
     dest: "{{ dest }}"
+    force: "yes"
   register: script_geturl_execution
   when: 
     - script.url is defined
     - not ansible_check_mode
   notify: run sql init scripts
-
-- block:
-  - ansible.builtin.set_fact:
-      path_to_sql_script_to_run: 
-        - { path: "{{ dest }}", instance: "{{ db_info }}" }
-  
-  - ansible.builtin.set_fact:
-      sql_script_to_run: "{{ sql_script_to_run }} + {{ path_to_sql_script_to_run }}"
-
-  - ansible.builtin.debug:
-      msg: "{{ sql_script_to_run }}"
-  when: 
-    - script_geturl_execution.changed or script_template_execution.changed

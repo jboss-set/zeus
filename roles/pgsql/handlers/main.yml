@@ -1,5 +1,1 @@
 ---
-- name: run sql init scripts
-  include_tasks: run_pgsql_initdb_scripts.yml
-  when:
-    - not ansible_check_mode

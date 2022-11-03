@@ -30,6 +30,11 @@ postgres_instances:
       db_name: "{{ pgsql.instances.mjolnir_preprod.db_name }}"
       ports_mapping: "{{ postgres_instances_services_ports_mapping }}"
       vars: "{{ postgres_instances_services_vars }}"
+      readonly_volumes:
+        - src: "{{ pgsql.scripts.home }}/{{ pgsql.instances.mjolnir_preprod.create_db.name }}"
+          dest: "/docker-entrypoint-initdb.d/{{ pgsql.instances.mjolnir_preprod.create_db.name }}"
+        - src: "{{ pgsql.scripts.home }}/{{ pgsql.instances.mjolnir_preprod.load_data.name }}"
+          dest: "/docker-entrypoint-initdb.d/{{ pgsql.instances.mjolnir_preprod.load_data.name }}"
 
     - name: pgsql-component-upgrade-dev
       image: 'docker.io/library/postgres'
@@ -37,3 +42,6 @@ postgres_instances:
       db_name: "{{ pgsql.instances.component_upgrade }}"
       ports_mapping: "{{ postgres_instances_services_upgrade_ports_mapping }}"
       vars: "{{ postgres_instances_services_upgrade_vars }}"
+      readonly_volumes:
+        - src: "{{ pgsql.scripts.home }}/{{ pgsql.instances.component_upgrade.create_db.name }}"
+          dest: "/docker-entrypoint-initdb.d/{{ pgsql.instances.component_upgrade.create_db.name }}"
