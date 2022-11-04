@@ -29,6 +29,7 @@
         - firewalld
         - zip
         - podman
+        - jq
       loop_control:
         loop_var: pretaskfiles
 
