@@ -29,15 +29,20 @@ provisioner:
     name: ansible-lint
   env:
     ANSIBLE_ROLES_PATH: "../../roles"
-  config_options:
-    defaults:
-      interpreter_python: auto_silent
-      callback_enabled: profile_tasks, timer, yaml
-    ssh_connection:
-      pipelining: false
 verifier:
   name: ansible
-  lint: |
-    set -e
-    yamllint .
-    ansible-lint .
+scenario:
+  test_sequence:
+    - dependency
+    - cleanup
+    - destroy
+    - syntax
+    - lint
+    - create
+    - prepare
+    - converge
+    - idempotence
+    - side_effect
+    - verify
+    - cleanup
+    - destroy
