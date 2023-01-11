@@ -1,0 +1,23 @@
+---
+- name: "Ensure required parameters are defined."
+  ansible.builtin.assert:
+    that:
+      - file_to_deploy is defined
+      - file_to_deploy.target is defined
+      - file_to_deploy.template
+      - jenkins is defined
+      - jenkins.home is defined
+      - jenkins.home_next is defined
+
+- name: "Deploy {{ file_to_deploy.target }} from template {{ file_to_deploy.template }}"
+  ansible.builtin.template:
+    src: "{{ file_to_deploy.template }}"
+    dest: "{{ path_to_jenkins_homedir }}/{{ file_to_deploy.target }}"
+    owner: jenkins
+    group: jenkins
+    mode: 0755
+  with_items:
+    - "{{ jenkins.home }}"
+    - "{{ jenkins.home_next }}"
+  loop_control:
+    loop_var: path_to_jenkins_homedir
