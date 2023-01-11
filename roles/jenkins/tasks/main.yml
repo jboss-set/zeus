@@ -68,17 +68,13 @@
     - jenkins.root_ca.url is defined
 
 - name: "Deploy fetchLastSuccessfulBuildId.sh"
-  ansible.builtin.template:
-    src: templates/fetchLastSuccessfulBuildId.sh.j2
-    dest: "{{ files }}/fetchLastSuccessfulBuildId.sh"
-    owner: jenkins
-    group: jenkins
-    mode: 0755
-  with_items:
-    - "{{ jenkins.home }}"
-    - "{{ jenkins.home_next }}"
+  ansible.builtin.include_tasks: deploy_to_jenkins_homedir.yml
+  loop:
+    - { template: 'templates/fetchLastSuccessfulBuildId.sh.j2', target: 'fetchLastSuccessfulBuildId.sh' }
+    - { template: 'templates/ansible-release-report.html.tmpl.j2', target: 'ansible-release-report.html.tmpl' }
+    - { template: 'templates/build-report-ansible-release-report.sh.j2', target: 'build-report-ansible-release-report.sh' }
   loop_control:
-    loop_var: files
+    loop_var: file_to_deploy
 
 - name: "Ensures data folder for Jenkins.next exists."
   ansible.builtin.file:
