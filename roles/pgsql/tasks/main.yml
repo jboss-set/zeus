@@ -36,6 +36,6 @@
       - pgsql.instances is defined
 
   - ansible.builtin.set_fact:
-      podman_services: "{{ postgres_instances.services }}"
+      podman_services: "{{ [ (podman_services | default([]) ) + postgres_instances.services ] | flatten }}"
   when:
     - pgsql_skip is not defined or ansible_check_mode

@@ -39,7 +39,7 @@ postgres_instances:
     - name: pgsql-component-upgrade-dev
       image: 'docker.io/library/postgres'
       ip: "{{ known_hosts.pgsql_mjolnir_upgrade.ip }}"
-      db_name: "{{ pgsql.instances.component_upgrade }}"
+      db_name: "{{ pgsql.instances.component_upgrade.db_name }}"
       ports_mapping: "{{ postgres_instances_services_upgrade_ports_mapping }}"
       vars: "{{ postgres_instances_services_upgrade_vars }}"
       readonly_volumes:

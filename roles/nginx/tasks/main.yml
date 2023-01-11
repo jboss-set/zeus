@@ -54,4 +54,4 @@
     loop_var: files
 
 - ansible.builtin.set_fact:
-    podman_services: "{{ podman_services }} + {{ nginx.service }}"
+    podman_services: "{{ [ podman_services + nginx.service ] | flatten }}"
