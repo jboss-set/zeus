@@ -89,7 +89,7 @@
     loop_var: folder
 
 - ansible.builtin.set_fact:
-     podman_services: "{{ podman_services }} + {{ jenkins.service }}"
+     podman_services: "{{ [ podman_services + jenkins.service ] | flatten }}"
 
 - ansible.builtin.set_fact:
      jenkins_service: "{{ jenkins.service }}"
