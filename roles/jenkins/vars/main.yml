@@ -55,6 +55,8 @@ jenkins:
       readonly_volumes: "{{ jenkins_service_readonly_volumes }}"
       add_hosts: "{{ jenkins_service_add_hosts }}"
       ports_mapping: "{{ jenkins_service_ports_mapping }}"
+      vars:
+        - { name: 'JENKINS_OPTS', value: '--prefix=/jenkins'}
     - name: hephaestus.next
       ip: "{{ known_hosts.jenkins_next.ip }}"
       location: '/jenkins.next'
@@ -63,3 +65,5 @@ jenkins:
       readonly_volumes: "{{ jenkins_service_next_readonly_volumes }}"
       add_hosts: "{{ jenkins_service_next_add_hosts }}"
       ports_mapping: "{{ jenkins_service_next_ports_mapping }}"
+      vars:
+        - { name: 'JENKINS_OPTS', value: '--prefix=/jenkins.next' }

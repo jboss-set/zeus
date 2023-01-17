@@ -13,6 +13,8 @@
       - jenkins.tools is defined
       - jenkins.tools.home is defined
       - jenkins.tools.home != ""
+      - jenkins_sso.prod is defined
+      - jenkins_sso.staging is defined
     quiet: true
 
 - name: "Ensures data folder for Jenkins and Jenkins.next exists."
@@ -34,12 +36,23 @@
     owner: "{{ jenkins.username }}"
     group: "{{ jenkins.username }}"
 
-- name: "Deploy missing configuration file for Jenkins into {{ ares.home }}."
+- name: "Deploy prod Jenkins configuration file into {{ ares.home }}."
   ansible.builtin.template:
     src: templates/casc.yaml.j2
-    dest: "{{ ares.home }}/hephaestus/casc.yaml"
+    dest: "{{ ares.home }}/hephaestus/casc-prod.yaml"
     owner: "{{ ares.owner }}"
     group: "{{ ares.owner }}"
+  vars:
+    instance: jenkins_sso.prod
+
+- name: "Deploy staging Jenkins configuration file into {{ ares.home }}."
+  ansible.builtin.template:
+    src: templates/casc.yaml.j2
+    dest: "{{ ares.home }}/hephaestus/casc-staging.yaml"
+    owner: "{{ ares.owner }}"
+    group: "{{ ares.owner }}"
+  vars:
+    instance: jenkins_sso.staging
 
 - ansible.builtin.include_tasks: generate_keys.yml
   loop:

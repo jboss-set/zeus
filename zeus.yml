@@ -12,6 +12,7 @@
       - vars/caches.yml
       - vars/java.yml
       - vars/java_certs.yml
+      - vars/jenkins_sso.yml
       - vars/jobs.yml
       - vars/component-alignment.yml
       - vars/mjolnir.yml

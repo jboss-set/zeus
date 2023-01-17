@@ -82,7 +82,21 @@ jenkins:
 {% endfor %}{% endif %}
   numExecutors: {{ jenkins.executors.num }}
   securityRealm:
-{% if jenkins.ldap.url is defined and jenkins.ldap.url != ""  %}
+{% if instance.oidc.authorization_endpoint is defined and instance.oidc.authorization_endpoint|length %}
+    oic:
+      authorizationServerUrl: "{{ instance.oidc.authorization_endpoint }}"
+      tokenServerUrl: "{{ instance.oidc.token_endpoint }}"
+      userInfoServerUrl: "{{ instance.oidc.userinfo_endpoint }}"
+      automanualconfigure: "manual"
+      clientId: "{{ instance.oidc.client_id }}"
+      clientSecret: "{{ instance.oidc.client_secret }}"
+      disableSslVerification: false
+      groupsFieldName: "groups"
+      logoutFromOpenidProvider: false
+      scopes: "openid email"
+      tokenAuthMethod: "client_secret_post"
+      userNameField: "preferred_username"
+{% elif jenkins.ldap.url is defined and jenkins.ldap.url != ""  %}
     ldap:
       configurations:
       - groupSearchBase: "{{ jenkins.ldap.search.group.base }}"
@@ -145,7 +159,7 @@ tool:
 
 unclassified:
   location:
-    url: https://{{ ansible_nodename }}/jenkins
+    url: https://{{ instance.url }}/jenkins
   mailer:
     replyToAddress: {{ mailer.replyTo }}
     smtpHost: {{ mailer.smtp.host }}

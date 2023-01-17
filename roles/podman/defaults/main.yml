@@ -16,7 +16,7 @@ podman:
       - { name: 'bashomatons', owner: 'jenkins', tag: 'bashomatons' }
       - { name: 'yarn-builder', owner: 'jenkins', tag: 'yarn-builder' }
       - { name: 'hephaestus', owner: 'root', tag: 'hephaestus' }
-      - { name: 'hephaestus.next', owner: 'root', tag: 'hephaestus.next' }
+      - { name: 'hephaestus', owner: 'root', tag: 'hephaestus.next' }
       - { name: 'ansible', owner: 'jenkins', tag: 'ansible' }
       - { name: 'molecule-runner', owner: 'jenkins', tag: 'molecule-runner' }
       - { name: 'molecule-slave', owner: 'jenkins', tag: 'molecule-slave' }
