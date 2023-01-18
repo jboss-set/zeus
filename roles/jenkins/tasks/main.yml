@@ -36,7 +36,7 @@
     owner: "{{ jenkins.username }}"
     group: "{{ jenkins.username }}"
 
-- name: "Deplo Jenkins configuration CASC file into {{ ares.home }}."
+- name: "Deploy Jenkins configuration CASC file into {{ ares.home }}."
   ansible.builtin.template:
     src: templates/casc.yaml.j2
     dest: "{{ ares.home }}/hephaestus/casc-{{ jenkins_stages.env }}.yaml"
@@ -46,7 +46,7 @@
     instance: "{{ jenkins_stages.instance }}"
     jenkins_home: "{{ jenkins_stages.jenkins_home }}"
   loop:
-    - { instance: "{{ jenkins_sso.staging }}", jenkins_home: '/home/jenkins/next', env: 'staging' } 
+    - { instance: "{{ jenkins_sso.staging }}", jenkins_home: '/home/jenkins/next', env: 'staging' }
     - { instance: "{{ jenkins_sso.prod }}", jenkins_home: '/home/jenkins/current', env: 'prod' }
   loop_control:
     loop_var: jenkins_stages
