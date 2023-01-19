@@ -1,0 +1,43 @@
+---
+- name: "Ensures data folder for Jenkins and Jenkins.next exists."
+  ansible.builtin.file:
+    state: directory
+    path: "{{ folder }}"
+    owner: "{{ jenkins.username }}"
+    group: "{{ jenkins.groupname | default(jenkins.username) }}"
+  with_items:
+    - "{{ jenkins.home_next }}"
+    - "{{ jenkins.home }}"
+  loop_control:
+    loop_var: folder
+
+- name: "Ensures tools home directory ({{ jenkins.tools.home }} exists."
+  ansible.builtin.file:
+    state: directory
+    path: "{{ jenkins.tools.home }}"
+    owner: "{{ jenkins.username }}"
+    group: "{{ jenkins.username }}"
+
+- name: "Deploy Jenkins configuration CASC file into {{ ares.home }}."
+  ansible.builtin.template:
+    src: templates/casc.yaml.j2
+    dest: "{{ ares.home }}/hephaestus/casc-{{ jenkins_stages.env }}.yaml"
+    owner: "{{ ares.owner }}"
+    group: "{{ ares.owner }}"
+  vars:
+    instance: "{{ jenkins_stages.instance }}"
+    jenkins_home: "{{ jenkins_stages.jenkins_home }}"
+  loop:
+    - { instance: "{{ jenkins_sso.staging }}", jenkins_home: '/home/jenkins/next', env: 'staging' }
+    - { instance: "{{ jenkins_sso.prod }}", jenkins_home: '/home/jenkins/current', env: 'prod' }
+  loop_control:
+    loop_var: jenkins_stages
+
+- name: "Deploy fetchLastSuccessfulBuildId.sh"
+  ansible.builtin.include_tasks: deploy_to_jenkins_homedir.yml
+  loop:
+    - { template: 'templates/fetchLastSuccessfulBuildId.sh.j2', target: 'fetchLastSuccessfulBuildId.sh' }
+    - { template: 'templates/ansible-release-report.html.tmpl.j2', target: 'ansible-release-report.html.tmpl' }
+    - { template: 'templates/build-report-ansible-release-report.sh.j2', target: 'build-report-ansible-release-report.sh' }
+  loop_control:
+    loop_var: file_to_deploy

@@ -1,0 +1,26 @@
+---
+- ansible.builtin.include_tasks: generate_keys.yml
+  loop:
+    - "/home/jenkins"
+  loop_control:
+    loop_var: homedir
+
+- name: "Download root CA"
+  ansible.builtin.get_url:
+    url: "{{ jenkins.root_ca.url }}"
+    dest: "{{ ares.home }}/hephaestus/Root-CA.crt"
+  check_mode: no
+  when:
+    - jenkins.root_ca.url is defined
+
+- name: "Import Root CA"
+  community.general.java_cert:
+    cert_path: "{{ ares.home }}/hephaestus/Root-CA.crt"
+    keystore_path: "{{ ares.home }}/hephaestus/cacerts"
+    cert_alias: "root-ca"
+    executable: "{{ jenkins.default_jdk_home }}/bin/keytool"
+    keystore_pass: changeit
+    keystore_create: yes
+    state: present
+  when:
+    - jenkins.root_ca.url is defined
