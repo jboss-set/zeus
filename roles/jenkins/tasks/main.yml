@@ -17,89 +17,14 @@
       - jenkins_sso.staging is defined
     quiet: true
 
-- name: "Ensures data folder for Jenkins and Jenkins.next exists."
-  ansible.builtin.file:
-    state: directory
-    path: "{{ folder }}"
-    owner: "{{ jenkins.username }}"
-    group: "{{ jenkins.groupname | default(jenkins.username) }}"
-  with_items:
-    - "{{ jenkins.home_next }}"
-    - "{{ jenkins.home }}"
-  loop_control:
-    loop_var: folder
+- name: "Deploy files and directory structure for Jenkins instances"
+  ansible.builtin.include_tasks: jenkins_files.yml
 
-- name: "Ensures tools home directory ({{ jenkins.tools.home }} exists."
-  ansible.builtin.file:
-    state: directory
-    path: "{{ jenkins.tools.home }}"
-    owner: "{{ jenkins.username }}"
-    group: "{{ jenkins.username }}"
-
-- name: "Deploy Jenkins configuration CASC file into {{ ares.home }}."
-  ansible.builtin.template:
-    src: templates/casc.yaml.j2
-    dest: "{{ ares.home }}/hephaestus/casc-{{ jenkins_stages.env }}.yaml"
-    owner: "{{ ares.owner }}"
-    group: "{{ ares.owner }}"
-  vars:
-    instance: "{{ jenkins_stages.instance }}"
-    jenkins_home: "{{ jenkins_stages.jenkins_home }}"
-  loop:
-    - { instance: "{{ jenkins_sso.staging }}", jenkins_home: '/home/jenkins/next', env: 'staging' }
-    - { instance: "{{ jenkins_sso.prod }}", jenkins_home: '/home/jenkins/current', env: 'prod' }
-  loop_control:
-    loop_var: jenkins_stages
-
-- ansible.builtin.include_tasks: generate_keys.yml
-  loop:
-    - "/home/jenkins"
-  loop_control:
-    loop_var: homedir
-
-- name: "Download root CA"
-  ansible.builtin.get_url:
-    url: "{{ jenkins.root_ca.url }}"
-    dest: "{{ ares.home }}/hephaestus/Root-CA.crt"
-  check_mode: no
-  when:
-    - jenkins.root_ca.url is defined
-
-- name: "Import Root CA"
-  community.general.java_cert:
-    cert_path: "{{ ares.home }}/hephaestus/Root-CA.crt"
-    keystore_path: "{{ ares.home }}/hephaestus/cacerts"
-    cert_alias: "root-ca"
-    executable: "{{ jenkins.default_jdk_home }}/bin/keytool"
-    keystore_pass: changeit
-    keystore_create: yes
-    state: present
-  when:
-    - jenkins.root_ca.url is defined
-
-- name: "Deploy fetchLastSuccessfulBuildId.sh"
-  ansible.builtin.include_tasks: deploy_to_jenkins_homedir.yml
-  loop:
-    - { template: 'templates/fetchLastSuccessfulBuildId.sh.j2', target: 'fetchLastSuccessfulBuildId.sh' }
-    - { template: 'templates/ansible-release-report.html.tmpl.j2', target: 'ansible-release-report.html.tmpl' }
-    - { template: 'templates/build-report-ansible-release-report.sh.j2', target: 'build-report-ansible-release-report.sh' }
-  loop_control:
-    loop_var: file_to_deploy
-
-- name: "Ensures data folder for Jenkins.next exists."
-  ansible.builtin.file:
-    state: directory
-    path: "{{ folder }}"
-    owner: "{{ jenkins.username }}"
-    group: "{{ jenkins.username }}"
-  with_items:
-    - "{{ jenkins.home_next }}"
-    - "{{ jenkins.home }}"
-  loop_control:
-    loop_var: folder
+- name: "Deploy Certificate for Jenkins"
+  ansible.builtin.include_tasks: jenkins_cert.yml
 
 - ansible.builtin.set_fact:
-     podman_services: "{{ [ podman_services + jenkins.service ] | flatten }}"
+    podman_services: "{{ [ podman_services + jenkins.service ] | flatten }}"
 
 - ansible.builtin.set_fact:
-     jenkins_service: "{{ jenkins.service }}"
+    jenkins_service: "{{ jenkins.service }}"
