@@ -154,7 +154,13 @@ jenkins:
 security:
   globalJobDslSecurityConfiguration:
     useScriptSecurity: false
-
+{% if jenkins.script.approvals is defined %}
+  scriptApproval:
+    approvedSignatures:
+{% for approvedSignature in jenkins.script.approvals  %}
+        - "{{ approvedSignature }}"
+{% endfor %}
+{% endif %}
 tool:
 
 unclassified:

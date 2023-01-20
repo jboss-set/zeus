@@ -67,3 +67,5 @@ jenkins:
       ports_mapping: "{{ jenkins_service_next_ports_mapping }}"
       vars:
         - { name: 'JENKINS_OPTS', value: '--prefix=/jenkins.next' }
+  script:
+    approvals: "{{ jenkins_script_approvals }}"
