@@ -34,6 +34,7 @@
 
 - ansible.builtin.set_fact:
     path_to_key: "{{ root_ssh_folder }}/{{ ansible_nodename }}_rsa"
+  when: sshd.generate_key
 
 - name: "Generate SSH key for server {{ path_to_key }}"
   community.crypto.openssh_keypair:
