@@ -1,7 +1,7 @@
 ---
 podman_images_user: "jenkins"
 podman_images_git_repo: "git@github.com:jboss-set/ares.git"
-podman_images_git_branch: "olympus"
+podman_images_git_branch: "main"
 podman_images_git_folder_name: "ares.git"
 ares_images_with_subs:
   - molecule-slave
