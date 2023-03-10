@@ -1,8 +1,10 @@
 ---
-- ansible.builtin.assert:
+- name: "Ensure that required parameters are provided."
+  ansible.builtin.assert:
     that:
       - jdk_home_folder is defined
       - mvn_home_folder is defined
+    quiet: true
 
 - name: "Ensures the tools home folder exits."
   ansible.builtin.file:
@@ -23,6 +25,17 @@
     tool_default_link: "{{ jdk_default_link }}"
   when:
     - jdk_list is defined
+
+- name: "Ensure links to latest version are set."
+  ansible.builtin.file:
+    src: "{{ jdk.source }}"
+    dest: "{{ jdk.link }}"
+    state: link
+  loop: "{{ jdk_version_symlinks }}"
+  loop_control:
+    loop_var: jdk
+  when:
+    - jdk_version_symlinks is defined
 
 - name: "Install maven versions"
   ansible.builtin.include_tasks: install_and_default.yml
