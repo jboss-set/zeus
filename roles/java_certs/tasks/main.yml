@@ -4,13 +4,16 @@
       - jdk_list is defined 
       - jdk_list is iterable
 
-- name: "Download root CA from  {{ root_ca_url }}"
+- name: "Downloading CA certs into {{ jdk_home }}"
   ansible.builtin.get_url:
-    url: "{{ root_ca_url }}"
-    dest: "{{ jdk_home }}/Root-CA.crt"
+    url: "{{ cert.url }}"
+    dest: "{{ jdk_home }}/{{ cert.url | basename }}"
   check_mode: no
+  with_items: "{{ root_ca_certs }}"
+  loop_control:
+    loop_var: cert
   when:
-    - root_ca_url is defined
+    - root_ca_certs is defined
 
 - name: "Provisioning self-signed certificate to JDKs"
   ansible.builtin.include_tasks: tasks/java_certs.yml

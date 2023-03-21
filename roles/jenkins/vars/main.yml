@@ -31,8 +31,6 @@ jenkins:
     host: "{{ ldap_host | default('') }}"
     port: "{{ ldap_port | default('636') }}"
     url: "{{ ldap_url | default('') }}"
-  root_ca:
-    url: "{{ root_ca_url | default('') }}"
   role:
     admin:
       name: "{{ jenkins_role_admin_name }}"
