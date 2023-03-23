@@ -16,7 +16,7 @@ ldap_root_dn: ""
 ldap_host: ""
 ldap_port: "636"
 ldap_url: ""
-root_ca_url: ""
+root_ca_certs: []
 known_hosts.jenkins.ip: "10.88.0.3"
 jenkins_service_readwrite_volumes:
   - { src: "{{ jenkins_home }}", dest: '/var/jenkins_home' }

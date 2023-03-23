@@ -32,16 +32,19 @@
     that:
       cacerts_file is defined
 
-- name: Remove Root CA  in {{ jdk.name }}
+- name: Removing CA certs from {{ jdk.name }}
   when: rebuild_keystore|default(false)
   community.general.java_cert:
-    cert_path: "{{ jdk_home }}/Root-CA.crt"
+    cert_path: "{{ jdk_home }}/{{ cert.url | basename }}"
     keystore_path: "{{ cacerts_file }}"
-    cert_alias: "internal.redhat.com"
+    cert_alias: "{{ cert.alias }}"
     executable: "{{ jdk.home }}/{{ jdk.name }}/bin/keytool"
     keystore_pass: changeit
     keystore_create: no
     state: absent
+  with_items: "{{ root_ca_certs }}"
+  loop_control:
+    loop_var: cert
 
 - name: Remove SSL certificates in {{ jdk.name }}
   when: rebuild_keystore|default(false)
@@ -59,13 +62,16 @@
 
 - name: Import Root CA in {{ jdk.name }} {{ cacerts_file }}
   community.general.java_cert:
-    cert_path: "{{ jdk_home }}/Root-CA.crt"
+    cert_path: "{{ jdk_home }}/{{ cert.url | basename }}"
     keystore_path: "{{ cacerts_file }}"
-    cert_alias: "internal.redhat.com"
+    cert_alias: "{{ cert.alias }}"
     executable: "{{ jdk.home }}/{{ jdk.name }}/bin/keytool"
     keystore_pass: changeit
     keystore_create: no
     state: present
+  with_items: "{{ root_ca_certs }}"
+  loop_control:
+    loop_var: cert
 
 - name: Import SSL certificates in {{ jdk.name }}
   community.general.java_cert:

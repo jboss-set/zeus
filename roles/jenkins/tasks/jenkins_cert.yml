@@ -5,22 +5,28 @@
   loop_control:
     loop_var: homedir
 
-- name: "Download root CA"
+- name: "Download CA certs"
   ansible.builtin.get_url:
-    url: "{{ jenkins.root_ca.url }}"
-    dest: "{{ ares.home }}/hephaestus/Root-CA.crt"
+    url: "{{ cert.url }}"
+    dest: "{{ ares.home }}/hephaestus/{{ cert.url | basename }}"
   check_mode: no
+  with_items: "{{ root_ca_certs }}"
+  loop_control:
+    loop_var: cert
   when:
-    - jenkins.root_ca.url is defined
+    - root_ca_certs is defined
 
-- name: "Import Root CA"
+- name: "Import CA certs"
   community.general.java_cert:
-    cert_path: "{{ ares.home }}/hephaestus/Root-CA.crt"
+    cert_path: "{{ ares.home }}/hephaestus/{{ cert.url | basename }}"
     keystore_path: "{{ ares.home }}/hephaestus/cacerts"
-    cert_alias: "root-ca"
+    cert_alias: "{{ cert.alias }}"
     executable: "{{ jenkins.default_jdk_home }}/bin/keytool"
     keystore_pass: changeit
     keystore_create: yes
     state: present
+  with_items: "{{ root_ca_certs }}"
+  loop_control:
+    loop_var: cert
   when:
-    - jenkins.root_ca.url is defined
+    - root_ca_certs is defined
