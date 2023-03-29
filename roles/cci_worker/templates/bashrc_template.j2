@@ -1,0 +1,22 @@
+# /home/{{ cci_worker_username }}/.bashrc
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+	. /etc/bashrc
+fi
+
+# User specific environment
+export JAVA_HOME={{ jdk_default }}
+export M2_HOME={{ mvn_default }}
+
+PATH="$HOME/.local/bin:$HOME/bin:$JAVA_HOME/bin:$M2_HOME/bin:$SCRIPT:$PATH"
+export PATH
+
+
+# Uncomment the following line if you don't like systemctl's auto-paging feature:
+# export SYSTEMD_PAGER=
+
+#Docker environment setup
+export XDG_RUNTIME_DIR=/run/user/{{ cci_worker_uid }}
+export DOCKER_HOST=unix:///run/user/{{ cci_worker_uid }}/podman/podman.sock
+export TESTCONTAINERS_RYUK_DISABLED=true

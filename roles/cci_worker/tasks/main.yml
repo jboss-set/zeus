@@ -66,13 +66,21 @@
     state: started
     enabled: yes
 
-- name: Enable podman socket
+- name: Set environment variables
+  become_user: "{{ cci_worker_username }}"
+  ansible.builtin.template:
+    src: templates/bashrc_template.j2
+    dest: "/home/{{ cci_worker_username }}/.bashrc"
+    mode: "0644"
+    owner: "{{ cci_worker_username }}"
+
+- name: "Enable Linger for {{ cci_worker_username }}"
+  become_user: "{{ cci_worker_username }}"
+  ansible.builtin.shell: loginctl enable-linger {{ cci_worker_username }}
+
+- name: Enable podman
+  become_user: "{{ cci_worker_username }}"
   ansible.builtin.systemd:
     name: "podman.socket"
     state: started
     enabled: true
-
-- name: Set environment variables
-  ansible.builtin.set_fact:
-    DOCKER_HOST: "unix:///run/user/${UID}/podman/podman.sock"
-    TESTCONTAINERS_RYUK_DISABLED: "true"
