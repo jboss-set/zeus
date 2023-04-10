@@ -30,3 +30,8 @@ Recommended way to install molecule on a developer machine:
 
 * From root of the repo, Run `$ molecule test --all` to run the whole testsuite.
 * From root of the repo, Run `$ molecule test -s role_name` to run individual role test.
+
+### How to perform CCI VM automation
+
+* First install OpenStack in your local machine. Follow the instructions [here](https://docs.openstack.org/install-guide/environment-packages-rdo.html)
+* Run the playbook `cci_run.yml`, it will perform all the operations.

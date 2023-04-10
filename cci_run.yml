@@ -1,0 +1,14 @@
+---
+- name: Automate CCI VM with Ansible
+  hosts: localhost
+  gather_facts: false
+
+  vars_files:
+    - vars/cci_automate.yml
+
+  tasks:
+    - name: Automate CCI VM using Ansible
+      include_tasks: cci_vm_automate.yml
+      with_items:
+        - { url: "{{ cci_os_cluster_url_first }}", id: "{{ cci_os_project_id_first }}", network: "{{ cci_os_network_first }}", flavor: "{{ cci_os_flavor_first }}" }
+        - { url: "{{ cci_os_cluster_url_second }}", id: "{{ cci_os_project_id_second }}", network: "{{ cci_os_network_second }}", flavor: "{{ cci_os_flavor_second }}" }
