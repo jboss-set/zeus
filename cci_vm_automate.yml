@@ -1,0 +1,373 @@
+---
+- name: Install openstacksdk dependency
+  ansible.builtin.pip:
+    name: openstacksdk>=0.36,<0.99.0
+    executable: pip3
+
+- name: Prompt for OpenStack password
+  pause:
+    prompt: "{{ cci_os_password_prompt }}"
+    echo: no
+  register: os_password
+  when: not cci_os_jenkins_password is defined
+
+- name: Set new variable with value of original variable
+  set_fact:
+    current_password: "{{ cci_os_jenkins_password }}"
+  when: cci_os_jenkins_password is defined
+
+- name: Set new variable with value of original variable
+  set_fact:
+    current_password: "{{ os_password.user_input  }}"
+  when: not cci_os_jenkins_password is defined
+
+- name: "Generate a keypair in cluster {{ item.url }}"
+  ansible.builtin.command: "openstack --os-auth-url {{ item.url }} --os-username {{ cci_os_username }} --os-project-id {{ item.id }} --os-project-name {{ cci_os_project_name }} --os-user-domain-name {{ cci_os_domain_name }} --os-password {{ current_password }} keypair create --public-key {{ local_pubkey_path }} {{ cci_os_key_pair }}"
+  when: not cci_os_jenkins_password is defined
+
+- name: "Generate a keypair in cluster {{ item.url }}"
+  ansible.builtin.command: "openstack --os-auth-url {{ item.url }} --os-username {{ cci_os_jenkins_username }} --os-project-id {{ item.id }} --os-project-name {{ cci_os_project_name }} --os-user-domain-name {{ cci_os_domain_name }} --os-password {{ current_password }} keypair create --public-key {{ local_pubkey_path }} {{ cci_os_key_pair }}"
+  when: cci_os_jenkins_password is defined
+
+- name: Prompt for OpenStack password
+  pause:
+    prompt: "{{ cci_os_password_prompt }}"
+    echo: no
+  register: os_password
+  when: not cci_os_jenkins_password is defined
+
+- name: Set new variable with value of original variable
+  set_fact:
+    current_password: "{{ cci_os_jenkins_password }}"
+  when: cci_os_jenkins_password is defined
+
+- name: Set new variable with value of original variable
+  set_fact:
+    current_password: "{{ os_password.user_input  }}"
+  when: not cci_os_jenkins_password is defined
+
+- name: "Launch an new instance in cluster {{ item.url }}"
+  openstack.cloud.server:
+    state: present
+    auth:
+      auth_url: "{{ item.url }}"
+      username: "{{ cci_os_username }}"
+      project_id: "{{ item.id }}"
+      project_name: "{{ cci_os_project_name }}"
+      user_domain_name: "{{ cci_os_domain_name }}"
+      password: "{{ current_password }}"
+    name: "{{ cci_os_vm_name }}"
+    boot_from_volume: false
+    availability_zone: "{{ cci_os_availability_zone }}"
+    network: "{{ item.network }}"
+    flavor: "{{ item.flavor }}"
+    image: "{{ cci_os_image_name }}"
+    key_name: "{{ cci_os_key_pair }}"
+    timeout: 200
+    security_groups:
+      - default
+      - ssh
+  when: not cci_os_jenkins_password is defined
+
+- name: "Launch an new instance in cluster {{ item.url }}"
+  openstack.cloud.server:
+    state: present
+    auth:
+      auth_url: "{{ item.url }}"
+      username: "{{ cci_os_jenkins_username }}"
+      project_id: "{{ item.id }}"
+      project_name: "{{ cci_os_project_name }}"
+      user_domain_name: "{{ cci_os_domain_name }}"
+      password: "{{ current_password }}"
+    name: "{{ cci_os_vm_name }}"
+    boot_from_volume: false
+    availability_zone: "{{ cci_os_availability_zone }}"
+    network: "{{ item.network }}"
+    flavor: "{{ item.flavor }}"
+    image: "{{ cci_os_image_name }}"
+    key_name: "{{ cci_os_key_pair }}"
+    timeout: 200
+    security_groups:
+      - default
+      - ssh
+  when: cci_os_jenkins_password is defined
+
+- name: Prompt for OpenStack password
+  pause:
+    prompt: "{{ cci_os_password_prompt }}"
+    echo: no
+  register: os_password
+  when: not cci_os_jenkins_password is defined
+
+- name: Set new variable with value of original variable
+  set_fact:
+    current_password: "{{ cci_os_jenkins_password }}"
+  when: cci_os_jenkins_password is defined
+
+- name: Set new variable with value of original variable
+  set_fact:
+    current_password: "{{ os_password.user_input  }}"
+  when: not cci_os_jenkins_password is defined
+
+- name: "Retrieve instance fact present in cluster {{ item.url }}"
+  openstack.cloud.server_info:
+    auth:
+      auth_url: "{{ item.url }}"
+      username: "{{ cci_os_username }}"
+      project_id: "{{ item.id }}"
+      project_name: "{{ cci_os_project_name }}"
+      user_domain_name: "{{ cci_os_domain_name }}"
+      password: "{{ current_password }}"
+    filters:
+      name: "{{ cci_os_vm_name }}"
+  register: instance
+  when: not cci_os_jenkins_password is defined
+
+- name: "Retrieve instance fact present in cluster {{ item.url }}"
+  openstack.cloud.server_info:
+    auth:
+      auth_url: "{{ item.url }}"
+      username: "{{ cci_os_jenkins_username }}"
+      project_id: "{{ item.id }}"
+      project_name: "{{ cci_os_project_name }}"
+      user_domain_name: "{{ cci_os_domain_name }}"
+      password: "{{ current_password }}"
+    filters:
+      name: "{{ cci_os_vm_name }}"
+  register: instance
+  when: cci_os_jenkins_password is defined
+
+- name: Debug instance info
+  ansible.builtin.debug:
+    var: instance
+
+- name: Creating an empty inventory file
+  ansible.builtin.file:
+    path: inventory
+    state: touch
+
+- name: Save inventory to file
+  ansible.builtin.blockinfile:
+    path: inventory
+    block: "{{ instance.openstack_servers[0].accessIPv4 }}"
+
+- name: Run cci_worker.yml playbook
+  ansible.builtin.command: ansible-playbook -i inventory -u cloud-user cci_worker.yml
+
+- name: Remove the inventory file
+  ansible.builtin.file:
+    path: inventory
+    state: absent
+
+- name: Prompt for OpenStack password
+  pause:
+    prompt: "{{ cci_os_password_prompt }}"
+    echo: no
+  register: os_password
+  when: not cci_os_jenkins_password is defined
+
+- name: Set new variable with value of original variable
+  set_fact:
+    current_password: "{{ cci_os_jenkins_password }}"
+  when: cci_os_jenkins_password is defined
+
+- name: Set new variable with value of original variable
+  set_fact:
+    current_password: "{{ os_password.user_input  }}"
+  when: not cci_os_jenkins_password is defined
+
+- name: "Stop the {{ instance.openstack_servers[0].accessIPv4 }} present in cluster {{ item.url }}"
+  openstack.cloud.server_action:
+    action: stop
+    auth:
+      auth_url: "{{ item.url }}"
+      username: "{{ cci_os_username }}"
+      project_id: "{{ item.id }}"
+      project_name: "{{ cci_os_project_name }}"
+      user_domain_name: "{{ cci_os_domain_name }}"
+      password: "{{ current_password }}"
+    server: "{{ cci_os_vm_name }}"
+    timeout: 200
+  when: not cci_os_jenkins_password is defined
+
+- name: "Stop the {{ instance.openstack_servers[0].accessIPv4 }} present in cluster {{ item.url }}"
+  openstack.cloud.server_action:
+    action: stop
+    auth:
+      auth_url: "{{ item.url }}"
+      username: "{{ cci_os_jenkins_username }}"
+      project_id: "{{ item.id }}"
+      project_name: "{{ cci_os_project_name }}"
+      user_domain_name: "{{ cci_os_domain_name }}"
+      password: "{{ current_password }}"
+    server: "{{ cci_os_vm_name }}"
+    timeout: 200
+  when: cci_os_jenkins_password is defined
+
+- name: Prompt for OpenStack password
+  pause:
+    prompt: "{{ cci_os_password_prompt }}"
+    echo: no
+  register: os_password
+  when: not cci_os_jenkins_password is defined
+
+- name: Set new variable with value of original variable
+  set_fact:
+    current_password: "{{ cci_os_jenkins_password }}"
+  when: cci_os_jenkins_password is defined
+
+- name: Set new variable with value of original variable
+  set_fact:
+    current_password: "{{ os_password.user_input  }}"
+  when: not cci_os_jenkins_password is defined
+
+- name: "Create image in cluster {{ item.url }}"
+  ansible.builtin.command: "openstack --os-auth-url {{ item.url }} --os-username {{ cci_os_username }} --os-project-id {{ item.id }} --os-project-name {{ cci_os_project_name }} --os-user-domain-name {{ cci_os_domain_name }} --os-password {{ current_password }} server image create {{ cci_os_vm_name }} --name {{ cci_os_snapshot_name }}"
+  when: not cci_os_jenkins_password is defined
+
+- name: "Create image in cluster {{ item.url }}"
+  ansible.builtin.command: "openstack --os-auth-url {{ item.url }} --os-username {{ cci_os_jenkins_username }} --os-project-id {{ item.id }} --os-project-name {{ cci_os_project_name }} --os-user-domain-name {{ cci_os_domain_name }} --os-password {{ current_password }} server image create {{ cci_os_vm_name }} --name {{ cci_os_snapshot_name }}"
+  when: cci_os_jenkins_password is defined
+
+- name: Prompt for OpenStack password
+  pause:
+    prompt: "{{ cci_os_password_prompt }}"
+    echo: no
+  register: os_password
+  when: not cci_os_jenkins_password is defined
+
+- name: Set new variable with value of original variable
+  set_fact:
+    current_password: "{{ cci_os_jenkins_password }}"
+  when: cci_os_jenkins_password is defined
+
+- name: Set new variable with value of original variable
+  set_fact:
+    current_password: "{{ os_password.user_input  }}"
+  when: not cci_os_jenkins_password is defined
+
+- name: "Gather information about the previously created image in cluster {{ item.url }}"
+  openstack.cloud.image_info:
+    auth:
+      auth_url: "{{ item.url }}"
+      username: "{{ cci_os_username }}"
+      project_id: "{{ item.id }}"
+      project_name: "{{ cci_os_project_name }}"
+      user_domain_name: "{{ cci_os_domain_name }}"
+      password: "{{ current_password }}"
+    image: "{{ cci_os_snapshot_name }}"
+  register: image
+  until: image is success
+  retries: 5
+  delay: 10
+  when: not cci_os_jenkins_password is defined
+
+- name: "Gather information about the previously created image in cluster {{ item.url }}"
+  openstack.cloud.image_info:
+    auth:
+      auth_url: "{{ item.url }}"
+      username: "{{ cci_os_jenkins_username }}"
+      project_id: "{{ item.id }}"
+      project_name: "{{ cci_os_project_name }}"
+      user_domain_name: "{{ cci_os_domain_name }}"
+      password: "{{ current_password }}"
+    image: "{{ cci_os_snapshot_name }}"
+  register: image
+  until: image is success
+  retries: 5
+  delay: 10
+  when: cci_os_jenkins_password is defined
+
+- name: "Show information of the previously created image in cluster {{ item,url }}"
+  ansible.builtin.debug:
+    var: image
+
+- name: Prompt for OpenStack password
+  pause:
+    prompt: "{{ cci_os_password_prompt }}"
+    echo: no
+  register: os_password
+  when: not cci_os_jenkins_password is defined
+
+- name: Set new variable with value of original variable
+  set_fact:
+    current_password: "{{ cci_os_jenkins_password }}"
+  when: cci_os_jenkins_password is defined
+
+- name: Set new variable with value of original variable
+  set_fact:
+    current_password: "{{ os_password.user_input  }}"
+  when: not cci_os_jenkins_password is defined
+
+- name: "Delete your keypair in cluster {{ item.url }}"
+  openstack.cloud.keypair:
+    auth:
+      auth_url: "{{ item.url }}"
+      username: "{{ cci_os_username }}"
+      project_id: "{{ item.id }}"
+      project_name: "{{ cci_os_project_name }}"
+      user_domain_name: "{{ cci_os_domain_name }}"
+      password: "{{ current_password }}"
+    state: absent
+    name: "{{ cci_os_key_pair }}"
+    public_key_file: "{{ local_pubkey_path }}"
+  when: not cci_os_jenkins_password is defined
+
+- name: "Delete your keypair in cluster {{ item.url }}"
+  openstack.cloud.keypair:
+    auth:
+      auth_url: "{{ item.url }}"
+      username: "{{ cci_os_jenkins_username }}"
+      project_id: "{{ item.id }}"
+      project_name: "{{ cci_os_project_name }}"
+      user_domain_name: "{{ cci_os_domain_name }}"
+      password: "{{ current_password }}"
+    state: absent
+    name: "{{ cci_os_key_pair }}"
+    public_key_file: "{{ local_pubkey_path }}"
+  when: cci_os_jenkins_password is defined
+
+- name: Prompt for OpenStack password
+  pause:
+    prompt: "{{ cci_os_password_prompt }}"
+    echo: no
+  register: os_password
+  when: not cci_os_jenkins_password is defined
+
+- name: Set new variable with value of original variable
+  set_fact:
+    current_password: "{{ cci_os_jenkins_password }}"
+  when: cci_os_jenkins_password is defined
+
+- name: Set new variable with value of original variable
+  set_fact:
+    current_password: "{{ os_password.user_input  }}"
+  when: not cci_os_jenkins_password is defined
+
+- name: "Delete the {{ instance.openstack_servers[0].accessIPv4 }} present in cluster {{ item.url }}"
+  openstack.cloud.server:
+    state: absent
+    auth:
+      auth_url: "{{ item.url }}"
+      username: "{{ cci_os_username }}"
+      project_id: "{{ item.id }}"
+      project_name: "{{ cci_os_project_name }}"
+      user_domain_name: "{{ cci_os_domain_name }}"
+      password: "{{ current_password }}"
+    name: "{{ cci_os_vm_name }}"
+    timeout: 200
+  when: not cci_os_jenkins_password is defined
+
+- name: "Delete the {{ instance.openstack_servers[0].accessIPv4 }} present in cluster {{ item.url }}"
+  openstack.cloud.server:
+    state: absent
+    auth:
+      auth_url: "{{ item.url }}"
+      username: "{{ cci_os_jenkins_username }}"
+      project_id: "{{ item.id }}"
+      project_name: "{{ cci_os_project_name }}"
+      user_domain_name: "{{ cci_os_domain_name }}"
+      password: "{{ current_password }}"
+    name: "{{ cci_os_vm_name }}"
+    timeout: 200
+  when: cci_os_jenkins_password is defined
