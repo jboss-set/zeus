@@ -83,4 +83,5 @@
   ansible.builtin.systemd:
     name: "podman.socket"
     state: started
+    scope: user
     enabled: true
