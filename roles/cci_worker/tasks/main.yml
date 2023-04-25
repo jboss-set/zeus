@@ -83,4 +83,13 @@
   ansible.builtin.systemd:
     name: "podman.socket"
     state: started
+    scope: user
     enabled: true
+
+- name: "Configure testcontainers"
+  ansible.builtin.copy:
+    src: files/testcontainers.properties
+    dest: "/home/{{ cci_worker_username }}/.testcontainers.properties"
+    mode: "0644"
+    owner: "{{ cci_worker_username }}"
+    group: "{{ cci_worker_username }}"
