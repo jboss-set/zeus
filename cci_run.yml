@@ -12,3 +12,6 @@
       with_items:
         - { url: "{{ cci_os_cluster_url_first }}", id: "{{ cci_os_project_id_first }}", network: "{{ cci_os_network_first }}", flavor: "{{ cci_os_flavor_first }}" }
         - { url: "{{ cci_os_cluster_url_second }}", id: "{{ cci_os_project_id_second }}", network: "{{ cci_os_network_second }}", flavor: "{{ cci_os_flavor_second }}" }
+
+    - name: Automate CCI VM using Ansible
+      include_tasks: cci_casc_edit.yml
