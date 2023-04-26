@@ -1,0 +1,51 @@
+---
+- name: Creating an empty file
+  file:
+    path: "/home/{{ cci_os_username }}/{{ gitlab_repo }}"
+    state: directory
+
+- name: "Clone source code of personal forked {{ gitlab_repo }}"
+  git:
+    repo: "{{ forked_repo_link }}"
+    dest: "/home/{{ cci_os_username }}/{{ gitlab_repo }}"
+    version: master
+    key_file: "{{ local_pubkey_path }}"
+
+- name: Add upstream
+  ansible.builtin.command: "git remote add upstream {{ upstream_repo_link }}"
+  args:
+    chdir: "/home/{{ cci_os_username }}/{{ gitlab_repo }}"
+
+- name: Fetch upstream
+  ansible.builtin.command: "git fetch upstream"
+  args:
+    chdir: "/home/{{ cci_os_username }}/{{ gitlab_repo }}"
+
+- name: Merge upstream
+  ansible.builtin.command: "git merge upstream/master"
+  args:
+    chdir: "/home/{{ cci_os_username }}/{{ gitlab_repo }}"
+
+- name: Modify casc file with new images
+  ansible.builtin.command: "sed -i 's/{{ cci_os_old_snapshot_name }}/{{ cci_os_snapshot_name }}/' /home/{{ cci_os_username }}/{{ gitlab_repo }}/casc.yaml"
+
+- name: Add the new changes
+  ansible.builtin.command: "git add -A"
+  args:
+    chdir: "/home/{{ cci_os_username }}/{{ gitlab_repo }}"
+
+- name: Create new Commmit
+  ansible.builtin.command: "git commit -m 'Edit casc.yaml with new image'"
+  args:
+    chdir: "/home/{{ cci_os_username }}/{{ gitlab_repo }}"
+
+- name: create a new PR
+  ansible.builtin.command: "git push origin -f master"
+  args:
+    chdir: "/home/{{ cci_os_username }}/{{ gitlab_repo }}"
+  register: results
+
+- name: "Delete {{ gitlab_repo }} from local."
+  ansible.builtin.file:
+    state: absent
+    path: "/home/{{ cci_os_username }}/{{ gitlab_repo }}"
