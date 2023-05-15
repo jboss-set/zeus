@@ -5,7 +5,7 @@ on:
   pull_request:
   push:    
     branches:
-      - olympus
+      - main
            
 jobs:      
   test:    
@@ -23,13 +23,15 @@ jobs:
            
       - name: Install testing dependencies.
         run: |
-          pip install --upgrade pip
-          pip install molecule
-          pip install docker
-          pip install podman
-          pip install --user "molecule[podman,lint]"
-          pip install --user "molecule[docker,lint]"
-           
+          python -m pip install --upgrade pip
+          pip install yamllint 'molecule>=4.0.4' 'molecule-plugins[podman]>=23.0.0' ansible-core flake8 ansible-lint voluptuous
+          ansible-galaxy collection install -r requirements.yml
+
+      - name: Run linter
+        run: |
+          ansible-lint --version
+          ansible-lint -v
+
       - name: "Run molecule tests"
         run: molecule test --all
         env:

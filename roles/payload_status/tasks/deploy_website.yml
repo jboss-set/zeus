@@ -27,7 +27,7 @@
       - path_to_build_dir is defined
       - path_to_build_dir.stat is defined
       - path_to_build_dir.stat.exists
-   quiet: true
+    quiet: true
 
 - name: "Ensure symlink to nginx_http_docroot is set"
   ansible.builtin.file:
