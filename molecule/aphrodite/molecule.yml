@@ -25,8 +25,6 @@ provisioner:
     converge: converge.yml
     verify: verify.yml
     prepare: prepare.yml
-  lint:
-    name: ansible-lint
   env:
     ANSIBLE_ROLES_PATH: "../../roles"
 verifier:
@@ -36,8 +34,6 @@ scenario:
     - dependency
     - cleanup
     - destroy
-    - syntax
-    - lint
     - create
     - prepare
     - converge

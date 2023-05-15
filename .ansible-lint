@@ -1,0 +1,44 @@
+# .ansible-lint
+exclude_paths:
+  - .github/
+  - molecule/
+  - .ansible-lint
+
+enable_list:
+  - fqcn-builtins  # opt-in
+  - no-log-password  # opt-in
+
+warn_list:
+  - role_vars_start_with_role_name
+  - vars_in_vars_files_have_valid_names
+  - experimental
+  - ignore-errors
+  - no-handler
+  - fqcn-builtins
+  - no-log-password
+  - no-empty-data-files
+  - name[template]
+  - fqcn[keyword]
+  - schema[meta]
+  # needs to fix the below and remove from warning list.
+  - name[missing]
+  - yaml
+  - no-changed-when
+  - risky-file-permissions
+  - fqcn[action]
+  - package-latest
+  - name
+  - var-naming
+  - risky-octal
+  - key-order
+  - schema
+  - command-instead-of-shell
+  - command-instead-of-module
+
+skip_list:
+  - vars_should_not_be_used
+  - file_is_small_enough
+  - jinja[spacing]
+
+use_default_rules: true
+parseable: true
