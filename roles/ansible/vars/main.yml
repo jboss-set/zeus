@@ -4,3 +4,5 @@ ansible:
     path: /home/jenkins/ansible.cfg
   automation_hub:
     token: "{{ ansible_automation_hub_token }}"
+  jboss_network_api:
+    path: "{{ ansible_jboss_network_api_file }}"

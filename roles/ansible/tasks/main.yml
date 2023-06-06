@@ -9,6 +9,9 @@
       - ansible.config is defined
       - ansible.config.path is defined
       - ansible.config.path != ""
+      - ansible.jboss_network_api is defined and ansible.jboss_network_api.path is defined
+      - ansible_service_account_username is defined
+      - ansible_service_account_password is defined
     quiet: True
     fail_msg: "Missing required parameters"
 
@@ -18,4 +21,11 @@
     dest: "{{ ansible.config.path }}"
     owner: "{{ jenkins_name | default(omit) }}"
     group: "{{ jenkins_group | default(omit) }}"
+    mode: 0644
+
+- name: "Ensures JBoss Network API credentials file is deployed."
+  ansible.builtin.template:
+    src: templates/jboss_network_api.yml.j2
+    dest: "{{ ansible.jboss_network_api.path }}"
+    owner: "{{ jenkins_name | default(omit) }}"
     mode: 0644
