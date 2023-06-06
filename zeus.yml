@@ -4,6 +4,7 @@
   become: yes
   become_user: root
   vars_files:
+      - vars/ansible.yml
       - vars/olympus.yml
       - vars/ssh.yml
       - vars/aphrodite.yml
