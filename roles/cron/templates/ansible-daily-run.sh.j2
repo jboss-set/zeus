@@ -8,7 +8,11 @@ cd /etc/ansible
 git pull origin olympus >> "${LOGFILE}"
 # TODO: update /etc/ansible/vars too
 
+set +e
 ansible-playbook -D /etc/ansible/zeus.yml 2>&1 >> "${LOGFILE}"
+echo "${?}" > /etc/ansible/zeus_daily_run_status.txt
+set -e
+
 readonly SUBJECT=$(tail -2 "${LOGFILE}" | sed '/^$/d' | head -1)
 cat "${LOGFILE}" | \
   mailx -r "{{ mailer.to }}" -s "{{ jobs.name }}:${SUBJECT}" -S smtp="{{ mailer.smtp.host }}:{{mailer.smtp.port }}" "{{ mailer.replyTo }}"
