@@ -37,6 +37,8 @@
   register: payload_build_dir_path
 
 - name: "Checkout payload_status from git: {{ payload_status.git.url }}"
+  become: yes
+  become_user: jenkins
   ansible.builtin.git:
     repo: "{{ payload_status.git.url }}"
     dest: "{{ payload_status.home }}"

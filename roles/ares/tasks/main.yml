@@ -22,6 +22,8 @@
     quiet: true
 
 - name: "Fetch images definition from {{ ares.git.repo }} from branch {{ ares.git.branch }}."
+  become: yes
+  become_user: jenkins
   ansible.builtin.git:
     repo: "{{ ares.git.repo }}"
     dest: "{{ ares.home }}"
