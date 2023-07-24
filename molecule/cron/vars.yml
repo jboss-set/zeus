@@ -7,4 +7,3 @@ mailer:
     port: 587
 cronjobs:
   - { name: "ansible-daily-run", dest: "/opt/tools/ansible-daily-run.sh", src: "ansible-daily-run.sh.j2", special_time: "daily" }
-  - { name: "jboss-editorial-reminder", dest: "/opt/tools/jboss-editorial-reminder.sh", src: "templates/jboss-editorial-reminder.sh.j2", weekday: "1,4", minute: "00", hour: "11" }
