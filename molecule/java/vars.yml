@@ -1,7 +1,7 @@
 ---
 # dummy variables for java role testing purpose.
 jdk_version: 17.0.1
-mvn_version: 3.6.3
+mvn_version: 3.9.3
 jdk_home_folder: /opt/java
 mvn_home_folder: /opt/java
 jdk_list:
