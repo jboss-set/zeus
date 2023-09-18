@@ -32,6 +32,7 @@ checkIfRequiredEnvVarIsDefined 'BUILD_JANUS' "${BUILD_JANUS}"
 checkIfRequiredEnvVarIsDefined 'BUILD_DOWNSTREAM_CI' "${BUILD_DOWNSTREAM_CI}"
 checkIfRequiredEnvVarIsDefined 'BUILD_DOT' "${BUILD_DOT}"
 checkIfRequiredEnvVarIsDefined 'BUILD_RUNNER' "${BUILD_RUNNER}"
+checkIfRequiredEnvVarIsDefined 'BUILD_RELEASE_ARTEFACTS' "${BUILD_RELEASE_ARTEFACTS}"
 
 sed "${TEMPLATE}" \
     -e "s;COLLECTION_NAME;${COLLECTION_NAME};g" \
@@ -41,4 +42,5 @@ sed "${TEMPLATE}" \
     -e "s;BUILD_JANUS;${BUILD_JANUS};g" \
     -e "s;BUILD_DOWNSTREAM_CI;${BUILD_DOWNSTREAM_CI};g" \
     -e "s;BUILD_DOT;${BUILD_DOT};g" \
-    -e "s;BUILD_RUNNER;${BUILD_RUNNER};g" > "${PATH_TO_REPORT}"
+    -e "s;BUILD_RUNNER;${BUILD_RUNNER};g" \
+    -e "s;BUILD_RELEASE_ARTEFACTS;${BUILD_RELEASE_ARTEFACTS};g" > "${PATH_TO_REPORT}"
