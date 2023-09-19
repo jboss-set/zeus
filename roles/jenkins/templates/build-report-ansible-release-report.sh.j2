@@ -26,7 +26,6 @@ readonly BUILD_DOT=${BUILD_DOT}
 readonly BUILD_RUNNER=${BUILD_RUNNER}
 
 checkIfRequiredEnvVarIsDefined 'COLLECTION_NAME' "${COLLECTION_NAME}"
-checkIfRequiredEnvVarIsDefined 'RELEASE_NAME' "${RELEASE_NAME}"
 checkIfRequiredEnvVarIsDefined 'BUILD_CI' "${BUILD_CI}"
 checkIfRequiredEnvVarIsDefined 'BUILD_JANUS' "${BUILD_JANUS}"
 checkIfRequiredEnvVarIsDefined 'BUILD_DOWNSTREAM_CI' "${BUILD_DOWNSTREAM_CI}"
@@ -36,7 +35,7 @@ checkIfRequiredEnvVarIsDefined 'BUILD_RELEASE_ARTEFACTS' "${BUILD_RELEASE_ARTEFA
 
 sed "${TEMPLATE}" \
     -e "s;COLLECTION_NAME;${COLLECTION_NAME};g" \
-    -e "s;RELEASE_NAME;${RELEASE_NAME};g" \
+    -e "s;RELEASE_VERSION;${RELEASE_VERSION:-'no version'};g" \
     -e "s;CI_SERVER_URL;${CI_SERVER_URL};g" \
     -e "s;BUILD_CI;${BUILD_CI};g" \
     -e "s;BUILD_JANUS;${BUILD_JANUS};g" \
