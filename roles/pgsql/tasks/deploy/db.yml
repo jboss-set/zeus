@@ -15,7 +15,7 @@
   register: script_template_execution
   when:
     - script.url is not defined
-  notify: run sql init scripts
+      #  notify: run sql init scripts
 
 - name: "Ensures {{ script.name }} exists (source: {{ script.url }}."
   ansible.builtin.get_url:
@@ -26,4 +26,4 @@
   when: 
     - script.url is defined
     - not ansible_check_mode
-  notify: run sql init scripts
+      #  notify: run sql init scripts
