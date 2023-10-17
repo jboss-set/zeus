@@ -26,8 +26,6 @@ monit_alerts_services:
   - { name: 'sshd', pidfile: '/var/run/sshd.pid', start_program: '/usr/bin/systemctl start sshd', stop_program: '/usr/bin/systemctl stop sshd' }
   - { name: 'hephaestus', pidfile: '/var/run/hephaestus/hephaestus.pid', start_program: '/usr/bin/systemctl start hephaestus', stop_program: '/usr/bin/systemctl stop hephaestus' }
   - { name: 'nginx', pidfile: '/var/run/nginx/nginx.pid', start_program: '/usr/bin/systemctl start nginx', stop_program: '/usr/bin/systemctl stop nginx' }
-  - { name: 'pgsql-mjolnir-predprod', pidfile: '/var/run/pgsql-mjolnir-predprod/pgsql-mjolnir-predprod.pid', start_program: '/usr/bin/systemctl start pgsql-mjolnir-predprod', stop_program: '/usr/bin/systemctl stop pgsql-mjolnir-predprod
-          ' }
   - { name: 'pgsql-component-upgrade-dev', pidfile: '/var/run/pgsql-component-upgrade-dev/pgsql-component-upgrade-dev.pid', start_program: '/usr/bin/systemctl start pgsql-component-upgrade-dev', stop_program: '/usr/bin/systemctl stop pgsql-component-upgrade-dev' }
 monit_alerts_custom_scripts:
   - { name: "jenkins-dead-containers", src: 'jenkins-dead-containers.sh.j2', dest: "{{ monit_custom_scripts_directory }}/jenkins-containers" }

@@ -1,13 +1,6 @@
 ---
-mjolnir_prepord_create_db_url: "https://raw.githubusercontent.com/jboss-set/mjolnir-archive-service/master/dbscripts/create.sql"
 component_upgrade_create_db_url: "https://raw.githubusercontent.com/TomasHofman/component-upgrade-logger/main/src/main/resources/init.sql"
-known_hosts.pgsql_mjolnir.ip: "10.88.0.4"
-postgres_instances_services_ports_mapping:
-  - { src: '5432', dest: "{{ pgsql.instances.mjolnir_preprod.port }}" }
-postgres_instances_services_vars:
-  - { name: 'POSTGRES_PASSWORD', value: "{{ pgsql.instances.mjolnir_preprod.password }}" }
-  - { name: 'POSTGRES_USER', value: "{{ pgsql.instances.mjolnir_preprod.username }}" }
-known_hosts.pgsql_mjolnir_upgrade.ip: "10.88.0.5"
+known_hosts.pgsql_component_upgrade.ip: "10.88.0.5"
 postgres_instances_services_upgrade_ports_mapping:
   - { src: '5432', dest: "{{ pgsql.instances.component_upgrade.port }}" }
 postgres_instances_services_upgrade_vars:
