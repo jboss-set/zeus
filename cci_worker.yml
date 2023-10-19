@@ -38,6 +38,7 @@
     - name: "Ensure jaegertracing docker image is downloaded for tests"
       containers.podman.podman_image:
         name: "quay.io/jaegertracing/all-in-one:latest"
+      become: yes
       become_user: "{{cci_worker_username}}"
 
   tasks:
