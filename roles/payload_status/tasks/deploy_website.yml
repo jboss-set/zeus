@@ -10,6 +10,7 @@
     state: started
     detach: no
     command: "./build.sh"
+  become: yes
   become_user: "{{ payload_status.owner }}"
 
 - ansible.builtin.set_fact:

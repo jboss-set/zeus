@@ -67,6 +67,7 @@
     enabled: yes
 
 - name: Set environment variables
+  become: yes
   become_user: "{{ cci_worker_username }}"
   ansible.builtin.template:
     src: templates/bashrc_template.j2
@@ -75,10 +76,12 @@
     owner: "{{ cci_worker_username }}"
 
 - name: "Enable Linger for {{ cci_worker_username }}"
+  become: yes
   become_user: "{{ cci_worker_username }}"
   ansible.builtin.shell: loginctl enable-linger {{ cci_worker_username }}
 
 - name: Enable podman
+  become: yes
   become_user: "{{ cci_worker_username }}"
   ansible.builtin.systemd:
     name: "podman.socket"

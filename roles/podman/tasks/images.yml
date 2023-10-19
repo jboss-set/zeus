@@ -1,6 +1,6 @@
 ---
 - ansible.builtin.assert:
-    that: 
+    that:
       - podman_images_home is defined
     quiet: True
     fail_msg: "Required parameters podman_images_home is not defined."
@@ -16,7 +16,7 @@
       - podman_images_home_info.stat.exists is defined
       - podman_images_home_info.stat.exists
       - podman_images_home_info.stat.isdir is defined
-      - podman_images_home_info.stat.isdir 
+      - podman_images_home_info.stat.isdir
     quiet: True
     fail_msg: "Invalid podman_images_home_info provided: {{ podman_images_home_info.stat.isdir }}."
 
@@ -26,6 +26,7 @@
 - name: "Ensure remote images are downloaded"
   containers.podman.podman_image:
     name: "{{ files.name }}"
+  become: yes
   become_user: "{{ files.owner | default('root') }}"
   with_items: "{{ podman.images.remotes }}"
   loop_control:
@@ -36,6 +37,7 @@
     name: "{{ files.tag }}"
     path: "{{ podman_images_home }}/{{ files.name }}"
     state: build
+  become: yes
   become_user: "{{ files.owner | default('root') }}"
   with_items: "{{ podman.images.locals }}"
   loop_control:
