@@ -1,0 +1,58 @@
+---
+- hosts: localhost
+  gather_facts: no
+  become: yes
+  become_user: root
+  vars:
+    monit_service_file: "/etc/monit.d/{{ service_to_remove }}"
+  pre_tasks:
+    - name: "Ensure required parameters have been provided"
+      ansible.builtin.assert:
+        that:
+          - service_to_remove is defined and service_to_remove | length > 0
+        quiet: True
+
+  tasks:
+    - name: "Ensure service is removed to Monit to avoid restarts"
+      block:
+        - name: "Delete monit service file"
+          ansible.builtin.file:
+            path: "{{ monit_service_file }}"
+            state: absent
+          notify: "Reload Monit"
+        - name: "Ensure Monit is reloaded if needed"
+          ansible.builtin.meta: flush_handlers
+      when:
+        - monit_service_file is exists
+
+
+    - name: "Ensure that {{ service_to_remove }} is not running."
+      ansible.builtin.service:
+        name: "{{ service_to_remove }}"
+        state: stopped
+
+    - name: "Delete systemd service descriptor for {{ service_to_remove }}"
+      ansible.builtin.file:
+        path: "/usr/lib/systemd/system/{{ service_to_remove }}"
+        state: absent
+      notify: "Reload systemd"
+
+    - name: "Delete podman service script"
+      ansible.builtin.file:
+        path: "{{ path_to_file }}"
+        state: absent
+      loop:
+        - "/opt/podman/{{ service_to_remove }}.config.sh"
+        - "/opt/podman/{{ service_to_remove }}-service.sh"
+      loop_control:
+        loop_var: path_to_file
+
+  handlers:
+    - name: "Reload systemd"
+      ansible.builtin.systemd:
+        daemon_reload: true
+
+    - name: "Reload Monit"
+      ansible.builtin.systemd:
+        name: monit
+        state: reloaded
