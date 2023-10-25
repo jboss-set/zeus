@@ -21,21 +21,21 @@ jenkins:
             description: "{{ jenkins.role.admin.desc }}"
             permissions:
               - "Overall/Administer"
-            assignments:
-              - "{{ jenkins.role.admin.group }}"
+            entries:
+              - group: "{{ jenkins.role.admin.group }}"
           - name: "{{ jenkins.role.ansibleCI.name }}"
             description: "{{ jenkins.role.ansibleCI.desc }}"
             permissions:
               - "Overall/Administer"
-            assignments:
-              - "{{ jenkins.role.ansibleCI.group }}"
+            entries:
+              - group: "{{ jenkins.role.ansibleCI.group }}"
           - name: "anonymous"
             description: "Anonymous users"
             permissions:
               - "Overall/Read"
               - "Job/Read"
-            assignments:
-              - "anonymous"
+            entries:
+              - group: "anonymous"
           - name: "readonly"
             description: "Read-only users"
             permissions:
@@ -43,8 +43,8 @@ jenkins:
               - "Job/Read"
               - "Job/ExtendedRead"
               - "View/Read"
-            assignments:
-              - "authenticated"
+            entries:
+              - group: "authenticated"
           - name: "{{ jenkins.role.user.name }}"
             description: "{{ jenkins.role.user.desc }}"
             permissions:
@@ -68,8 +68,8 @@ jenkins:
               - "Agent/Disconnect"
               - "Agent/Create"
               - "Agent/Build"
-            assignments:
-              - "{{ jenkins.role.user.group }}"
+            entries:
+              - group: "{{ jenkins.role.user.group }}"
 {% endif %}
   globalNodeProperties:
     - envVars:
