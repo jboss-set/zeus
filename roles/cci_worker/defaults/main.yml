@@ -1,2 +1,4 @@
 ---
 cci_worker_pubkey_file: "vars/files/openstack_rsa.pub"
+cci_worker_caches:
+  - { name: 'maven.central.cache', mirrorOf: 'central', desc: 'Maven Central Cache', url: "{{ maven_mirror_central | default('https://repo1.maven.org/maven2') }}" }

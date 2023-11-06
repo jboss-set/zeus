@@ -96,3 +96,11 @@
     mode: "0644"
     owner: "{{ cci_worker_username }}"
     group: "{{ cci_worker_username }}"
+
+- name: "Configure Maven settings.xml"
+  ansible.builtin.template:
+    src: templates/settings.xml.j2
+    dest: "/home/{{ cci_worker_username }}/.m2/settings.xml"
+    mode: "0644"
+    owner: "{{ cci_worker_username }}"
+    group: "{{ cci_worker_username }}"
