@@ -5,3 +5,5 @@ cci_worker:
     password: "{{ cci_worker_password }}"
     home: "/home/{{ cci_worker_username }}"
   pubkey_file: "{{ cci_worker_pubkey_file }}"
+  maven:
+    caches: "{{ cci_worker_caches }}"
