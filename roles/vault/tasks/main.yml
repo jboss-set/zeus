@@ -1,0 +1,25 @@
+---
+- ansible.builtin.assert:
+    that:
+      - vault_paths is defined
+      - vault_paths | length > 0
+      - ansible_hashi_vault_addr is defined and ansible_hashi_vault_addr | length > 0
+    quiet: true
+
+- name: "Check the Vault Secrets using token auth method"
+  ansible.builtin.include_tasks: tasks/vault-token.yml
+  with_items: "{{ vault_paths }}"
+  loop_control:
+    loop_var: vault_path
+  when:
+    - ansible_hashi_vault_token is defined and ansible_hashi_vault_token | length > 0
+
+- name: "Check the Vault Secrets using approle auth method"
+  ansible.builtin.include_tasks: tasks/vault-approle.yml
+  with_items: "{{ vault_paths }}"
+  loop_control:
+    loop_var: vault_path
+  when:
+    - ansible_hashi_vault_token is not defined or ansible_hashi_vault_token | length == 0
+    - ansible_hashi_vault_role_id is defined and ansible_hashi_vault_role_id | length > 0
+    - ansible_hashi_vault_secret_id is defined and ansible_hashi_vault_secret_id | length > 0
