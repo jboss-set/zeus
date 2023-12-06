@@ -1,0 +1,27 @@
+---
+- ansible.builtin.assert:
+    that:
+      - vault_path is defined
+      - ansible_hashi_vault_addr is defined and ansible_hashi_vault_addr | length > 0
+      - ansible_hashi_vault_token is defined and ansible_hashi_vault_token | length > 0
+    quiet: true
+
+- name: "Retrieve the secrets from Vault Path {{ vault_path }} using token auth method"
+  community.hashi_vault.vault_kv2_get:
+    url: '{{ ansible_hashi_vault_addr }}'
+    auth_method: token
+    token: '{{ ansible_hashi_vault_token }}'
+    engine_mount_point: '{{ vault_mount }}'
+    path: '{{ vault_path }}'
+  register: vault_path_result
+
+- name: "Set variables from result of vault path {{ vault_path }}"
+  ansible.builtin.set_fact:
+    "{{ item.key }}": "{{ item.value }}"
+  with_items: "{{ vault_path_result.secret | dict2items }}"
+  loop_control:
+    label: "{{ item.key }} ==> ***** "
+  when:
+    - vault_path_result is defined
+    - vault_path_result.secret is defined and vault_path_result.secret | length > 0
+

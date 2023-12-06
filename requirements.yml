@@ -3,5 +3,6 @@ collections:
   - community.general
   - community.crypto
   - community.postgresql
+  - community.hashi_vault
   - ansible.posix
   - containers.podman

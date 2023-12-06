@@ -1,0 +1,8 @@
+---
+ansible_hashi_vault_addr: "{{ lookup('ansible.builtin.env', 'VAULT_ADDR') }}"
+ansible_hashi_vault_token: "{{ lookup('ansible.builtin.env', 'VAULT_TOKEN') }}"
+ansible_hashi_vault_role_id: "{{ lookup('ansible.builtin.env', 'ANSIBLE_HASHI_VAULT_ROLE_ID') }}"
+ansible_hashi_vault_secret_id: "{{ lookup('ansible.builtin.env', 'ANSIBLE_HASHI_VAULT_SECRET_ID') }}"
+vault_mount: 'secret'
+vault_paths:
+  - "jboss-set"
