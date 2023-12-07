@@ -1,0 +1,94 @@
+---
+- name: Prepare
+  hosts: all
+  vars_files:
+    - vars.yml
+  environment:
+    - VAULT_ADDR: "{{ ansible_hashi_vault_addr }}"
+  tasks:
+    - name: "Import Vault repo for installation"
+      ansible.builtin.yum_repository:
+        name: 'vault'
+        description: 'The vault repository'
+        file: external_repos
+        baseurl: https://rpm.releases.hashicorp.com/RHEL/$releasever/$basearch/stable
+        gpgcheck: no
+
+    - name: "Install Vault and pip"
+      ansible.builtin.package:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - vault
+        - python3-pip
+
+    - name: Install hvac python package
+      ansible.builtin.pip:
+        name: hvac
+
+    - name: "Set up Vault env - Start dev server in background for 5 minutes"
+      ansible.builtin.shell: "vault server -dev -dev-root-token-id={{ root_vault_token }}"
+      async: 300
+      poll: 0
+      register: result
+
+    - name: "Show the Vault server start result"
+      ansible.builtin.debug:
+        msg: "{{ result }}"
+
+    - name: Create a temporary shell script file
+      ansible.builtin.copy:
+        content: |
+          #!/bin/bash
+          set -x
+          sleep 5
+          echo "Create test policy to read on path: secret/*"
+          echo 'path "secret/*" {
+            capabilities = ["list", "read"]
+          }' | vault policy write test -
+          echo "Enable approle auth method"
+          vault auth enable approle
+          echo "Set up the role_id "
+          vault write auth/approle/role/{{ role_name }} secret_id_ttl=10m token_num_uses=10 token_ttl=20m token_max_ttl=30m secret_id_num_uses=40 policies="default","test"
+        dest: /tmp/setup_vault.sh
+        mode: '0755'
+
+    - name: Execute the script to set up Vault
+      command: '/tmp/setup_vault.sh'
+      register: script_output
+
+    - name: Display script output for debugging purpose
+      debug:
+        var: script_output.stdout_lines
+
+    - name: Remove the temporary script file
+      file:
+        path: /tmp/setup_vault.sh
+        state: absent
+
+    - name: "Set up Vault env - Write test data"
+      shell: |
+        vault kv put {{ vault_mount }}/{{ item.vault_path }}  {{ item.secrets }}
+      with_items: "{{ test_secrets }}"
+
+    - name: "Read role_id for role: {{ role_name }} "
+      community.hashi_vault.vault_read:
+        path: "auth/approle/role/{{ role_name }}/role-id"
+      register: role_id
+
+    - name: Generate a secret-id for the given approle
+      community.hashi_vault.vault_write:
+        path: "auth/approle/role/{{ role_name }}/secret-id"
+      register: secret_id
+
+    - name: "Write role_id to {{ role_id_file }}"
+      ansible.builtin.copy:
+        content: "{{ role_id.data.data.role_id }}"
+        dest: "{{ role_id_file }}"
+        mode: '0644'
+
+    - name: "Write secret_id to {{ secret_id_file }}"
+      ansible.builtin.copy:
+        content: "{{ secret_id.data.data.secret_id }}"
+        dest: "{{ secret_id_file }}"
+        mode: '0644'

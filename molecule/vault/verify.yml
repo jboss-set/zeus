@@ -1,0 +1,20 @@
+---
+- name: Verify for vault role
+  hosts: all
+  vars_files:
+    - vars.yml
+  gather_facts: false
+
+  tasks:
+    - name: "Include vault tasks"
+      ansible.builtin.include_tasks: vault.yml
+
+    - name: Check variables
+      ansible.builtin.assert:
+        that:
+          - ansible_site == 'ansible.com'
+          - ansible_nodename == 'node1'
+          - olympus_ip == '127.0.0.1'
+          - olympus_fqdn == 'olympus.host.local'
+        fail_msg: "Secrets in Vault should be converted to Anislbe variables"
+        success_msg: "Great, it passed!"

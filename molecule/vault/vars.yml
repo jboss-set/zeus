@@ -1,0 +1,19 @@
+---
+ansible_hashi_vault_addr: 'http://127.0.0.1:8200'
+root_vault_token: 'root-token'
+role_name: 'jboss-set'
+vault_mount: "secret"
+vault_paths:
+  - "jboss-set/ansible"
+  - "jboss-set/olympus"
+test_secrets:
+  - {
+      "vault_path": "jboss-set/ansible",
+      "secrets": "ansible_site=ansible.com ansible_nodename=node1"
+    }
+  - {
+      "vault_path": "jboss-set/olympus",
+      "secrets": "olympus_ip=127.0.0.1 olympus_fqdn=olympus.host.local"
+    }
+role_id_file: '/tmp/role_id'
+secret_id_file: '/tmp/secret_id'
