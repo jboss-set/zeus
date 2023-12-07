@@ -1,0 +1,8 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: "Include vault tasks"
+      ansible.builtin.include_tasks: vault.yml

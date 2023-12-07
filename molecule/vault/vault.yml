@@ -1,0 +1,26 @@
+---
+- name: "Read role_id from {{ role_id_file }}"
+  ansible.builtin.slurp:
+    src: "{{ role_id_file }}"
+  register: role_id
+
+- name: "Set role_id variable"
+  ansible.builtin.set_fact:
+    "ansible_hashi_vault_role_id": "{{ role_id.content | b64decode }}"
+
+- name: "Read secret_id from {{ secret_id_file }}"
+  ansible.builtin.slurp:
+    src: "{{ secret_id_file }}"
+  register: secret_id
+
+- name: "Set secret_id varialbe"
+  ansible.builtin.set_fact:
+    "ansible_hashi_vault_secret_id": "{{ secret_id.content | b64decode }}"
+
+- name: "Show the role_id and secret_id"
+  ansible.builtin.debug:
+    msg: "role_id: {{ ansible_hashi_vault_role_id }},  secret_id: {{ ansible_hashi_vault_secret_id }}"
+
+- name: "Include vault"
+  ansible.builtin.include_role:
+    name: "vault"
