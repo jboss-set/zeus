@@ -31,6 +31,21 @@
     - files.ssh_keys is defined
     - files.ssh_keys | length > 0
 
+- name: "Deploy identity content into {{ ssh_home }}"
+  ansible.builtin.copy:
+    content: "{{ key.content }}"
+    dest: "{{ ssh_home }}/.ssh/{{ key.file_name }}"
+    owner: "{{ files.username }}"
+    group: "{{ group }}"
+    mode: 0400
+  loop: "{{ files.ssh_keys_content }}"
+  loop_control:
+    loop_var: key
+  when:
+    - files.ssh_keys is not defined
+    - files.ssh_keys_content is defined
+    - files.ssh_keys_content | length > 0
+
 - block:
   - ansible.builtin.assert:
       that:
