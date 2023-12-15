@@ -5,10 +5,20 @@
   become: yes
 
   vars_files:
+    - vars/vault.yml
     - vars/cci.yml
     - vars/java.yml
 
   pre_tasks:
+    - name: "Install hvac python library"
+      ansible.builtin.pip:
+        name: hvac>=1.2.1
+        executable: pip3
+
+    - name: "Load Secrets from Vault"
+      ansible.builtin.include_role:
+        name: "vault"
+
     - name: Register
       redhat_subscription:
         state: present

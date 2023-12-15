@@ -4,7 +4,18 @@
   gather_facts: false
 
   vars_files:
+    - vars/vault.yml
     - vars/cci_automate.yml
+
+  pre_tasks:
+    - name: "Install hvac python library"
+      ansible.builtin.pip:
+        name: hvac>=1.2.1
+        executable: pip3
+
+    - name: "Load Secrets from Vault"
+      ansible.builtin.include_role:
+        name: "vault"
 
   tasks:
     - name: Automate CCI VM using Ansible
