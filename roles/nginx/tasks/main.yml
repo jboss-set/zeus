@@ -29,6 +29,8 @@
 
 - ansible.builtin.include_tasks: nginx_config.yml
 
+- ansible.builtin.include_tasks: update_nginx_image.yml
+
 - ansible.builtin.include_tasks: static_content.yml
 
 - ansible.builtin.include_tasks: http_cache_setup.yml

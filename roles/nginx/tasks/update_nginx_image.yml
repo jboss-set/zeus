@@ -1,0 +1,14 @@
+---
+- name: Check current Nginx version
+  ansible.builtin.command: "rpm -q --queryformat '%{VERSION}-%{RELEASE}' nginx"
+  register: nginx_version
+
+- name: Get available Nginx version
+  ansible.builtin.command: "yum list --showduplicates nginx | grep 'available' | awk '{print $2}' | sort -V | tail -n 1"
+  register: available_version
+
+- name: Update Nginx if it's not the latest version
+  ansible.builtin.yum:
+    name: nginx
+    state: latest
+  when: nginx_version.stdout | version_compare(available_version.stdout, '<')
