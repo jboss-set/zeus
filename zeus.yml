@@ -122,7 +122,7 @@
         name: "{{ posttaskfiles }}"
       with_items:
         - monit
-        - cron
+        #- cron # disabled because the only item is the Ansible daily run which are currently disable (Vault)
         - infosec.qualys-cloud-agent
       loop_control:
         loop_var: posttaskfiles
