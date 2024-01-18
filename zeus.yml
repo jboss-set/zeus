@@ -24,10 +24,6 @@
       - vars/qualys.yml
 
   pre_tasks:
-    - name: "Install hvac python library"
-      ansible.builtin.pip:
-        name: hvac>=1.2.1
-        executable: pip3
 
     - name: "Load Secrets from Vault"
       ansible.builtin.include_role:

@@ -1,10 +1,21 @@
 ---
-- ansible.builtin.assert:
+- name: "Ensure required parameters are provided."
+  ansible.builtin.assert:
     that:
       - vault_paths is defined
       - vault_paths | length > 0
       - ansible_hashi_vault_addr is defined and ansible_hashi_vault_addr | length > 0
+      - ansible_hashi_vault_token is defined and ansible_hashi_vault_token | length > 0
     quiet: true
+    fail_msg: "Missing requirements, double check that VAULT_ADDR and VAULT_TOKEN are properly defined."
+
+- name: "Install hvac python library"
+  ansible.builtin.pip:
+    name: "{{ pip_dependency.name }}>={{ pip_dependency.min_version }}"
+    executable: "{{ pip_dependency.exec | default(omit) }}"
+  loop: "{{ ansible_hashi_vault_pip_deps }}"
+  loop_control:
+    loop_var: pip_dependency
 
 - name: "Check the Vault Secrets using token auth method"
   ansible.builtin.include_tasks: tasks/vault-token.yml
