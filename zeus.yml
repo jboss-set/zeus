@@ -106,7 +106,7 @@
         name: "{{ post_tasks_role_name }}"
       with_items:
         - monit
-        #- cron # disabled because the only item is the Ansible daily run which are currently disable (Vault)
+        - cron
         - infosec.qualys-cloud-agent
       loop_control:
         loop_var: post_tasks_role_name
