@@ -79,7 +79,7 @@
           home: "{{ jenkins_home | default('/home/jenkins') }}"
 
     - ansible.builtin.include_role:
-        name: "{{ pretaskfiles }}"
+        name: "{{ pre_tasks_role_name }}"
       with_items:
         # OS settings and optimizations
         - selinux
@@ -94,16 +94,16 @@
         - ansible
         - ssh
       loop_control:
-        loop_var: pretaskfiles
+        loop_var: pre_tasks_role_name
 
   post_tasks:
     - ansible.builtin.include_role:
-        name: "{{ posttaskfiles }}"
+        name: "{{ post_tasks_role_name }}"
       with_items:
         - monit
         #- cron # disabled because the only item is the Ansible daily run which are currently disable (Vault)
         - infosec.qualys-cloud-agent
       loop_control:
-        loop_var: posttaskfiles
+        loop_var: post_tasks_role_name
 
 - ansible.builtin.import_playbook: jenkins.yml
