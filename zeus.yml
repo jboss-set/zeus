@@ -22,6 +22,17 @@
       - vars/pgsql.yml
       - vars/hosts.yml
       - vars/qualys.yml
+  roles:
+      - name: sshd
+      - name: ares
+      - name: java
+      - name: pgsql
+      - name: jenkins
+      - name: nginx
+      - name: podman
+      - name: systemd
+      - name: java_certs
+      - name: payload_status
 
   pre_tasks:
 
@@ -94,24 +105,6 @@
         - ssh
       loop_control:
         loop_var: pretaskfiles
-
-  tasks:
-    - ansible.builtin.include_role:
-        name: "{{ taskfiles }}"
-      with_items:
-        # main services
-        - sshd
-        - ares
-        - java
-        - pgsql
-        - jenkins
-        - nginx
-        - podman
-        - systemd
-        - java_certs
-        - payload_status
-      loop_control:
-        loop_var: taskfiles
 
   post_tasks:
     - ansible.builtin.include_role:
