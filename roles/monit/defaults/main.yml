@@ -34,4 +34,4 @@ monit_alerts_custom_scripts:
   - { name: "root-podman-too-many-images", src: 'podman-too-many-images.sh.j2', dest: "{{ monit_custom_scripts_directory }}/root-{{ max_nb_images_for_root }}-podman-too-many-images.sh" }
   - { name: "yum-update", src: 'yum-update.sh.j2', dest: "{{ monit_custom_scripts_directory }}/yum-update" }
   - { name: "needs-restarting", src: 'dnf-needs-restarting.sh.j2', dest: "{{ monit_custom_scripts_directory }}/needs-restarting" }
-#  - { name: "daily-zeus", src: 'zeus_daily_run_check.sh.j2', dest: "{{ monit_custom_scripts_directory }}/zeus_daily_run_check.sh" }
+  - { name: "daily-zeus", src: 'zeus_daily_run_check.sh.j2', dest: "{{ monit_custom_scripts_directory }}/zeus_daily_run_check.sh" }
