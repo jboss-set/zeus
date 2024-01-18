@@ -13,6 +13,7 @@
     token: '{{ ansible_hashi_vault_token }}'
     engine_mount_point: '{{ vault_mount }}'
     path: '{{ vault_path }}'
+    validate_certs: False
   register: vault_path_result
 
 - name: "Set variables from result of vault path {{ vault_path }}"
