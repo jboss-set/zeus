@@ -35,16 +35,18 @@
       - name: payload_status
 
   pre_tasks:
-    - name: "Ensure Vault token has been provided."
-      ansible.builtin.assert:
-        that:
-          - lookup('env', 'VAULT_TOKEN') is defined and lookup('env', 'VAULT_TOKEN') | length > 0
-        quiet: True
-        fail_msg: "Ensure the VAULT_TOKEN env var has been properly defined with the appropriate Vault token."
 
-    - name: "Load Secrets from Vault"
-      ansible.builtin.include_role:
-        name: "vault"
+    - name: "Load local secrets - if any"
+      ansible.builtin.include_tasks: load_secrets.yml
+
+    - name: "Block"
+      block:
+        - name: "Load Secrets from Vault"
+          ansible.builtin.include_role:
+            name: "vault"
+      environment:
+        ANSIBLE_HASHI_VAULT_ROLE_ID: "{{ ansible_hashi_vault_role_id }}"
+        ANSIBLE_HASHI_VAULT_SECRET_ID: "{{ ansible_hashi_vault_secret_id }}"
 
     - name: "Ensure target is register in RHN"
       community.general.redhat_subscription:
@@ -70,9 +72,6 @@
     - name: "Ensure target has the appropriate hostname: {{ ansible_hostname }}"
       ansible.builtin.hostname:
         name: "{{ ansible_hostname }}"
-
-    - name: "Load local secrets - if any"
-      ansible.builtin.include_tasks: load_secrets.yml
 
     - ansible.builtin.include_role:
         name: account
