@@ -50,10 +50,10 @@
       vars:
         package_name: python3-pyOpenSSL.noarch
 
-    - set_fact:
+    - ansible.builtin.set_fact:
         secrets_filename: "{{ override_secrets_filename  | default('/etc/ansible/secrets.yml') }}"
 
-    - stat:
+    - ansible.builtin.stat:
         path: "{{ secrets_filename }}"
       register: secrets
 
@@ -63,7 +63,7 @@
         - secrets.stat.exists
         - ansible_hostname != 'olympus'
 
-    - hostname:
+    - ansible.builtin.hostname:
         name: "{{ ansible_hostname }}"
 
     - ansible.builtin.include_role:
