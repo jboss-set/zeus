@@ -5,6 +5,7 @@
     - vars.yml
   environment:
     - VAULT_ADDR: "{{ ansible_hashi_vault_addr }}"
+    - VAULT_TOKEN: dummy
   tasks:
     - name: "Import Vault repo for installation"
       ansible.builtin.yum_repository:

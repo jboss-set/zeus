@@ -5,7 +5,6 @@
       - vault_paths is defined
       - vault_paths | length > 0
       - ansible_hashi_vault_addr is defined and ansible_hashi_vault_addr | length > 0
-      - ansible_hashi_vault_token is defined and ansible_hashi_vault_token | length > 0
     quiet: true
     fail_msg: "Missing requirements, double check that VAULT_ADDR and VAULT_TOKEN are properly defined."
 
