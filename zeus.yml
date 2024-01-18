@@ -40,7 +40,7 @@
       ansible.builtin.include_role:
         name: "vault"
 
-    - name: Register
+    - name: "Ensure target is register in RHN"
       community.general.redhat_subscription:
         state: present
         username: "{{ cci_worker_rhel_subscription_username }}"
@@ -52,10 +52,14 @@
 
     - ansible.builtin.include_role:
         name: qualys_fix
+
     - ansible.builtin.include_role:
         name: fast_yum_install
-      vars:
-        package_name: python3-pyOpenSSL.noarch
+      loop:
+        - python3-pyOpenSSL.noarch
+        - firewalld
+      loop_control:
+        loop_var: package_name
 
     - ansible.builtin.set_fact:
         secrets_filename: "{{ override_secrets_filename  | default('/etc/ansible/secrets.yml') }}"
@@ -82,11 +86,6 @@
           group: "{{ jenkins_group }}"
           gid: "{{ jenkins_gid }}"
           home: "{{ jenkins_home | default('/home/jenkins') }}"
-
-    - ansible.builtin.include_role:
-        name: fast_yum_install
-      vars:
-        package_name: firewalld
 
     - ansible.builtin.include_role:
         name: "{{ pretaskfiles }}"
