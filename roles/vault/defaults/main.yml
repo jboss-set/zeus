@@ -1,4 +1,6 @@
 ---
+ansible_hashi_vault_pip_deps:
+  - { name: hvac, min_version: 1.2.1, exec: pip3 }
 ansible_hashi_vault_addr: "{{ lookup('ansible.builtin.env', 'VAULT_ADDR') }}"
 ansible_hashi_vault_token: "{{ lookup('ansible.builtin.env', 'VAULT_TOKEN') }}"
 ansible_hashi_vault_role_id: "{{ lookup('ansible.builtin.env', 'ANSIBLE_HASHI_VAULT_ROLE_ID') }}"
