@@ -168,6 +168,11 @@ tool:
 unclassified:
   location:
     url: {{ instance.url }}
+  email-ext:
+    defaultRecipients: "jboss-set-ops@redhat.com"
+    defaultSuffix: "@redhat.com"
+    mailAccount:
+      smtpHost: "{{ mailer.smtp.host }}"
   mailer:
     replyToAddress: {{ mailer.replyTo }}
     smtpHost: {{ mailer.smtp.host }}
