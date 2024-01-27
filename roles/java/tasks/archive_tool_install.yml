@@ -21,6 +21,7 @@
   ansible.builtin.get_url:
     url: "{{ files.source }}"
     dest: "{{ path_to_archive }}"
+    validate_certs: no
   retries: 3
   delay: 5
   register: archive_download
