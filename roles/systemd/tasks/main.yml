@@ -29,7 +29,7 @@
   ansible.builtin.service:
     name: "{{ podman_service.name }}"
     state: "{{ podman_service.state | default('started') }}"
-    enabled: yes
+    enabled: "{{ podman_service.enable | default('yes') }}"
   with_items: "{{ podman_services }}"
   loop_control:
     loop_var: podman_service

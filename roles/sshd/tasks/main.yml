@@ -1,5 +1,6 @@
 ---
-- ansible.builtin.include_role:
+- name: "Ensure required dependencies are installed."
+  ansible.builtin.include_role:
     name: fast_yum_install
   vars:
     package_name: openssh-server

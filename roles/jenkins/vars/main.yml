@@ -59,6 +59,7 @@ jenkins:
       ip: "{{ known_hosts.jenkins_next.ip }}"
       location: '/jenkins.next'
       state: stopped
+      enable: no
       readwrite_volumes: "{{ jenkins_service_next_readwrite_volumes }}"
       readonly_volumes: "{{ jenkins_service_next_readonly_volumes }}"
       add_hosts: "{{ jenkins_service_next_add_hosts }}"
