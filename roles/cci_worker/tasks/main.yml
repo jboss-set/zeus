@@ -104,3 +104,21 @@
     mode: "0644"
     owner: "{{ cci_worker_username }}"
     group: "{{ cci_worker_username }}"
+
+- name: Ensure CA certificates directory exists
+  ansible.builtin.file:
+    path: "{{ ca_certs_path }}"
+    state: directory
+
+- name: Download RedHat CA certificates
+  ansible.builtin.get_url:
+    url: "{{ cert.url }}"
+    dest: "{{ ca_certs_path}}/{{ cert.alias }}"
+  with_items: "{{ root_ca_certs }}"
+  loop_control:
+    loop_var: cert
+  register: cert_results
+
+- name: Update CA trust
+  ansible.builtin.command: update-ca-trust
+  changed_when: cert_results.changed
