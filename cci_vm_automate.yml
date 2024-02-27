@@ -1,7 +1,7 @@
 ---
 - name: Install openstacksdk dependency
   ansible.builtin.pip:
-    name: openstacksdk>=0.36,<0.99.0
+    name: openstacksdk>=1.0
     executable: pip3
 
 - name: Prompt for OpenStack password
@@ -149,7 +149,7 @@
 - name: Save inventory to file
   ansible.builtin.blockinfile:
     path: inventory
-    block: "{{ instance.openstack_servers[0].accessIPv4 }}"
+    block: "{{ instance.servers[0].access_ipv4 }}"
 
 - name: Run cci_worker.yml playbook
   ansible.builtin.command: ansible-playbook -i inventory -u cloud-user cci_worker.yml
@@ -176,7 +176,7 @@
     current_password: "{{ os_password.user_input  }}"
   when: not cci_os_jenkins_password is defined
 
-- name: "Stop the {{ instance.openstack_servers[0].accessIPv4 }} present in cluster {{ item.url }}"
+- name: "Stop the {{ instance.servers[0].access_ipv4 }} present in cluster {{ item.url }}"
   openstack.cloud.server_action:
     action: stop
     auth:
@@ -190,7 +190,7 @@
     timeout: 200
   when: not cci_os_jenkins_password is defined
 
-- name: "Stop the {{ instance.openstack_servers[0].accessIPv4 }} present in cluster {{ item.url }}"
+- name: "Stop the {{ instance.servers[0].access_ipv4 }} present in cluster {{ item.url }}"
   openstack.cloud.server_action:
     action: stop
     auth:
@@ -344,7 +344,7 @@
     current_password: "{{ os_password.user_input  }}"
   when: not cci_os_jenkins_password is defined
 
-- name: "Delete the {{ instance.openstack_servers[0].accessIPv4 }} present in cluster {{ item.url }}"
+- name: "Delete the {{ instance.servers[0].access_ipv4 }} present in cluster {{ item.url }}"
   openstack.cloud.server:
     state: absent
     auth:
@@ -358,7 +358,7 @@
     timeout: 200
   when: not cci_os_jenkins_password is defined
 
-- name: "Delete the {{ instance.openstack_servers[0].accessIPv4 }} present in cluster {{ item.url }}"
+- name: "Delete the {{ instance.servers[0].access_ipv4 }} present in cluster {{ item.url }}"
   openstack.cloud.server:
     state: absent
     auth:
