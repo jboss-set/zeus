@@ -10,17 +10,18 @@
     - vars/java.yml
 
   pre_tasks:
-    - name: "Install hvac python library"
-      ansible.builtin.pip:
-        name: hvac>=1.2.1
-        executable: pip3
-
     - name: "Load Secrets from Vault"
       ansible.builtin.include_role:
         name: "vault"
 
-    - name: Register
-      redhat_subscription:
+    - name: Check registration status
+      ansible.builtin.command: subscription-manager list
+      register: registration_status
+      ignore_errors: true
+
+    - name: Register if not already registered
+      when: registration_status.rc != 0
+      community.general.redhat_subscription:
         state: present
         username: "{{ cci_worker_rhel_subscription_username }}"
         password: "{{ cci_worker_rhel_subscription_password }}"
@@ -28,9 +29,18 @@
         force_register: true
 
     - name: Update yum
-      yum:
+      ansible.builtin.yum:
         name: "*"
         state: latest
+
+    - name: Install pip3
+      ansible.builtin.package:
+        name: python3-pip
+
+    - name: "Install hvac python library"
+      ansible.builtin.pip:
+        name: hvac>=1.2.1
+        executable: pip3
 
     - ansible.builtin.include_role:
         name: fast_yum_install
