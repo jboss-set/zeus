@@ -10,29 +10,32 @@
       - jobs.dest != ""
     quiet: true
 
-- name: "Ensures script job for {{ jobs.name }} is deployed"
-  ansible.builtin.template:
-    src: "{{ jobs.src }}"
-    dest: "{{ jobs.dest }}"
-    owner: root
-    group: root
-    mode: 0745
+- name: "Escalate privileges"
+  become: yes
+  block:
+    - name: "Ensures script job for {{ jobs.name }} is deployed"
+      ansible.builtin.template:
+        src: "{{ jobs.src }}"
+        dest: "{{ jobs.dest }}"
+        owner: root
+        group: root
+        mode: 0745
 
-- name: "Ensures cron task for {{ jobs.name }} is defined."
-  ansible.builtin.cron:
-    name: "{{ jobs.name }}"
-    job: "{{ jobs.dest }}"
-    special_time: "{{ jobs.special_time }}"
-  when:
-    - jobs.special_time is defined
+    - name: "Ensures cron task for {{ jobs.name }} is defined."
+      ansible.builtin.cron:
+        name: "{{ jobs.name }}"
+        job: "{{ jobs.dest }}"
+        special_time: "{{ jobs.special_time }}"
+      when:
+        - jobs.special_time is defined
 
-- name: "Ensures cron task for {{ jobs.name }} is defined."
-  ansible.builtin.cron:
-    name: "{{ jobs.name }}"
-    job: "{{ jobs.dest }}"
-    weekday: "{{ jobs.weekday | default(omit) }}"
-    minute: "{{ jobs.minute | default(omit) }}"
-    hour: "{{ jobs.hour | default(omit) }}"
-    day: "{{ jobs.day | default(omit) }}"
-  when:
-    - not jobs.special_time is defined
+    - name: "Ensures cron task for {{ jobs.name }} is defined."
+      ansible.builtin.cron:
+        name: "{{ jobs.name }}"
+        job: "{{ jobs.dest }}"
+        weekday: "{{ jobs.weekday | default(omit) }}"
+        minute: "{{ jobs.minute | default(omit) }}"
+        hour: "{{ jobs.hour | default(omit) }}"
+        day: "{{ jobs.day | default(omit) }}"
+      when:
+        - not jobs.special_time is defined

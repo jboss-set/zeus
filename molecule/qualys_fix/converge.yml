@@ -1,5 +1,6 @@
 ---
 - name: Converge
+  become: yes
   hosts: all
 
   tasks:

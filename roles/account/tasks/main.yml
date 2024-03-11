@@ -12,27 +12,30 @@
       - account.home != ""
     quiet: true
 
-- name: "Ensure group {{ account.group }} exists."
-  ansible.builtin.group:
-    name: "{{ account.group }}"
-    gid: "{{ account.gid }}"
-    state: present
+- name: "Escalate privilege"
+  become: yes
+  block:
+    - name: "Ensure group {{ account.group }} exists."
+      ansible.builtin.group:
+        name: "{{ account.group }}"
+        gid: "{{ account.gid }}"
+        state: present
 
-- name: "Ensure user {{ account.username }} with UID {{ account.uid }} exists."
-  ansible.builtin.user:
-    name: "{{ account.username }}"
-    uid: "{{ account.uid }}"
-    group: "{{ account.group }}"
+    - name: "Ensure user {{ account.username }} with UID {{ account.uid }} exists."
+      ansible.builtin.user:
+        name: "{{ account.username }}"
+        uid: "{{ account.uid }}"
+        group: "{{ account.group }}"
 
-- name: "Ensure path provided for home is valid: {{ account.home }}"
-  ansible.builtin.stat:
-    path: "{{ account.home }}"
-  register: account_home
+    - name: "Ensure path provided for home is valid: {{ account.home }}"
+      ansible.builtin.stat:
+        path: "{{ account.home }}"
+      register: account_home
 
-- name: "Ensure home directory {{ account.home }} exists."
-  ansible.builtin.file:
-    state: directory
-    path: "{{ account.home }}"
-    owner: "{{ account.username }}"
-    group: "{{ account.group }}"
-  when: account_home.stat is defined
+    - name: "Ensure home directory {{ account.home }} exists."
+      ansible.builtin.file:
+        state: directory
+        path: "{{ account.home }}"
+        owner: "{{ account.username }}"
+        group: "{{ account.group }}"
+      when: account_home.stat is defined

@@ -1,3 +1,4 @@
 ---
+cron_mail_pkg_name: mailx
 cronjobs:
   - { name: "ansible-daily-run", dest: "/opt/tools/ansible-daily-run.sh", src: "ansible-daily-run.sh.j2", special_time: "daily" }

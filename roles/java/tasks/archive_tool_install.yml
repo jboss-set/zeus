@@ -13,35 +13,38 @@
 - ansible.builtin.set_fact:
     path_to_archive: "{{ home_folder }}/{{ files.name }}{{ files.ext | default('.tgz') }}"
 
-- ansible.builtin.stat:
-    path: "{{ path_to_archive }}"
-  register: archive
+- name: "Escalate priviliges"
+  become: yes
+  block:
+    - ansible.builtin.stat:
+        path: "{{ path_to_archive }}"
+      register: archive
 
-- name: "Download archive from {{ files.source }}"
-  ansible.builtin.get_url:
-    url: "{{ files.source }}"
-    dest: "{{ path_to_archive }}"
-  retries: 3
-  delay: 5
-  register: archive_download
-  when:
-    - archive.stat is defined
-    - not archive.stat.exists
+    - name: "Download archive from {{ files.source }}"
+      ansible.builtin.get_url:
+        url: "{{ files.source }}"
+        dest: "{{ path_to_archive }}"
+      retries: 3
+      delay: 5
+      register: archive_download
+      when:
+        - archive.stat is defined
+        - not archive.stat.exists
 
-- ansible.builtin.stat:
-    path: "{{ files.home }}"
-  register: path_to_home
+    - ansible.builtin.stat:
+        path: "{{ files.home }}"
+      register: path_to_home
 
-- ansible.builtin.stat:
-    path: "{{ files.home }}/{{ files.name }}"
-  register: path_to_home
+    - ansible.builtin.stat:
+        path: "{{ files.home }}/{{ files.name }}"
+      register: path_to_home
 
-- name: "Unpack archive {{ path_to_archive }} to {{ files.home }}"
-  ansible.builtin.unarchive:
-    src: "{{ path_to_archive }}"
-    dest: "{{ files.home }}"
-    remote_src: yes
-  when:
-    - path_to_home is defined
-    - path_to_home.stat is defined
-    - not path_to_home.stat.exists
+    - name: "Unpack archive {{ path_to_archive }} to {{ files.home }}"
+      ansible.builtin.unarchive:
+        src: "{{ path_to_archive }}"
+        dest: "{{ files.home }}"
+        remote_src: yes
+      when:
+        - path_to_home is defined
+        - path_to_home.stat is defined
+        - not path_to_home.stat.exists

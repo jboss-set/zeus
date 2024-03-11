@@ -1,5 +1,6 @@
 ---
 - name: Check bashrc configuration
+  become: yes
   ansible.builtin.template:
     src: templates/bashrc.j2
     dest: /etc/bashrc

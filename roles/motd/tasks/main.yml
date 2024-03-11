@@ -10,17 +10,10 @@
     motd_src_file: "files/motd.{{ motd.font }}"
 
 - name: Add a specific motd
+  become: yes
   ansible.builtin.copy:
     src: "files/motd.{{ motd.font }}"
     dest: /etc/motd
     owner: root
     group: root
     mode: 0644
-
-#- include_tasks: tasks/remove_file.yml
-#  loop: "{{ motd.files.to_remove }}"
-#  when:
-#    - motd is defined
-#    - motd.files is defined
-#    - motd.files.to_remove is defined
-#    - motd.files.to_remove is iterable

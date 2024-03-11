@@ -1,0 +1,15 @@
+---
+- name: "Ensure Harshicorp repo is enabled"
+  ansible.builtin.yum_repository:
+    name: 'hashi'
+    description: 'Hashicorp Stable - $basearch'
+    gpgcheck: true
+    gpgkey: 'https://rpm.releases.hashicorp.com/gpg'
+    file: external_repos
+    baseurl: 'https://rpm.releases.hashicorp.com/RHEL/$releasever/$basearch/stable'
+
+- name: "Ensure vault package is installed."
+  ansible.builtin.yum:
+    name: vault
+    state: present
+    update_cache: true

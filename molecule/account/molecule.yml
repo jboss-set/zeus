@@ -1,12 +1,6 @@
 ---
-dependency:
-  name: galaxy
-  options:
-    ignore-certs: True
-    ignore-errors: True
-    requirements-file: molecule/default/requirements.yml
 driver:
-  name: podman
+  name: docker
 platforms:
   - name: instance
     image: registry.access.redhat.com/ubi8/ubi-init:latest
@@ -17,18 +11,25 @@ platforms:
       - sudo
 provisioner:
   name: ansible
+  config_options:
+    defaults:
+      interpreter_python: auto_silent
+    ssh_connection:
+      pipelining: false
   playbooks:
+    prepare: prepare.yml
     converge: converge.yml
     verify: verify.yml
   env:
+    ANSIBLE_FORCE_COLOR: "true"
     ANSIBLE_ROLES_PATH: "../../roles"
 verifier:
   name: ansible
 scenario:
   test_sequence:
-    - dependency
     - cleanup
     - destroy
+    - syntax
     - create
     - prepare
     - converge

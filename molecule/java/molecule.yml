@@ -1,10 +1,4 @@
 ---
-dependency:
-  name: galaxy
-  options:
-    ignore-certs: True
-    ignore-errors: True
-    requirements-file: molecule/default/requirements.yml
 driver:
   name: podman
 platforms:
@@ -18,18 +12,19 @@ platforms:
 provisioner:
   name: ansible
   playbooks:
+    prepare: prepare.yml
     converge: converge.yml
     verify: verify.yml
-    prepare: ../prepare.yml
   env:
+    ANSIBLE_FORCE_COLOR: "true"
     ANSIBLE_ROLES_PATH: "../../roles"
 verifier:
   name: ansible
 scenario:
   test_sequence:
-    - dependency
     - cleanup
     - destroy
+    - syntax
     - create
     - prepare
     - converge
