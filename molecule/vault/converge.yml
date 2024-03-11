@@ -1,9 +1,23 @@
 ---
 - name: Converge
   hosts: all
-  become: yes
   vars_files:
     - vars.yml
   tasks:
     - name: "Include vault tasks"
       ansible.builtin.include_tasks: vault.yml
+      when:
+        - vault_scenario_enabled is defined and vault_scenario_enabled
+
+  post_tasks:
+    - name: "Verify"
+      ansible.builtin.assert:
+        that:
+          - ansible_site == 'ansible.com'
+          - ansible_nodename == 'node1'
+          - olympus_ip == '127.0.0.1'
+          - olympus_fqdn == 'olympus.host.local'
+        fail_msg: "Secrets in Vault should be converted to Anislbe variables"
+        success_msg: "Great, it passed!"
+      when:
+        - vault_scenario_enabled is defined and vault_scenario_enabled

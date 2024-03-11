@@ -1,4 +1,5 @@
 ---
+vault_scenario_enabled: True
 ansible_hashi_vault_addr: 'http://127.0.0.1:8200'
 root_vault_token: 'root-token'
 role_name: 'jboss-set'
