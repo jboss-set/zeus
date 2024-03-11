@@ -15,6 +15,7 @@
         - ansible_user_id == "root"
 
     - name: Creates directory
+      become: yes
       ansible.builtin.file:
         path: /root/.ansible/roles/infosec.qualys-cloud-agent/tasks/
         state: directory
