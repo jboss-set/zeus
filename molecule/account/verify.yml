@@ -1,6 +1,7 @@
 ---
 - name: Verify for account role
   hosts: all
+  become: yes
   vars_files:
     - vars.yml
   gather_facts: false

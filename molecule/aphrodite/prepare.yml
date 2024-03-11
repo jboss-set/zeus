@@ -9,6 +9,7 @@
         name: jenkins
 
     - name: Creates directory
+      become: yes
       ansible.builtin.file:
         path: /opt/tools
         state: directory
