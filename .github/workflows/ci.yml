@@ -1,26 +1,26 @@
----        
-name: CI   
-           
-on:        
+---
+name: CI
+
+on:
   pull_request:
-  push:    
+  push:
     branches:
       - main
-           
-jobs:      
-  test:    
+
+jobs:
+  test:
     name: molecule
     runs-on: ubuntu-latest
-           
-    steps: 
+
+    steps:
       - name: Checkout the codebase.
         uses: actions/checkout@v2
-           
+
       - name: Set up Python3.
         uses: actions/setup-python@v2
         with:
           python-version: '3.10'
-           
+
       - name: Install testing dependencies.
         run: |
           python -m pip install --upgrade pip
@@ -32,10 +32,40 @@ jobs:
           ansible-lint --version
           ansible-lint -v
 
+      - name: Set up Python ${{ matrix.python_version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python_version }}
+          cache: 'pip'
+
+      - name: Install ansible and molecule
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 5
+          retry_wait_seconds: 60
+          max_attempts: 3
+          command: |
+            python -m pip install --upgrade pip
+            pip install --progress-bar off 'molecule>=5.0.1' 'molecule-plugins[docker]>=23.0.0' ansible-core==${{ matrix.ansible_version }}
+            if [ -f ansible_collections/${{ inputs.fqcn }}/requirements.txt ]; then
+              echo "=== Installing python deps"
+              pip install --progress-bar off -r ansible_collections/${{ inputs.fqcn }}/requirements.txt
+            fi
+            if [ -f ansible_collections/${{ inputs.fqcn }}/requirements.yml ]; then
+              echo "=== Installing dependencies"
+              ansible-galaxy collection install -r ansible_collections/${{ inputs.fqcn }}/requirements.yml -p /home/runner/.ansible/collections --force-with-deps
+            fi
+            if [ -f ansible_collections/${{ inputs.fqcn }}/molecule/requirements.yml ]; then
+              echo "=== Installing test dependencies"
+              ansible-galaxy role install -r ansible_collections/${{ inputs.fqcn }}/molecule/requirements.yml ||:
+              ansible-galaxy collection install -r ansible_collections/${{ inputs.fqcn }}/molecule/requirements.yml -p /home/runner/.ansible/collections
+            fi
+            exit 0
+
       - name: "Run molecule tests"
         run: molecule test --all
         env:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
-          MOLECULE_DISTRO: rhel-8               
+          MOLECULE_DISTRO: rhel-8
         working-directory: '.'

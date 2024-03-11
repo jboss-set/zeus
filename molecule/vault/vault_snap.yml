@@ -3,13 +3,23 @@
   become: yes
   block:
     - name: "Ensure EPEL Release for RHEL 9 is configured"
-      ansible.builtin.command: "sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm"
+      ansible.builtin.command: "dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm"
 
     - name: "Ensure Snap is installed"
-      ansible.builtin.command: "sudo yum install snapd"
+      ansible.builtin.command: "dnf install -y snapd"
 
     - name: "Ensure Snapd.socket is enabled"
-      ansible.builtin.command: "sudo systemctl enable --now snapd.socket"
+      ansible.builtin.command: "systemctl enable --now snapd.socket"
+
+    - name: "Wait for Snapd to seed."
+      ansible.builtin.wait_for:
+        timeout: 60
 
     - name: "Ensure {{ package_name }} is installed."
-      ansible.builtin.command: "sudo snap install {{ package_name }}"
+      block:
+        - name: "First try..."
+          ansible.builtin.command: "snap install vault"
+      rescue:
+        - name: "Second try..."
+          ansible.builtin.command: "snap install vault"
+
