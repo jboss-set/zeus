@@ -9,116 +9,119 @@
       - cci_worker.account.home is defined
     quiet: true
 
-- name: "Creating {{ cci_worker.account.username }} user."
-  ansible.builtin.user:
-    name: "{{ cci_worker.account.username }}"
-    state: present
-    password: "{{ cci_worker.account.password | password_hash('sha512', 'A512') }}"
-    shell: /bin/bash
-
-- name: "Ensure path provided for home is valid"
-  ansible.builtin.stat:
-    path: "{{ cci_worker.account.home }}"
-  register: account_home
-
-- name: "Ensure home directory {{ cci_worker.account.home }} exists."
-  ansible.builtin.file:
-    state: directory
-    path: "{{ cci_worker.account.home }}"
-    owner: "{{ cci_worker.account.username }}"
-  when: account_home.stat is defined
-
-- name: "Ensure ssh directory for {{ cci_worker.account.username }} exists"
-  ansible.builtin.file:
-    state: directory
-    path: "{{ cci_worker.account.home }}/.ssh"
-    owner: "{{ cci_worker.account.username }}"
-
-- name: "Deploy authorized key"
-  ansible.posix.authorized_key:
-    user: "{{ cci_worker.account.username }}"
-    state: present
-    key: "{{ files }}"
-  with_file:
-    - "{{ cci_worker.pubkey_file }}"
-  loop_control:
-    loop_var: files
-
-- name: "Deploy fix_multicast script"
-  ansible.builtin.copy:
-    src: "files/setup_multicast.sh"
-    dest: "/usr/local/sbin/setup_multicast.sh"
-    owner: "root"
-    group: "root"
-    mode: "0755"
-
-- name: "Create boot-time service to fix multicast"
-  ansible.builtin.copy:
-    src: "files/setup_multicast.service"
-    dest: "/etc/systemd/system/setup_multicast.service"
-    owner: "root"
-    group: "root"
-    mode: "0644"
-
-- name: "Ensures setup_multicast service is running"
-  ansible.builtin.service:
-    name: "setup_multicast.service"
-    state: started
-    enabled: yes
-
-- name: Set environment variables
+- name: "Privilege escalation"
   become: yes
-  become_user: "{{ cci_worker_username }}"
-  ansible.builtin.template:
-    src: templates/bashrc_template.j2
-    dest: "/home/{{ cci_worker_username }}/.bashrc"
-    mode: "0644"
-    owner: "{{ cci_worker_username }}"
+  block:
+    - name: "Creating {{ cci_worker.account.username }} user."
+      ansible.builtin.user:
+        name: "{{ cci_worker.account.username }}"
+        state: present
+        password: "{{ cci_worker.account.password | password_hash('sha512', 'A512') }}"
+        shell: /bin/bash
 
-- name: "Enable Linger for {{ cci_worker_username }}"
-  become: yes
-  become_user: "{{ cci_worker_username }}"
-  ansible.builtin.shell: loginctl enable-linger {{ cci_worker_username }}
+    - name: "Ensure path provided for home is valid"
+      ansible.builtin.stat:
+        path: "{{ cci_worker.account.home }}"
+      register: account_home
 
-- name: Enable podman
-  become: yes
-  become_user: "{{ cci_worker_username }}"
-  ansible.builtin.systemd:
-    name: "podman.socket"
-    state: started
-    scope: user
-    enabled: true
+    - name: "Ensure home directory {{ cci_worker.account.home }} exists."
+      ansible.builtin.file:
+        state: directory
+        path: "{{ cci_worker.account.home }}"
+        owner: "{{ cci_worker.account.username }}"
+      when: account_home.stat is defined
 
-- name: "Configure testcontainers"
-  ansible.builtin.copy:
-    src: files/testcontainers.properties
-    dest: "/home/{{ cci_worker_username }}/.testcontainers.properties"
-    mode: "0644"
-    owner: "{{ cci_worker_username }}"
-    group: "{{ cci_worker_username }}"
+    - name: "Ensure ssh directory for {{ cci_worker.account.username }} exists"
+      ansible.builtin.file:
+        state: directory
+        path: "{{ cci_worker.account.home }}/.ssh"
+        owner: "{{ cci_worker.account.username }}"
 
-- name: "Configure Maven settings.xml"
-  ansible.builtin.template:
-    src: templates/settings.xml.j2
-    dest: "/home/{{ cci_worker_username }}/.m2/settings.xml"
-    mode: "0644"
-    owner: "{{ cci_worker_username }}"
-    group: "{{ cci_worker_username }}"
+    - name: "Deploy authorized key"
+      ansible.posix.authorized_key:
+        user: "{{ cci_worker.account.username }}"
+        state: present
+        key: "{{ files }}"
+      with_file:
+        - "{{ cci_worker.pubkey_file }}"
+      loop_control:
+        loop_var: files
 
-- name: Ensure CA certificates directory exists
-  ansible.builtin.file:
-    path: "{{ ca_certs_path }}"
-    state: directory
+    - name: "Deploy fix_multicast script"
+      ansible.builtin.copy:
+        src: "files/setup_multicast.sh"
+        dest: "/usr/local/sbin/setup_multicast.sh"
+        owner: "root"
+        group: "root"
+        mode: "0755"
 
-- name: Download RedHat CA certificates
-  ansible.builtin.get_url:
-    url: "{{ cert.url }}"
-    dest: "{{ ca_certs_path}}/{{ cert.alias }}"
-  with_items: "{{ root_ca_certs }}"
-  loop_control:
-    loop_var: cert
-  register: cert_results
+    - name: "Create boot-time service to fix multicast"
+      ansible.builtin.copy:
+        src: "files/setup_multicast.service"
+        dest: "/etc/systemd/system/setup_multicast.service"
+        owner: "root"
+        group: "root"
+        mode: "0644"
 
-- name: Update CA trust
-  ansible.builtin.command: update-ca-trust
-  changed_when: cert_results.changed
+    - name: "Ensures setup_multicast service is running"
+      ansible.builtin.service:
+        name: "setup_multicast.service"
+        state: started
+        enabled: yes
+
+    - name: Set environment variables
+      become: yes
+      become_user: "{{ cci_worker_username }}"
+      ansible.builtin.template:
+        src: templates/bashrc_template.j2
+        dest: "/home/{{ cci_worker_username }}/.bashrc"
+        mode: "0644"
+        owner: "{{ cci_worker_username }}"
+
+    - name: "Enable Linger for {{ cci_worker_username }}"
+      become: yes
+      become_user: "{{ cci_worker_username }}"
+      ansible.builtin.shell: loginctl enable-linger {{ cci_worker_username }}
+
+    - name: Enable podman
+      become: yes
+      become_user: "{{ cci_worker_username }}"
+      ansible.builtin.systemd:
+        name: "podman.socket"
+        state: started
+        scope: user
+        enabled: true
+
+    - name: "Configure testcontainers"
+      ansible.builtin.copy:
+        src: files/testcontainers.properties
+        dest: "/home/{{ cci_worker_username }}/.testcontainers.properties"
+        mode: "0644"
+        owner: "{{ cci_worker_username }}"
+        group: "{{ cci_worker_username }}"
+
+    - name: "Configure Maven settings.xml"
+      ansible.builtin.template:
+        src: templates/settings.xml.j2
+        dest: "/home/{{ cci_worker_username }}/.m2/settings.xml"
+        mode: "0644"
+        owner: "{{ cci_worker_username }}"
+        group: "{{ cci_worker_username }}"
+
+    - name: Ensure CA certificates directory exists
+      ansible.builtin.file:
+        path: "{{ ca_certs_path }}"
+        state: directory
+
+    - name: Download RedHat CA certificates
+      ansible.builtin.get_url:
+        url: "{{ cert.url }}"
+        dest: "{{ ca_certs_path}}/{{ cert.alias }}"
+      with_items: "{{ root_ca_certs }}"
+      loop_control:
+        loop_var: cert
+      register: cert_results
+
+    - name: Update CA trust
+      ansible.builtin.command: update-ca-trust
+      changed_when: cert_results.changed

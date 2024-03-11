@@ -1,5 +1,6 @@
 ---
 - name: "Replace content of Windows specific tasks, that are not Ansible 2.21 compliant"
+  become: yes
   ansible.builtin.template:
     dest: "{{ tasks }}"
     src: templates/dummy.j2

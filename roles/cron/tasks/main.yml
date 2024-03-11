@@ -4,12 +4,18 @@
       - cronjobs is defined
       - cronjobs | length > 0
 
+- name: "Change mail tool package name if running on RHEL9 ({{ ansible_distribution_major_version }})"
+  ansible.builtin.set_fact:
+    cron_mail_pkg_name: s-nail
+  when:
+    - ansible_distribution_major_version == "9"
+
 - ansible.builtin.include_role:
     name: fast_yum_install
   vars:
     package_name: "{{ files }}"
   with_items:
-    - mailx
+    - "{{ cron_mail_pkg_name }}"
     - cronie
   loop_control:
     loop_var: files

@@ -1,10 +1,24 @@
 ---
 - name: Prepare
   hosts: all
+  gather_facts: yes
   vars_files:
     - vars.yml
   tasks:
+
+    - name: Display Ansible version
+      ansible.builtin.debug:
+        msg: "Ansible version is  {{ ansible_version.full }}"
+
+    - name: "Install sudo if user is root"
+      ansible.builtin.yum:
+        name: sudo
+        state: present
+      when:
+        - ansible_user_id == "root"
+
     - name: Creates directory
+      become: yes
       ansible.builtin.file:
         path: /opt/tools
         state: directory

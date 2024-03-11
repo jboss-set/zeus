@@ -1,0 +1,15 @@
+---
+- name: "Setup snap to install {{ package_name }}"
+  become: yes
+  block:
+    - name: "Ensure EPEL Release for RHEL 9 is configured"
+      ansible.builtin.command: "sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm"
+
+    - name: "Ensure Snap is installed"
+      ansible.builtin.command: "sudo yum install snapd"
+
+    - name: "Ensure Snapd.socket is enabled"
+      ansible.builtin.command: "sudo systemctl enable --now snapd.socket"
+
+    - name: "Ensure {{ package_name }} is installed."
+      ansible.builtin.command: "sudo snap install {{ package_name }}"

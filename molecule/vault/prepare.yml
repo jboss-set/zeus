@@ -1,32 +1,45 @@
 ---
 - name: Prepare
   hosts: all
+  gather_facts: yes
   vars_files:
     - vars.yml
   environment:
     - VAULT_ADDR: "{{ ansible_hashi_vault_addr }}"
   tasks:
-    - name: "Import Vault repo for installation"
-      ansible.builtin.yum_repository:
-        name: 'vault'
-        description: 'The vault repository'
-        file: external_repos
-        baseurl: https://rpm.releases.hashicorp.com/RHEL/$releasever/$basearch/stable
-        gpgcheck: no
+    - name: Display Ansible version
+      ansible.builtin.debug:
+        msg: "Ansible version is  {{ ansible_version.full }}"
 
-    - name: "Install Vault and pip"
-      ansible.builtin.package:
-        name: "{{ item }}"
+    - name: "Install sudo if user is root"
+      ansible.builtin.yum:
+        name: sudo
         state: present
-      with_items:
-        - vault
-        - python3-pip
+      when:
+        - ansible_user_id == "root"
+
+    - name: "Install pip"
+      become: yes
+      ansible.builtin.package:
+        name: python3-pip
+        state: present
+
+    - name: "Install Vault on RHEL 8 ({{ ansible_distribution_major_version }})"
+      ansible.builtin.include_tasks: vault_yum.yml
+      when:
+        - ansible_distribution_major_version == "8"
+
+    - name: "Install vault using snap on RHEL 9 ({{ ansible_distribution_major_version }})"
+      ansible.builtin.include_tasks: vault_snap.yml
+      when:
+        - ansible_distribution_major_version == "9"
 
     - name: Install hvac python package
       ansible.builtin.pip:
         name: hvac
 
     - name: "Set up Vault env - Start dev server in background for 5 minutes"
+      become: yes
       ansible.builtin.shell: "vault server -dev -dev-root-token-id={{ root_vault_token }}"
       async: 300
       poll: 0
@@ -37,6 +50,7 @@
         msg: "{{ result }}"
 
     - name: Create a temporary shell script file
+      become: yes
       ansible.builtin.copy:
         content: |
           #!/bin/bash
@@ -54,6 +68,7 @@
         mode: '0755'
 
     - name: Execute the script to set up Vault
+      become: yes
       command: '/tmp/setup_vault.sh'
       register: script_output
 
@@ -62,12 +77,13 @@
         var: script_output.stdout_lines
 
     - name: Remove the temporary script file
-      file:
+      ansible.builtin.file:
         path: /tmp/setup_vault.sh
         state: absent
 
     - name: "Set up Vault env - Write test data"
-      shell: |
+      become: yes
+      ansible.builtin.shell: |
         vault kv put {{ vault_mount }}/{{ item.vault_path }}  {{ item.secrets }}
       with_items: "{{ test_secrets }}"
 

@@ -3,7 +3,8 @@
   hosts: all
   gather_facts: yes
   tasks:
-    - name: Display Ansible version
+
+    - name: "Display Ansible version"
       ansible.builtin.debug:
         msg: "Ansible version is  {{ ansible_version.full }}"
 
@@ -13,9 +14,3 @@
         state: present
       when:
         - ansible_user_id == "root"
-
-    - name: Creates directory
-      ansible.builtin.file:
-        path: /root/.ansible/roles/infosec.qualys-cloud-agent/tasks/
-        state: directory
-        mode: 0644

@@ -1,35 +1,38 @@
 ---
-- name: Verify for netrc role
+- name: Verify for Qualys role
   hosts: all
   gather_facts: false
 
   tasks:
-    - name: Add a duplicate Windows specific tasks
-      ansible.builtin.template:
-        src: "../../roles/qualys_fix/templates/dummy.j2"
-        dest: /root/.ansible/roles/infosec.qualys-cloud-agent/tasks/duplicateTasks
+    - name: "Escalate privileges"
+      become: yes
+      block:
+        - name: Add a duplicate Windows specific tasks
+          ansible.builtin.template:
+            src: "../../roles/qualys_fix/templates/dummy.j2"
+            dest: /root/.ansible/roles/infosec.qualys-cloud-agent/tasks/duplicateTasks
 
-    - name: Get checksum of my original file
-      ansible.builtin.stat:
-        path: '/root/.ansible/roles/infosec.qualys-cloud-agent/tasks/setup-Windows.yml'
-      register: originalfile
+        - name: Get checksum of my original file
+          ansible.builtin.stat:
+            path: '/root/.ansible/roles/infosec.qualys-cloud-agent/tasks/setup-Windows.yml'
+          register: originalfile
 
-    - ansible.builtin.set_fact:
-        original: "{{ originalfile.stat.checksum }}"
+        - ansible.builtin.set_fact:
+            original: "{{ originalfile.stat.checksum }}"
 
-    - name: Get checksum of my duplicate file
-      ansible.builtin.stat:
-        path: "/root/.ansible/roles/infosec.qualys-cloud-agent/tasks/duplicateTasks"
-      register: duplicatefile
+        - name: Get checksum of my duplicate file
+          ansible.builtin.stat:
+            path: "/root/.ansible/roles/infosec.qualys-cloud-agent/tasks/duplicateTasks"
+          register: duplicatefile
 
-    - ansible.builtin.set_fact:
-        duplicate: "{{ duplicatefile.stat.checksum }}"
+        - ansible.builtin.set_fact:
+            duplicate: "{{ duplicatefile.stat.checksum }}"
 
-    - name: Compare both the qualys_fix files
-      ansible.builtin.debug:
-        msg: "File Compare"
-      failed_when: original != duplicate
+        - name: Compare both the qualys_fix files
+          ansible.builtin.debug:
+            msg: "File Compare"
+          failed_when: original != duplicate
 
-    - name: Verify that qualys_fix role was properly executed
-      ansible.builtin.assert:
-        that: true
+        - name: Verify that qualys_fix role was properly executed
+          ansible.builtin.assert:
+            that: true

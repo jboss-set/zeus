@@ -8,6 +8,7 @@
     quiet: true
 
 - name: "Deploy aphrodite configuration to {{ aphrodite.path }}"
+  become: yes
   ansible.builtin.template:
     src: "{{ aphrodite.template }}"
     dest: "{{ aphrodite.path }}"

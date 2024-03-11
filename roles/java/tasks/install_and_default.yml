@@ -18,6 +18,7 @@
     loop_var: files
 
 - name: "Symlink {{ tool_default_link }} to default version: {{ tool_default }}."
+  become: yes
   ansible.builtin.file:
     src: "{{ tool_default }}"
     dest: "{{ tool_default_link }}"
