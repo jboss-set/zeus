@@ -6,34 +6,19 @@
     - vars.yml
   tasks:
 
-    - name: Display Ansible version
-      ansible.builtin.debug:
-        msg: "Ansible version is  {{ ansible_version.full }}"
-
-    - name: "Install sudo if user is root"
-      ansible.builtin.yum:
-        name: sudo
-        state: present
-      when:
-        - ansible_user_id == "root"
-    - name: Add the user jenkins
-      ansible.builtin.user:
-        name: jenkins
-
-    - name: Creates directory
-      become: yes
-      ansible.builtin.file:
-        path: /opt/tools
-        state: directory
-        owner: jenkins
-        group: jenkins
-        mode: 0644
+    - name: "Include common prepare tasks"
+      ansible.builtin.include_tasks: ../prepare.yml
+      vars:
+        users:
+          - "{{ aphrodite_user }}"
+        dirs:
+          - { path: /opt/tools, owner: "{{ aphrodite_user }}", group: "{{ aphrodite_user }}" }
 
     - name: "Deploy aphrodite configuration to {{ aphrodite.path }}"
       become: yes
       ansible.builtin.template:
         src: "../../roles/aphrodite/templates/aphrodite.json.j2"
         dest: "{{ aphrodite.path }}"
-        owner: jenkins
-        group: jenkins
+        owner: "{{ aphrodite_user }}"
+        group: "{{ aphrodite_user }}"
         mode: 0644

@@ -6,27 +6,22 @@
     - vars.yml
   tasks:
 
-    - name: Display Ansible version
-      ansible.builtin.debug:
-        msg: "Ansible version is  {{ ansible_version.full }}"
+    - name: "Include common prepare tasks"
+      ansible.builtin.include_tasks: ../prepare.yml
 
-    - name: "Install sudo if user is root"
-      ansible.builtin.yum:
-        name: sudo
-        state: present
-      when:
-        - ansible_user_id == "root"
-
-    - ansible.builtin.assert:
+    - name: "Check that path to motd file has been defined"
+      ansible.builtin.assert:
         that:
           - motd_path is defined
         quiet: true
 
-    - ansible.builtin.stat:
+    - name: "Load metadata on {{ motd_path }}"
+      ansible.builtin.stat:
         path: "{{ motd_path }}"
       register: file_details
 
-    - ansible.builtin.assert:
+    - name: "Ensure that {{ motd_path }} exists."
+      ansible.builtin.assert:
         that:
           - file_details is defined
           - file_details.stat is defined

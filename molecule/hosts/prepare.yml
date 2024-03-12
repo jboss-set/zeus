@@ -5,31 +5,13 @@
   vars_files:
     - vars.yml
   tasks:
-    - name: Display Ansible version
-      ansible.builtin.debug:
-        msg: "Ansible version is  {{ ansible_version.full }}"
-
-    - name: "Install sudo if user is root"
-      ansible.builtin.yum:
-        name: sudo
-        state: present
-      when:
-        - ansible_user_id == "root"
+    - name: "Include common prepare tasks"
+      ansible.builtin.include_tasks: ../prepare.yml
+      vars:
+        dirs:
+          - { path: /etc/fake_hosts, state: touch, mode: 0644 }
+          - { path: /etc/real_hosts, state: touch, mode: 0644 }
 
     - name: "Include fast_yum_install"
       ansible.builtin.include_role:
         name: "fast_yum_install"
-
-    - name: Creates /etc/fake_hosts directory
-      become: yes
-      ansible.builtin.file:
-        path: /etc/fake_hosts
-        state: touch
-        mode: 0644
-
-    - name: Creates /etc/real_hosts directory
-      become: yes
-      ansible.builtin.file:
-        path: /etc/real_hosts
-        state: touch
-        mode: 0644
