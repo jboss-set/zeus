@@ -1,4 +1,5 @@
 ---
+aphrodite_user: jenkins
 aphrodite:
   trackers:
     bugzilla:

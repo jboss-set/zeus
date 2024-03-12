@@ -6,22 +6,10 @@
     - vars.yml
   tasks:
 
-    - name: Display Ansible version
-      ansible.builtin.debug:
-        msg: "Ansible version is  {{ ansible_version.full }}"
-
-    - name: "Install sudo if user is root"
-      ansible.builtin.yum:
-        name: sudo
-        state: present
-      when:
-        - ansible_user_id == "root"
-
-    - name: Creates directory
-      become: yes
-      ansible.builtin.file:
-        path: /opt/tools
-        state: directory
-        owner: root
-        group: root
-        mode: 0745
+    - name: "Include common prepare tasks"
+      ansible.builtin.include_tasks: ../prepare.yml
+      vars:
+        users:
+          - "{{ aphrodite_user }}"
+        dirs:
+          - { path: '/opt/tools', mode: '0745' }

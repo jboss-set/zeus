@@ -1,0 +1,10 @@
+---
+- name: "Determine if scenario should be run"
+  ansible.builtin.set_fact:
+    vault_scenario_enabled: True
+  when:
+    - not vault_scenario_enabled is defined and ansible_distribution_major_version == "8"
+
+- name: "Inform user that scenario is NOT being run"
+  ansible.builtin.debug:
+    msg: "Molecule is NOT running on RHEL8 but RHEL{{ ansible_distribution_major_version }}, Vault scenario cannot be executed"

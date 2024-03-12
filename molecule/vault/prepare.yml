@@ -7,20 +7,15 @@
   environment:
     - VAULT_ADDR: "{{ ansible_hashi_vault_addr }}"
   tasks:
+    - name: "Ensure scenario can be run in this execution context"
+      ansible.builtin.include_tasks: is_scenario_enabled.yml
+
     - name: "Prepare for Vault scenario (if enabled)"
       when:
         - vault_scenario_enabled is defined and vault_scenario_enabled
       block:
-        - name: Display Ansible version
-          ansible.builtin.debug:
-            msg: "Ansible version is  {{ ansible_version.full }}"
-
-        - name: "Install sudo if user is root"
-          ansible.builtin.yum:
-            name: sudo
-            state: present
-          when:
-            - ansible_user_id == "root"
+        - name: "Include common prepare tasks"
+          ansible.builtin.include_tasks: ../prepare.yml
 
         - name: "Install pip"
           become: yes

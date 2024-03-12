@@ -1,8 +1,34 @@
 ---
-- name: Prepare
-  hosts: all
-  tasks:
+- name: "Display Ansible version"
+  ansible.builtin.debug:
+    msg: "Ansible version is  {{ ansible_version.full }}"
 
-    - name: Display Ansible version
-      ansible.builtin.debug:
-        msg: "Ansible version is {{ ansible_version.full }}"
+- name: "Install sudo if user is root"
+  ansible.builtin.yum:
+    name: sudo
+    state: present
+  when:
+    - ansible_user_id == "root"
+
+- name: Add the user "{{ user }}"
+  ansible.builtin.user:
+    name: "{{ user }}"
+  when:
+    - users is defined and users | length > 0
+  loop: "{{ users }}"
+  loop_control:
+    loop_var: user
+
+- name: "Creates directory"
+  become: yes
+  ansible.builtin.file:
+    path: "{{ dir.path }}"
+    state: "{{ dir.state | default('directory') }}"
+    owner: "{{ dir.owner | default('root') }}"
+    group: "{{ dir.group | default('root') }}"
+    mode: "{{ dir.mode | default('0644') }}"
+  when:
+    - dirs is defined and dirs | length > 0
+  loop: "{{ dirs }}"
+  loop_control:
+    loop_var: dir

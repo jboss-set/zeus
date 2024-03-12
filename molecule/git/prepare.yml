@@ -6,27 +6,10 @@
     - vars.yml
   tasks:
 
-    - name: Display Ansible version
-      ansible.builtin.debug:
-        msg: "Ansible version is  {{ ansible_version.full }}"
-
-    - name: "Install sudo if user is root"
-      ansible.builtin.yum:
-        name: sudo
-        state: present
-      when:
-        - ansible_user_id == "root"
-
-    - name: Add the user jenkins
-      become: yes
-      ansible.builtin.user:
-        name: jenkins
-
-    - name: Creates directory
-      become: yes
-      ansible.builtin.file:
-        path: /home/jenkins
-        state: directory
-        owner: jenkins
-        group: jenkins
-        mode: 0644
+    - name: "Include common prepare tasks"
+      ansible.builtin.include_tasks: ../prepare.yml
+      vars:
+        users:
+          - "{{ git_user }}"
+        dirs:
+          - { path: /home/jenkins, owner: "{{ git_user }}", group: "{{ git_user }}" }
