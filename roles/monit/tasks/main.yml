@@ -42,7 +42,6 @@
     - { name: 'root', path: '/', threshold: '90%' }
     - { name: 'var-crash', path: '/var/crash', threshold: '90%' }
     - { name: 'home', path: '/home', threshold: '90%' }
-    - { name: 'docker-part', path: '/var/lib/docker', threshold: '85%' }
 
 - name: "Ensures custom scripts are deployed"
   copy:
@@ -54,8 +53,6 @@
   with_items:
     - { src: files/sudo-group-check, dest: /opt/jboss-set-ci-scripts/ops/ }
     - { src: files/dns-check, dest: /opt/jboss-set-ci-scripts/ops/ }
-    - { src: files/docker-space-monitoring, dest: /opt/jboss-set-ci-scripts/ops/ }
-    - { src: files/check-container.sh, dest: "{{scripts_home.path}}/check-container" }
 
 - name: "Ensures custom script 'check-sudoers-list' is deployed"
   template:
