@@ -1,6 +1,10 @@
 - set_fact:
     package_name: "{{ jboss.package_name }}"
 
+# Skip EAP configuration to prevent EAP from starting - remove if needs to run EAP
+- set_fact:
+    skip_eap_configuration: "true"
+
 - name: "Ensures jboss-eap7 RPM package is installed"
   import_tasks: tasks/rpminfo.yml
 
@@ -21,13 +25,14 @@
 - name: "Ensure JBoss EAP 7 is running"
   service:
     name: 'eap7-standalone'
-    state: started
-    enabled: yes
+    state: stopped
+    enabled: no
 
 - name: "Wait for EAP7 to start"
   wait_for:
     timeout: 5
   delegate_to: localhost
+  when: skip_eap_configuration is not defined or skip_eap_configuration == 'false'
 
 - name: "Tuning Wildfly using JCliff (CLI running on port {{ 9990 + jboss.port_shift|int }})"
   jcliff:
@@ -77,3 +82,4 @@
             - name: txn-status-manager
               interface: internal
               port: "4713"
+  when: skip_eap_configuration is not defined or skip_eap_configuration == 'false'
