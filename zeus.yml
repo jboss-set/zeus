@@ -46,7 +46,8 @@
       debug: msg=" >>> Set Up Required Infrastructure Services <<<"
 
     - include: tasks/disabled.yml
-    - include: tasks/docker.yml
+    # Disable docker - we are not supposed to use docker any more due to licensing issues
+    #- include: tasks/docker.yml
     - include: tasks/nginx.yml
 
     - name: " ******* STAGE 4 *******"

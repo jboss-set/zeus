@@ -10,6 +10,5 @@ cronjobs:
   - { name: "Monit Weekly Report", template: templates/cron-monit.j2, dest: /root/cron-monit, frequency: weekly, job: /root/cron-monit }
   - { name: "Cleaning logfiles", template: templates/cron-cleaning-logs.j2, dest: /root/cron-cleaning-logs, frequency: daily, job: /root/cron-cleaning-logs } 
 fixed_time_cronjobs:
-- { name: "Delete all stopped containers", minute: 0, hour: 10, weekday: 2, job: "/root/cron-cleaning-docker-stopped-containers >> /var/log/docker.deleted.containers.log",  script: files/cron-cleaning-docker-stopped-containers.sh, dest: /root/cron-cleaning-docker-stopped-containers }
 - { name: "Delete all forgotten ws-cleanup directories", minute: 0, hour: 10, weekday: 0, job: "/root/cron-cleaning-ws-cleanup-directories.sh >> /var/log/ws-cleanup.log", script: files/cron-cleaning-ws-cleanup-directories.sh, dest: /root/cron-cleaning-ws-cleanup-directories }
 
