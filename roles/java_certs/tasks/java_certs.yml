@@ -1,8 +1,8 @@
 ---
 - ansible.builtin.assert:
     that:
-      - certificate_list is defined
-      - certificate_list is iterable
+      - root_ca_certs is defined
+      - root_ca_certs is iterable
 
 # reset cacerts_file fact between iterations
 - ansible.builtin.set_fact:
@@ -47,7 +47,9 @@
     loop_var: cert
 
 - name: Remove SSL certificates in {{ jdk.name }}
-  when: rebuild_keystore|default(false)
+  when:
+    - rebuild_keystore|default(false)
+    - certificate_list is defined
   community.general.java_cert:
     cert_url: "{{ removessl.cert_url }}"
     keystore_path: "{{ cacerts_file }}"
@@ -85,3 +87,5 @@
   with_items: "{{ certificate_list }}"
   loop_control:
     loop_var: importssl
+  when:
+    - certificate_list is defined
