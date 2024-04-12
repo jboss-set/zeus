@@ -20,7 +20,7 @@ root_ca_certs: []
 known_hosts.jenkins.ip: "10.88.0.3"
 jenkins_service_readwrite_volumes:
   - { src: "{{ jenkins_home }}", dest: '/var/jenkins_home' }
-  - { src: '/var/run/podman/podman.sock', dest: '/var/run/podman/podman.sock' }
+    #  - { src: '/var/run/podman/podman.sock', dest: '/var/run/podman/podman.sock' }
 jenkins_service_readonly_volumes:
   - { src: "/home/jenkins/.ssh", dest: '/var/jenkins_home/.ssh' }
   - { src: "/home/jenkins/.netrc", dest: '/var/jenkins_home/.netrc' }
