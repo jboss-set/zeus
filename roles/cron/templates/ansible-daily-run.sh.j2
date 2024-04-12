@@ -1,18 +1,42 @@
 #!/bin/bash
 set -eo pipefail
 
-readonly LOGFILE=$(mktemp)
+readonly ANSIBLE_LOCAL_REPO=${ANSIBLE_LOCAL_REPO:-'/etc/ansible'}
+readonly GIT_BRANCH=${GIT_BRANCH:-'main'}
+readonly GIT_REMOTE=${GIT_REMOTE:-'origin'}
+readonly ZEUS_STATUS_FILE=${ZEUS_STATUS_FILE:-'/etc/ansible/zeus_daily_run_status.txt'}
+
+rm "${ZEUS_STATUS_FILE}"
+touch "${ZEUS_STATUS_FILE}"
+
+readonly LOGFILE="$(mktemp)"
+echo "Ansible Daily run on Olympus" > "${LOGFILE}"
+
+zeus_status() {
+  if [ -s "${ZEUS_STATUS_FILE}" ]; then
+    cat "${ZEUS_STATUS_FILE}"
+  else
+    echo "Ansible did not ran"
+  fi
+}
+
+mail_report() {
+    local subject=$(head -1 "${LOGFILE}" | sed -e "s;$; (Status: $(zeus_status));")
+    cat "${LOGFILE}" | \
+        mailx -r "{{ mailer.to }}" -s "{{ jobs.name }}:${subject}" \
+        -S smtp="{{ mailer.smtp.host }}:{{mailer.smtp.port }}" "{{ mailer.replyTo }}"
+}
+
+run_zeus() {
+  echo "Set working directory ${ANSIBLE_LOCAL_REPO}."
+  cd "${ANSIBLE_LOCAL_REPO}"
+  echo "Update local Zeus repository ($(pwd))"
+  git pull "${GIT_REMOTE}" "${GIT_BRANCH}"
+  ansible-playbook -D "${ANSIBLE_LOCAL_REPO}/zeus.yml" 2>&1
+  echo "${?}" > "${ZEUS_STATUS_FILE}"
+}
+
+trap mail_report EXIT
 trap "rm -f ${LOGFILE}" EXIT
 
-cd /etc/ansible
-git pull origin olympus >> "${LOGFILE}"
-# TODO: update /etc/ansible/vars too
-
-set +e
-ansible-playbook -D /etc/ansible/zeus.yml 2>&1 >> "${LOGFILE}"
-echo "${?}" > /etc/ansible/zeus_daily_run_status.txt
-set -e
-
-readonly SUBJECT=$(tail -2 "${LOGFILE}" | sed '/^$/d' | head -1)
-cat "${LOGFILE}" | \
-  mailx -r "{{ mailer.to }}" -s "{{ jobs.name }}:${SUBJECT}" -S smtp="{{ mailer.smtp.host }}:{{mailer.smtp.port }}" "{{ mailer.replyTo }}"
+run_zeus >> "${LOGFILE}"
