@@ -20,11 +20,12 @@ zeus_status() {
   fi
 }
 
-mail_report() {
-    local subject=$(head -1 "${LOGFILE}" | sed -e "s;$; (Status: $(zeus_status));")
-    cat "${LOGFILE}" | \
-        mailx -r "{{ mailer.to }}" -s "{{ jobs.name }}:${subject}" \
-        -S smtp="{{ mailer.smtp.host }}:{{mailer.smtp.port }}" "{{ mailer.replyTo }}"
+mail_report_and_clean() {
+  local subject=$(head -1 "${LOGFILE}" | sed -e "s;$; (Status: $(zeus_status));")
+  cat "${LOGFILE}" | \
+      mailx -r "{{ mailer.to }}" -s "{{ jobs.name }}:${subject}" \
+      -S smtp="{{ mailer.smtp.host }}:{{mailer.smtp.port }}" "{{ mailer.replyTo }}"
+  rm -f "${LOGFILE}"
 }
 
 run_zeus() {
@@ -36,7 +37,6 @@ run_zeus() {
   echo "${?}" > "${ZEUS_STATUS_FILE}"
 }
 
-trap mail_report EXIT
-trap "rm -f ${LOGFILE}" EXIT
+trap mail_report_and_clean EXIT
 
 run_zeus >> "${LOGFILE}"
