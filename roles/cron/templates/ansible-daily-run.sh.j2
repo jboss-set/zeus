@@ -16,7 +16,7 @@ zeus_status() {
   if [ -s "${ZEUS_STATUS_FILE}" ]; then
     cat "${ZEUS_STATUS_FILE}"
   else
-    echo "Ansible did not ran"
+    echo "Ansible did not ran or failed"
   fi
 }
 
