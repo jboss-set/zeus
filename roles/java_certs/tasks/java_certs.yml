@@ -10,20 +10,20 @@
 
 # determine the location of cacerts file
 - ansible.builtin.stat:
-    path: "{{ jdk.home }}/{{ jdk.name }}/jre/lib/security/cacerts"
+    path: "{{ jdk_cacerts.name }}/lib/security/cacerts"
   register: cacerts_file_stat
 
 - ansible.builtin.set_fact:
-    cacerts_file: "{{ jdk.home }}/{{ jdk.name }}/jre/lib/security/cacerts"
+    cacerts_file: "{{ jdk_cacerts.name }}/lib/security/cacerts"
   when: cacerts_file_stat.stat.exists
 
 - ansible.builtin.stat:
-    path: "{{ jdk.home }}/{{ jdk.name }}/lib/security/cacerts"
+    path: "{{ jdk_cacerts.name }}/lib/security/cacerts"
   register: cacerts_file_stat_alt
   when: cacerts_file == ''
 
 - ansible.builtin.set_fact:
-    cacerts_file: "{{ jdk.home }}/{{ jdk.name }}/lib/security/cacerts"
+    cacerts_file: "{{ jdk_cacerts.name }}/lib/security/cacerts"
   when:
     - (not cacerts_file_stat is defined) or (not cacerts_file_stat.stat.exists)
     - cacerts_file_stat_alt.stat.exists
@@ -32,13 +32,13 @@
     that:
       cacerts_file is defined
 
-- name: Removing CA certs from {{ jdk.name }}
+- name: Removing CA certs from {{ jdk_cacerts.name }}
   when: rebuild_keystore|default(false)
   community.general.java_cert:
     cert_path: "{{ jdk_home }}/{{ cert.url | basename }}"
     keystore_path: "{{ cacerts_file }}"
     cert_alias: "{{ cert.alias }}"
-    executable: "{{ jdk.home }}/{{ jdk.name }}/bin/keytool"
+    executable: "{{ jdk_cacerts.name }}/bin/keytool"
     keystore_pass: changeit
     keystore_create: no
     state: absent
@@ -46,7 +46,7 @@
   loop_control:
     loop_var: cert
 
-- name: Remove SSL certificates in {{ jdk.name }}
+- name: Remove SSL certificates in {{ jdk_cacerts.name }}
   when:
     - rebuild_keystore|default(false)
     - certificate_list is defined
@@ -54,7 +54,7 @@
     cert_url: "{{ removessl.cert_url }}"
     keystore_path: "{{ cacerts_file }}"
     cert_alias: "{{ removessl.alias }}"
-    executable: "{{ jdk.home }}/{{ jdk.name }}/bin/keytool"
+    executable: "{{ jdk_cacerts.name }}/bin/keytool"
     keystore_pass: changeit
     keystore_create: no
     state: absent
@@ -62,12 +62,12 @@
   loop_control:
     loop_var: removessl
 
-- name: Import Root CA in {{ jdk.name }} {{ cacerts_file }}
+- name: Import Root CA in {{ jdk_cacerts.name }} {{ cacerts_file }}
   community.general.java_cert:
     cert_path: "{{ jdk_home }}/{{ cert.url | basename }}"
     keystore_path: "{{ cacerts_file }}"
     cert_alias: "{{ cert.alias }}"
-    executable: "{{ jdk.home }}/{{ jdk.name }}/bin/keytool"
+    executable: "{{ jdk_cacerts.name }}/bin/keytool"
     keystore_pass: changeit
     keystore_create: no
     state: present
@@ -75,12 +75,12 @@
   loop_control:
     loop_var: cert
 
-- name: Import SSL certificates in {{ jdk.name }}
+- name: Import SSL certificates in {{ jdk_cacerts.name }}
   community.general.java_cert:
     cert_url: "{{ importssl.cert_url }}"
     keystore_path: "{{ cacerts_file }}"
     cert_alias: "{{ importssl.alias }}"
-    executable: "{{ jdk.home }}/{{ jdk.name }}/bin/keytool"
+    executable: "{{ jdk_cacerts.name }}/bin/keytool"
     keystore_pass: changeit
     keystore_create: no
     state: present

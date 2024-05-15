@@ -1,7 +1,7 @@
 ---
 - ansible.builtin.assert:
     that:
-      - jdk_list is defined 
+      - jdk_list is defined
       - jdk_list is iterable
 
 - name: "Downloading CA certs into {{ jdk_home }}"
@@ -17,6 +17,6 @@
 
 - name: "Provisioning self-signed certificate to JDKs"
   ansible.builtin.include_tasks: tasks/java_certs.yml
-  loop: "{{ jdk_list }}"
+  loop: "{{ jdk_cacerts_path }}"
   loop_control:
-    loop_var: jdk
+    loop_var: jdk_cacerts
