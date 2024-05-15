@@ -100,6 +100,14 @@
         owner: "{{ cci_worker_username }}"
         group: "{{ cci_worker_username }}"
 
+    - name: "Create maven settings directory"
+      ansible.builtin.file:
+        path: "/home/{{ cci_worker_username }}/.m2/"
+        state: directory
+        mode: "0755"
+        owner: "{{ cci_worker_username }}"
+        group: "{{ cci_worker_username }}"
+
     - name: "Configure Maven settings.xml"
       ansible.builtin.template:
         src: templates/settings.xml.j2
