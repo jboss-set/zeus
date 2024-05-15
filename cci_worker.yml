@@ -52,14 +52,9 @@
         - podman
         - podman-docker
         - jq
+        - git
       loop_control:
         loop_var: pretaskfiles
-
-    - name: "Ensure jaegertracing docker image is downloaded for tests"
-      containers.podman.podman_image:
-        name: "quay.io/jaegertracing/all-in-one:latest"
-      become: yes
-      become_user: "{{cci_worker_username}}"
 
   tasks:
     - ansible.builtin.include_role:
@@ -74,3 +69,10 @@
         - old_releases
       loop_control:
         loop_var: taskfiles
+
+  post_tasks:
+    - name: "Ensure jaegertracing docker image is downloaded for tests"
+      containers.podman.podman_image:
+        name: "quay.io/jaegertracing/all-in-one:latest"
+      become: yes
+      become_user: "{{cci_worker_username}}"
