@@ -11,11 +11,6 @@ platforms:
       - sudo
 provisioner:
   name: ansible
-  config_options:
-    defaults:
-      interpreter_python: auto_silent
-    ssh_connection:
-      pipelining: false
   playbooks:
     converge: converge.yml
     verify: verify.yml
