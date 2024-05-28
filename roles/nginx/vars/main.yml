@@ -7,6 +7,7 @@ nginx:
   home: "{{ nginx_home }}"
   volume: "{{ nginx_volume }}"
   docroot: "{{ nginx_http_docroot }}"
+  latest_image: "{{ nginx_latest_image }}"
   https:
     ssl:
       home: "{{ nginx_https_ssl_home }}"

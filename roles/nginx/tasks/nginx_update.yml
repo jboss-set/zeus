@@ -1,0 +1,44 @@
+---
+- name: Gather info on a current nginx image
+  containers.podman.podman_image_info:
+    name: "{{ files.name }}"
+  register: local_image_tags
+  with_items: "{{ podman.images.remotes }}"
+  loop_control:
+    loop_var: files
+
+- name: Store current nginx image value in a variable
+  set_fact:
+    nginx_latest_image_tag: "{{ item.images[0].RepoTags[0] }}"
+  when: "'nginx' in item.images[0].RepoTags[0]"
+  loop: "{{ local_image_tags.results }}"
+
+- name: Pull the latest Nginx image
+  shell: "podman pull {{ nginx.latest_image }}"
+  register: nginx_latest_image_result
+  when: "nginx.latest_image not in nginx_latest_image_tag"
+
+- name: Get current Nginx container info
+  command: podman ps --format "{{ '{{.Names}}' }}" --filter ancestor="{{ nginx_latest_image_tag }}"
+  register: nginx_container_info
+  when: nginx_latest_image_result.changed  # Only execute if the image was updated
+
+- name: Extract current container name
+  set_fact:
+    container_name: "{{ nginx_container_info.stdout_lines | first }}"
+  when: nginx_latest_image_result.changed
+
+- name: Stop and remove the current container
+  containers.podman.podman_container:
+    name: "{{ container_name }}"
+    state: absent
+  ignore_errors: true  # Ignore errors if the container doesn't exist
+
+- name: Start the latest Nginx container
+  containers.podman.podman_container:
+    name: "{{ container_name }}"
+    image: "{{ nginx.latest_image }}"
+    state: started
+  when: nginx_latest_image_result.changed
+  notify:
+    - restart nginx
