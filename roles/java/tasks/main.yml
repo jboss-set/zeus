@@ -17,6 +17,13 @@
   loop_control:
     loop_var: folders
 
+- name: Create /tools/maven directory for EAP6.4
+  become: yes
+  ansible.builtin.file:
+    path: "/tools/maven"
+    state: directory
+    mode: '0755'
+
 - name: "Install JDK versions"
   ansible.builtin.include_tasks: install_and_default.yml
   vars:
