@@ -83,6 +83,16 @@
       become_user: "{{ cci_worker_username }}"
       ansible.builtin.shell: loginctl enable-linger {{ cci_worker_username }}
 
+    # This is to increase the podman-service timeout from 5 seconds to something larger. The testsuite can take more
+    # time between requests to the service, which makes the service to terminate and cause broken pipe on next request.
+    - name: "Modify podman-service configuration"
+      ansible.builtin.copy:
+        src: files/containers.conf
+        dest: "/usr/share/containers/containers.conf"
+        mode: "0644"
+        owner: "root"
+        group: "root"
+
     - name: Enable podman
       become: yes
       become_user: "{{ cci_worker_username }}"
