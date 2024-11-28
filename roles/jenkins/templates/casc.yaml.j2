@@ -181,7 +181,7 @@ tool:
 
 unclassified:
   location:
-    url: {{ instance.url }}
+    url: {{ instance.url }}{% if not ".next" in instance.url %}
   email-ext:
     defaultRecipients: "jboss-set-ops@redhat.com"
     defaultSuffix: "@redhat.com"
@@ -190,7 +190,7 @@ unclassified:
   mailer:
     replyToAddress: {{ mailer.replyTo }}
     smtpHost: {{ mailer.smtp.host }}
-    smtpPort: {{ mailer.smtp.port }}
+    smtpPort: {{ mailer.smtp.port }}{% endif %}
 
 jobs:
   - url: "https://raw.githubusercontent.com/jboss-set/cedalion/main/job-configurator.groovy"
