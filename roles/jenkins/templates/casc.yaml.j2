@@ -84,7 +84,20 @@ jenkins:
 {% endfor %}{% endif %}
   numExecutors: {{ jenkins.executors.num }}
   securityRealm:
-{% if instance.oidc.authorization_endpoint is defined and instance.oidc.authorization_endpoint|length %}
+{% if not instance.oidc is defined and jenkins_sso_wellknow_openid_config_url is defined %}
+    oic:
+      serverConfiguration:
+        wellKnown:
+          wellKnownOpenIDConfigurationUrl: "{{ jenkins_sso_wellknow_openid_config_url }}"
+          scopesOverride: "openid email"
+      clientId: "{{ jenkins_sso_client_id }}"
+      clientSecret: "none"
+      disableSslVerification: false
+      groupsFieldName: "groups"
+      logoutFromOpenidProvider: false
+      userNameField: "preferred_username"
+{% elif %}
+{% if instance.oidc.authorization_endpoint is defined and instance.oidc.authorization_endpoint | length %}
     oic:
       authorizationServerUrl: "{{ instance.oidc.authorization_endpoint }}"
       tokenServerUrl: "{{ instance.oidc.token_endpoint }}"
@@ -112,6 +125,7 @@ jenkins:
       users:
        - id: {{ jenkins.admin.id }}
          password: {{ jenkins.admin.password }}
+{% endif %}
 {% endif %}
 {% if jenkins.view.tabs is defined %}
   views:
