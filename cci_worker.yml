@@ -10,6 +10,13 @@
     - vars/java.yml
 
   pre_tasks:
+    - name: Add vault.corp.redhat.com entry to /etc/hosts
+      ansible.builtin.lineinfile:
+        path: /etc/hosts
+        line: "{{ vault_ip_address }} vault.corp.redhat.com"
+        create: yes
+        state: present
+  
     - name: "Load Secrets from Vault"
       ansible.builtin.include_role:
         name: "vault"

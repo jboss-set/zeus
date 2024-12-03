@@ -151,8 +151,25 @@
     path: inventory
     block: "{{ instance.servers[0].access_ipv4 }}"
 
-- name: Run cci_worker.yml playbook
-  ansible.builtin.command: ansible-playbook -i inventory -u cloud-user cci_worker.yml
+- name: Fetch IP of vault.corp.redhat.com
+  ansible.builtin.shell: |
+    set -o pipefail
+    ping -c 1 vault.corp.redhat.com | head -n 1 | awk -F'[()]' '{print $2}'
+  register: vault_ip
+  changed_when: false
+
+- name: Store vault IP in a variable
+  ansible.builtin.set_fact:
+    vault_ip_address: "{{ vault_ip.stdout }}"
+
+- name: Pause for a minute to start the instance
+  ansible.builtin.pause:
+    minutes: 1
+
+- name: Run cci_worker.yml playbook with vault IP as an extra variable
+  ansible.builtin.command: >
+    ansible-playbook -i inventory -u cloud-user cci_worker.yml
+    --extra-vars "vault_ip_address={{ vault_ip_address }}"
 
 - name: Remove the inventory file
   ansible.builtin.file:
