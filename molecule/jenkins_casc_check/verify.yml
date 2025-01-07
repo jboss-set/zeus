@@ -1,0 +1,10 @@
+---
+- name: Verify generated casc.yml
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Ensure casc.yml is valid YAML
+      shell: "python3 -c 'import yaml, sys; yaml.safe_load(sys.stdin)' < /tmp/casc_generated.yaml"
+      register: yaml_check
+      failed_when: yaml_check.rc != 0
+      changed_when: false

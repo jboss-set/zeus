@@ -1,0 +1,143 @@
+jenkins:
+  groupname: "jenkins"
+  bind_addr: "localhost"
+  port: "8080"
+  username: "jenkins"
+  uid: "1000"
+  gid: "1000"
+  home: "/home/jenkins/current"
+  home_next: "/home/jenkins/next"
+  tools:
+    home: "/opt/tools"
+  executors:
+    num: "12"
+  default_jdk_home: "/opt/oracle/java"
+  default_mvn_home: "/opt/apache/maven"
+  default_mvn_settings: "/opt/tools/settings.xml"
+  jdk_list:
+    jdk8: "/opt/oracle/jdk1.8.0_181"
+    jdk17: "/opt/oracle/jdk-17.0.1"
+  admin:
+    id: "admin"
+    password: "admin_password"
+  ldap:
+    search:
+      group:
+        base: ""
+        filter: ""
+    inhibit_root_dn: false
+    rootDn: ""
+    host: ""
+    port: "636"
+    url: ""
+  role:
+    admin:
+      name: "admin"
+      group: "admins"
+      desc: "Administrator role"
+    ansibleCI:
+      name: "ansibleCI"
+      group: "ansible-ci-group"
+      desc: "Ansible CI role"
+    user:
+      name: "user"
+      group: "users"
+      desc: "Regular user role"
+  view:
+    - name: "Ansible AMQ Broker"
+      includeRegex: ".*amq.*"
+    - name: "Ansible CI"
+      includeRegex: "ansible-ci-.*"
+    - name: "Ansible DOT"
+      includeRegex: "ansible-downstream-tests-.*"
+    - name: "Ansible Demos"
+      includeRegex: ".*-demo"
+    - name: "Ansible Downstream CI"
+      includeRegex: "ansible-downstream-ci-.*"
+    - name: "Ansible Downstream Runner"
+      includeRegex: "ansible-downstream-runner-.*"
+    - name: "Ansible EAP"
+      includeRegex: ".*(wildfly|eap).*"
+      excludeRegex: '.*eap-[0-9]+\\.[0-9]+.*|wildfly-.*'
+    - name: "Ansible JWS"
+      includeRegex: ".*jws.*"
+    - name: "Ansible Janus"
+      includeRegex: "ansible-janus-.*"
+    - name: "Ansible Quarkus"
+      includeRegex: ".*quarkus.*"
+    - name: "Ansible Release"
+      includeRegex: "ansible-release-.*"
+    - name: "Component Alignment"
+      includeRegex: "component-alignment-.*"
+    - name: "SET CI"
+      includeRegex: "ci-.*"
+    - name: "eap-6.4.x"
+      includeRegex: 'eap-6\\.4\\.x-.*'
+    - name: "eap-7.0.x"
+      includeRegex: 'eap-7\\.0\\.x-.*'
+    - name: "eap-7.1.x"
+      includeRegex: 'eap-7\\.1\\.x-.*'
+    - name: "eap-7.2.x"
+      includeRegex: 'eap-7\\.2\\.x-.*'
+    - name: "eap-7.3.x"
+      includeRegex: 'eap-7\\.3\\.x-.*'
+    - name: "eap-7.4.x"
+      includeRegex: 'eap-7\\.4\\.x-.*'
+    - name: "eap-8.0.x"
+      includeRegex: 'eap-8\\.0\\.x-.*'
+    - name: "vbe"
+      includeRegex: "vbe-eap-.*"
+    - name: "vbe-wildfly"
+      includeRegex: "vbe-wildfly-.*"
+    - name: "wildfly"
+      includeRegex: "wildfly-.*"
+    - name: "xp-2.0.x"
+      includeRegex: 'xp-2\\.0\\.x-.*'
+    - name: "xp-3.0.x"
+      includeRegex: 'xp-3\\.0\\.x-.*'
+    - name: "xp-4.0.x"
+      includeRegex: 'xp-4\\.0\\.x-.*'
+    - name: "cryo"
+      includeRegex: "cryo-.*"
+  service:
+    - name: "hephaestus"
+      ip: "10.88.0.3"
+      location: "/jenkins"
+      readwrite_volumes:
+        - { src: "/home/jenkins/current", dest: "/var/jenkins_home" }
+      readonly_volumes:
+        - { src: "/home/jenkins/.ssh", dest: "/var/jenkins_home/.ssh" }
+        - { src: "/home/jenkins/.netrc", dest: "/var/jenkins_home/.netrc" }
+        - { src: "/home/jenkins/.gitconfig", dest: "/var/jenkins_home/.gitconfig" }
+      add_hosts:
+        - { src: "podman", ip: "10.88.0.3" }
+        - { src: "server", ip: "10.88.0.2" }
+      ports_mapping:
+        - { src: "8080", dest: "8080" }
+      vars:
+        - { name: "JENKINS_OPTS", value: "--prefix=/jenkins" }
+    - name: "hephaestus.next"
+      ip: "10.88.1.0"
+      location: "/jenkins.next"
+      state: "stopped"
+      enable: "no"
+      readwrite_volumes:
+        - { src: "/home/jenkins/next", dest: "/var/jenkins_home" }
+      readonly_volumes:
+        - { src: "/home/jenkins/.ssh", dest: "/var/jenkins_home/.ssh" }
+        - { src: "/home/jenkins/.netrc", dest: "/var/jenkins_home/.netrc" }
+        - { src: "/home/jenkins/.gitconfig", dest: "/var/jenkins_home/.gitconfig" }
+      add_hosts:
+        - { src: "podman", ip: "10.88.0.3" }
+        - { src: "server", ip: "10.88.0.2" }
+      ports_mapping:
+        - { src: "8080", dest: "8180" }
+      vars:
+        - { name: "JENKINS_OPTS", value: "--prefix=/jenkins.next" }
+instance:
+  url: "http://example.jenkins.server"
+mailer:
+  replyTo: "no-reply@example.com"
+  smtp:
+    host: "smtp.example.com"
+    port: "587"
