@@ -7,7 +7,6 @@
     quiet: true
 
 - name: "Ensures the tools home folder exits."
-  become: yes
   ansible.builtin.file:
     state: directory
     path: "{{ folders }}"

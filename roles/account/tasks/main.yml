@@ -13,7 +13,6 @@
     quiet: true
 
 - name: "Escalate privilege"
-  become: yes
   block:
     - name: "Ensure group {{ account.group }} exists."
       ansible.builtin.group:

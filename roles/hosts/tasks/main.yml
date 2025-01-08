@@ -1,7 +1,6 @@
 ---
 - block:
   - name: Add Ansible inventory mappings to /etc/hosts
-    become: true
     ansible.builtin.blockinfile:
       path: "{{ hosts_path_to_file }}"
       block: |

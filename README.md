@@ -1,6 +1,8 @@
 Zeus
 ====
 
+[![Build Status](https://github.com/jboss-set/zeus/workflows/CI/badge.svg)](https://github.com/jboss-set/zeus/actions/workflows/ci.yml)
+
 These are Ansible configuration scripts for the Olympus JBoss SET CI server.
 
 ### Prerequisites:

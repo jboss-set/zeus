@@ -2,7 +2,12 @@
 - name: Prepare
   hosts: all
   gather_facts: yes
+  vars_files:
+    - vars.yml
   tasks:
 
     - name: "Include common prepare tasks"
       ansible.builtin.include_tasks: ../prepare.yml
+      vars:
+        users:
+          - "{{ account.username }}"
