@@ -5,7 +5,6 @@
 
   tasks:
     - name: "Escalate privileges"
-      become: yes
       block:
         - name: Add a duplicate Windows specific tasks
           ansible.builtin.template:

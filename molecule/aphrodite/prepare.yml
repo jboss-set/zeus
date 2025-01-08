@@ -15,7 +15,6 @@
           - { path: /opt/tools, owner: "{{ aphrodite_user }}", group: "{{ aphrodite_user }}" }
 
     - name: "Deploy aphrodite configuration to {{ aphrodite.path }}"
-      become: yes
       ansible.builtin.template:
         src: "../../roles/aphrodite/templates/aphrodite.json.j2"
         dest: "{{ aphrodite.path }}"

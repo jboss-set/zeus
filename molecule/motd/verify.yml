@@ -6,7 +6,6 @@
   gather_facts: yes
   tasks:
     - name: Add a duplicate motd
-      become: yes
       ansible.builtin.copy:
         src: "../../roles/motd/files/motd.standard"
         dest: /etc/duplicateMotd

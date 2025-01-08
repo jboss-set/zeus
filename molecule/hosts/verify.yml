@@ -1,14 +1,12 @@
 ---
 - name: Verify for hosts role
   hosts: all
-  become: yes
   vars_files:
     - vars.yml
   gather_facts: false
 
   tasks:
     - name: Add Ansible inventory mappings to /etc/fake_hosts
-      become: true
       ansible.builtin.blockinfile:
         path: "/etc/fake_hosts"
         block: |

@@ -1,7 +1,6 @@
 ---
 - name: Verify for aphrodite role
   hosts: all
-  become: yes
   vars_files:
     - vars.yml
   gather_facts: false

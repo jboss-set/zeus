@@ -5,7 +5,6 @@
     package_name: git
 
 - name: "Ensures gitconfig is deployed for user root"
-  become: yes
   ansible.builtin.template:
     src: templates/gitconfig.j2
     dest: "{{ config.home }}/.gitconfig"

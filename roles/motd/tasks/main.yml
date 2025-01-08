@@ -10,7 +10,6 @@
     motd_src_file: "files/motd.{{ motd.font }}"
 
 - name: Add a specific motd
-  become: yes
   ansible.builtin.copy:
     src: "files/motd.{{ motd.font }}"
     dest: /etc/motd

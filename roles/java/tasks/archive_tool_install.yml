@@ -14,7 +14,6 @@
     path_to_archive: "{{ home_folder }}/{{ files.name }}{{ files.ext | default('.tgz') }}"
 
 - name: "Escalate priviliges"
-  become: yes
   block:
     - ansible.builtin.stat:
         path: "{{ path_to_archive }}"
