@@ -84,7 +84,7 @@ jenkins:
 {% endfor %}{% endif %}
   numExecutors: {{ jenkins.executors.num }}
   securityRealm:
-{% if not instance.oidc is defined and jenkins_sso_wellknow_openid_config_url is defined %}
+{% if jenkins_sso_wellknow_openid_config_url is defined %}
     oic:
       serverConfiguration:
         wellKnown:
