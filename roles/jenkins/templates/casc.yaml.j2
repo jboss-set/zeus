@@ -125,44 +125,60 @@ jenkins:
        - id: {{ jenkins.admin.id }}
          password: {{ jenkins.admin.password }}
 {% endif %}
-{% if jenkins.view.tabs is defined %}
-  views:
+{% if jenkins.view is defined %}
+views:
   - all:
       name: "all"
-
-  - dashboard:
-      name: "cryo"
+{% for view in jenkins.view %}
+  - list:
+      name: "{{ view.name }}"
       columns:
-{% for col in jenkins.view.tabs.columns  %}
-        - "{{ col }}"
-{% endfor %}
-      includeStdJobList: true
+      - "status"
+      - "weather"
+      - "jobName"
+      - "lastSuccess"
+      - "lastFailure"
+      - "lastDuration"
+      - "buildButton"
+{% if view.includeRegex is defined%}
+      includeRegex: "{{ view.includeRegex }}"
+{% endif %}
+{% if view.excludeRegex is defined%}
+      excludeRegex: "{{ view.excludeRegex }}"
+{% endif %}
+{% if view.jobNames is defined%}
       jobNames:
-      includeRegex: "cryo-.*"
-
-  - dashboard:
+{% for jobName in view.jobNames %}
+      - "{{ jobName }}"
+{% endfor %}
+{% endif %}
+{% endfor %}
+  - list:
       name: "Failing Jobs"
       columns:
-{% for col in jenkins.view.tabs.columns  %}
-        - "{{ col }}"
-{% endfor %}
-      includeStdJobList: true
+      - "status"
+      - "weather"
+      - "jobName"
+      - "lastSuccess"
+      - "lastFailure"
+      - "lastDuration"
+      - "buildButton"
+      jobNames: []
       jobFilters:
-      - jobStatusFilter:
-          aborted: false
-          disabled: false
-          failed: true
-          includeExcludeTypeString: "includeMatched"
-          stable: false
-          unstable: false
-      - jobStatusFilter:
-          aborted: false
-          disabled: true
-          failed: false
-          includeExcludeTypeString: "excludeMatched"
-          stable: false
-          unstable: false
-  viewsTabBar: "standard"
+        - jobStatusFilter:
+            aborted: false
+            disabled: false
+            failed: true
+            includeExcludeTypeString: "includeMatched"
+            stable: false
+            unstable: false
+        - jobStatusFilter:
+            aborted: false
+            disabled: true
+            failed: false
+            includeExcludeTypeString: "excludeMatched"
+            stable: false
+            unstable: false
 {% endif %}
 
 security:
@@ -194,4 +210,3 @@ unclassified:
 jobs:
   - url: "https://raw.githubusercontent.com/jboss-set/cedalion/main/job-configurator.groovy"
   - script: "queue('job-configurator')"
-
