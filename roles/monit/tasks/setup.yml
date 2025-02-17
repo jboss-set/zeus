@@ -21,12 +21,6 @@
 - ansible.builtin.include_role:
     name: fast_yum_install
   vars:
-    package_name: NetworkManager-openvpn
-
-
-- ansible.builtin.include_role:
-    name: fast_yum_install
-  vars:
     package_name: monit
 
 - ansible.builtin.assert:
