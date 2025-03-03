@@ -32,6 +32,11 @@
   loop_control:
     loop_var: files
 
+- name: "Update nginx image if required"
+  ansible.builtin.include_role:
+    name: nginx
+    tasks_from: nginx_update.yml
+
 - name: "Ensure local images are successfully build"
   containers.podman.podman_image:
     name: "{{ files.tag }}"
