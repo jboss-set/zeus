@@ -1,0 +1,10 @@
+---
+- name: Converge
+  hosts: all
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Generate casc.yaml from template
+      ansible.builtin.template:
+        src: "../../roles/jenkins/templates/casc.yaml.j2"
+        dest: "/tmp/casc_generated.yaml"

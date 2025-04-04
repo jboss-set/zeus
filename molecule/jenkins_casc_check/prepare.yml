@@ -1,0 +1,18 @@
+---
+- name: Prepare
+  hosts: all
+  gather_facts: yes
+  tasks:
+
+    - name: "Include common prepare tasks"
+      ansible.builtin.include_tasks: ../prepare.yml
+
+    - name: Ensure pip3 is installed
+      ansible.builtin.yum:
+        name: python3-pip
+        state: present
+
+    - name: Install PyYAML
+      ansible.builtin.pip:
+        name: pyyaml
+        state: present

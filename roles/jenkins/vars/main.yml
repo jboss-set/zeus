@@ -45,6 +45,61 @@ jenkins:
       group: "{{ jenkins_role_user_group }}"
       desc: "{{ jenkins_role_user_desc }}"
   view:
+    - name: "Ansible AMQ Broker"
+      includeRegex: ".*amq.*"
+    - name: "Ansible CI"
+      includeRegex: "ansible-ci-.*"
+    - name: "Ansible DOT"
+      includeRegex: "ansible-downstream-tests-.*"
+    - name: "Ansible Demos"
+      includeRegex: ".*-demo"
+    - name: "Ansible Downstream CI"
+      includeRegex: "ansible-downstream-ci-.*"
+    - name: "Ansible Downstream Runner"
+      includeRegex: "ansible-downstream-runner-.*"
+    - name: "Ansible EAP"
+      includeRegex: ".*(wildfly|eap).*"
+      excludeRegex: '.*eap-[0-9]+\\.[0-9]+.*|wildfly-.*'
+    - name: "Ansible JWS"
+      includeRegex: ".*jws.*"
+    - name: "Ansible Janus"
+      includeRegex: "ansible-janus-.*"
+    - name: "Ansible Quarkus"
+      includeRegex: ".*quarkus.*"
+    - name: "Ansible Release"
+      includeRegex: "ansible-release-.*"
+    - name: "Component Alignment"
+      includeRegex: "component-alignment-.*"
+    - name: "SET CI"
+      includeRegex: "ci-.*"
+    - name: "eap-6.4.x"
+      includeRegex: 'eap-6\\.4\\.x-.*'
+    - name: "eap-7.0.x"
+      includeRegex: 'eap-7\\.0\\.x-.*'
+    - name: "eap-7.1.x"
+      includeRegex: 'eap-7\\.1\\.x-.*'
+    - name: "eap-7.2.x"
+      includeRegex: 'eap-7\\.2\\.x-.*'
+    - name: "eap-7.3.x"
+      includeRegex: 'eap-7\\.3\\.x-.*'
+    - name: "eap-7.4.x"
+      includeRegex: 'eap-7\\.4\\.x-.*'
+    - name: "eap-8.0.x"
+      includeRegex: 'eap-8\\.0\\.x-.*'
+    - name: "vbe"
+      includeRegex: "vbe-eap-.*"
+    - name: "vbe-wildfly"
+      includeRegex: "vbe-wildfly-.*"
+    - name: "wildfly"
+      includeRegex: "wildfly-.*"
+    - name: "xp-2.0.x"
+      includeRegex: 'xp-2\\.0\\.x-.*'
+    - name: "xp-3.0.x"
+      includeRegex: 'xp-3\\.0\\.x-.*'
+    - name: "xp-4.0.x"
+      includeRegex: 'xp-4\\.0\\.x-.*'
+    - name: "cryo"
+      includeRegex: "cryo-.*"
   service:
     - name: hephaestus
       ip: "{{ known_hosts.jenkins.ip }}"
