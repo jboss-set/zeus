@@ -1,0 +1,76 @@
+---
+- name: Test Jenkins update on Olympus
+  hosts: localhost
+
+  vars:
+    jenkins_version: "2.452.3-lts"  # You need to update this.
+    hephaestus_dir: "/home/jenkins/ares.git/hephaestus"
+    jenkins_home: "/home/jenkins"
+
+  pre_tasks:
+    - name: "Ensure required variables are defined"
+      ansible.builtin.assert:
+        that:
+          - jenkins_version is defined
+          - jenkins_version | length > 0
+        fail_msg: "The 'jenkins_version' variable must be defined and non-empty."
+
+  tasks:
+    - name: "Build hephaestus.next image"
+      become: yes
+      containers.podman.podman_image:
+        name: hephaestus.next
+        tag: latest
+        path: "{{ hephaestus_dir }}"
+        build:
+          extra_args: "--build-arg jenkins_version={{ jenkins_version }}"
+      register: image_build
+
+    - name: "Remove old backup if exists"
+      become: yes
+      become_user: jenkins
+      ansible.builtin.file:
+        path: "{{ jenkins_home }}/next.old"
+        state: absent
+
+    - name: "Create backup directory"
+      become: yes
+      become_user: jenkins
+      ansible.builtin.file:
+        path: "{{ jenkins_home }}/next.old"
+        state: directory
+        owner: jenkins
+        group: jenkins
+        mode: '0755'
+
+    - name: "Check if there are files in {{ jenkins_home }}/next"
+      become: yes
+      become_user: jenkins
+      ansible.builtin.find:
+        paths: "{{ jenkins_home }}/next"
+        file_type: any
+      register: next_files
+
+    - name: "Move files if they exist"
+      become: yes
+      become_user: jenkins
+      ansible.builtin.command: >
+        mv {{ jenkins_home }}/next/* {{ jenkins_home }}/next.old/
+      when: next_files.matched > 0
+
+    - name: "Start hephaestus.next service"
+      become: yes
+      ansible.builtin.systemd:
+        name: hephaestus.next
+        state: started
+        daemon_reload: true
+
+    - name: "Check hephaestus.next service status"
+      become: yes
+      ansible.builtin.systemd:
+        name: hephaestus.next
+      register: hephaestus_service
+
+    - name: "Show service status"
+      ansible.builtin.debug:
+        var: hephaestus_service.status
