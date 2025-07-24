@@ -18,5 +18,6 @@ podman:
       - { name: 'hephaestus', owner: 'root', tag: 'hephaestus' }
       - { name: 'hephaestus', owner: 'root', tag: 'hephaestus.next' }
       - { name: 'ansible', owner: 'jenkins', tag: 'ansible' }
-      - { name: 'molecule-runner', owner: 'jenkins', tag: 'molecule-runner' }
-      - { name: 'molecule-slave', owner: 'jenkins', tag: 'molecule-slave' }
+      - { name: 'janus', owner: 'jenkins', tag: 'janus' }
+      - { name: 'molecule-runner-9', owner: 'jenkins', tag: 'molecule-runner-9' }
+      - { name: 'molecule-slave-9', owner: 'jenkins', tag: 'molecule-slave-9' }
