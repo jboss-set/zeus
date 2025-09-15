@@ -49,15 +49,22 @@
         ANSIBLE_HASHI_VAULT_ROLE_ID: "{{ ansible_hashi_vault_role_id }}"
         ANSIBLE_HASHI_VAULT_SECRET_ID: "{{ ansible_hashi_vault_secret_id }}"
 
-    - name: "Ensure target is register in RHN"
+    - name: Check registration status
+      ansible.builtin.command: subscription-manager status
+      register: registration_status
+      ignore_errors: true
+
+    - name: Register if not already registered
+      when:
+        - registration_status.rc != 0
+        - cci_worker_rhel_subscription_username is defined
+        - cci_worker_rhel_subscription_password is defined
       community.general.redhat_subscription:
         state: present
         username: "{{ cci_worker_rhel_subscription_username }}"
         password: "{{ cci_worker_rhel_subscription_password }}"
         autosubscribe: yes
-      when:
-        - cci_worker_rhel_subscription_username is defined
-        - cci_worker_rhel_subscription_password is defined
+        force_register: true
 
     - ansible.builtin.include_role:
         name: qualys_fix

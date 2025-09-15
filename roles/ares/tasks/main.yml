@@ -29,6 +29,7 @@
     dest: "{{ ares.home }}"
     version: "{{ ares.git.branch }}"
     key_file: "{{ ares.git.keyfile }}"
+    force: yes
 
 - name: "Ensure {{ ares.home }} belongs to {{ ares.owner }}"
   ansible.builtin.file:
